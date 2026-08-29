@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<title>Overtime · 体坛风云</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif}
+body{background:#0d1117;color:#e6edf3;min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;font-family:inherit}
+a{color:inherit;text-decoration:none}
+.view{display:none;min-height:100vh;animation:viewFadeIn 0.4s ease}
+.view.active{display:block}
+@keyframes viewFadeIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.back-btn{position:fixed;top:20px;left:20px;z-index:100;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:10px 20px;border-radius:30px;font-size:0.9rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:all 0.2s}
+.back-btn:hover{background:rgba(255,255,255,0.12);transform:translateX(-3px)}
+
+/* ===== Overtime Logo ===== */
+.ot-logo{display:flex;align-items:center;gap:10px}
+.ot-logo-mark{width:36px;height:36px;position:relative;flex-shrink:0}
+.ot-logo-mark svg{width:100%;height:100%}
+.ot-logo-text{font-size:1.3rem;font-weight:800;letter-spacing:1px;background:linear-gradient(135deg,#fff,#f0f6fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ot-logo-text .accent{color:#f97316;-webkit-text-fill-color:#f97316}
+
+/* ===== 封面页 ===== */
+#coverView{position:fixed;top:0;left:0;width:100%;height:100vh;background:#0d1117;z-index:9999;align-items:center;justify-content:center;overflow:hidden}
+#coverView.active{display:flex}
+.cover-glow{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.cover-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.25;animation:coverFloat 14s ease-in-out infinite}
+.cover-orb:nth-child(1){width:500px;height:500px;background:radial-gradient(circle,#f97316,transparent 70%);top:-10%;left:-10%}
+.cover-orb:nth-child(2){width:450px;height:450px;background:radial-gradient(circle,#1e3a5f,transparent 70%);bottom:-15%;right:-10%;animation-delay:-5s}
+.cover-orb:nth-child(3){width:350px;height:350px;background:radial-gradient(circle,#3b82f6,transparent 70%);top:40%;left:50%;transform:translate(-50%,-50%);animation-delay:-9s;opacity:0.15}
+@keyframes coverFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,20px) scale(0.95)}}
+.cover-grid{position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:50px 50px;z-index:0;pointer-events:none;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.cover-content{position:relative;z-index:10;text-align:center;padding:20px;max-width:700px;animation:coverFadeIn 1s ease-out}
+@keyframes coverFadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.cover-logo{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:28px}
+.cover-logo .ot-logo-mark{width:56px;height:56px}
+.cover-logo .ot-logo-text{font-size:2.2rem;letter-spacing:3px}
+.cover-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:7px 18px;border-radius:30px;font-size:0.8rem;font-weight:600;letter-spacing:2px;margin-bottom:24px}
+.cover-badge .dot{width:7px;height:7px;border-radius:50%;background:#f97316;animation:coverBlink 1.2s ease-in-out infinite}
+@keyframes coverBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+.cover-title{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;letter-spacing:6px;line-height:1.15;margin-bottom:6px;color:#f0f6fc}
+.cover-sub-en{font-size:clamp(0.65rem,1.8vw,0.9rem);color:rgba(255,255,255,0.35);letter-spacing:5px;text-transform:uppercase;margin-bottom:20px;font-weight:300}
+.cover-slogan{font-size:clamp(0.95rem,2.5vw,1.2rem);color:rgba(255,255,255,0.65);margin-bottom:36px;font-weight:400;letter-spacing:2px}
+.cover-slogan .hl{color:#fb923c;font-weight:700}
+.cover-icons{display:flex;justify-content:center;gap:16px;margin-bottom:40px;flex-wrap:wrap}
+.cover-icon{width:50px;height:50px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:all 0.3s;animation:coverIconFloat 3.5s ease-in-out infinite}
+.cover-icon:hover{transform:translateY(-6px) scale(1.1);background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.4)}
+@keyframes coverIconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.cover-enter-btn{position:relative;display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,#f97316 0%,#ea580c 100%);color:white;font-size:clamp(1rem,2.5vw,1.25rem);font-weight:700;padding:16px 44px;border-radius:50px;letter-spacing:3px;box-shadow:0 10px 30px rgba(249,115,22,0.3);transition:all 0.3s;overflow:hidden}
+.cover-enter-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 14px 36px rgba(249,115,22,0.4)}
+.cover-enter-btn .arrow{display:inline-block;transition:transform 0.3s}
+.cover-enter-btn:hover .arrow{transform:translateX(5px)}
+.cover-footer{position:absolute;bottom:20px;left:0;right:0;text-align:center;z-index:10;color:rgba(255,255,255,0.25);font-size:0.72rem;letter-spacing:1px}
+.flash-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center,rgba(255,255,255,0.8) 0%,rgba(249,115,22,0.3) 40%,transparent 70%);z-index:10000;pointer-events:none;opacity:0;transform:scale(0)}
+.flash-overlay.active{animation:flashExpand 0.6s cubic-bezier(0.4,0,0.2,1) forwards}
+@keyframes flashExpand{0%{opacity:0;transform:scale(0)}30%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(2.5)}}
+
+/* ===== 投票页 ===== */
+#voteView{background:linear-gradient(180deg,#0d1117 0%,#161b22 50%,#0d1117 100%);padding:60px 20px 40px;min-height:100vh}
+.vote-container{max-width:860px;margin:0 auto}
+.vote-header{text-align:center;margin-bottom:36px}
+.vote-header .icon{font-size:3rem;margin-bottom:10px}
+.vote-header h1{font-size:2rem;font-weight:800;color:#f0f6fc;margin-bottom:6px}
+.vote-header p{color:#8b949e;font-size:0.95rem}
+.step-indicator{display:flex;align-items:center;justify-content:center;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.step-circle{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:rgba(255,255,255,0.35);transition:all 0.4s ease;z-index:2}
+.step-item.active .step-circle{background:linear-gradient(135deg,#f97316,#ea580c);border-color:#fb923c;color:white;box-shadow:0 0 20px rgba(249,115,22,0.4);transform:scale(1.12)}
+.step-item.done .step-circle{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#22c55e;color:white}
+.step-label{font-size:0.78rem;font-weight:600;color:rgba(255,255,255,0.35)}
+.step-item.active .step-label{color:#fb923c}
+.step-item.done .step-label{color:#22c55e}
+.step-line{flex:1;height:3px;background:rgba(255,255,255,0.06);margin:0 8px;margin-bottom:20px;border-radius:2px;overflow:hidden}
+.step-line-fill{height:100%;background:linear-gradient(90deg,#22c55e,#f97316);width:0%;transition:width 0.5s ease}
+.vote-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:28px;padding:28px;min-height:300px;backdrop-filter:blur(10px)}
+.vote-step{display:none;animation:fadeSlideIn 0.4s ease}
+.vote-step.active{display:block}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.vote-step-desc{font-size:1.05rem;color:rgba(255,255,255,0.65);margin-bottom:22px;font-weight:500;text-align:center}
+.sport-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.sport-card-select{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px 14px;text-align:center;cursor:pointer;transition:all 0.3s ease}
+.sport-card-select:hover{background:rgba(255,255,255,0.1);border-color:rgba(249,115,22,0.4);transform:translateY(-3px)}
+.sport-card-select.selected{background:linear-gradient(135deg,rgba(249,115,22,0.25),rgba(234,88,12,0.15));border-color:#f97316;box-shadow:0 6px 20px rgba(249,115,22,0.25)}
+.sport-card-select .icon{font-size:2.5rem;margin-bottom:8px}
+.sport-card-select .name{font-weight:700;font-size:1rem}
+.team-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;max-height:360px;overflow-y:auto;padding-right:6px}
+.team-list::-webkit-scrollbar{width:5px}
+.team-list::-webkit-scrollbar-track{background:rgba(255,255,255,0.04);border-radius:3px}
+.team-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.team-option{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.08);border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.25s ease}
+.team-option:hover{background:rgba(255,255,255,0.1);border-color:rgba(249,115,22,0.35)}
+.team-option.selected{background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(234,88,12,0.12));border-color:#f97316}
+.team-option-logo{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.team-option-info{flex:1;min-width:0}
+.team-option-name{font-weight:700;font-size:0.95rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-option-votes{font-size:0.75rem;color:rgba(255,255,255,0.45)}
+.team-option-votes strong{color:#fb923c}
+.team-option-check{width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0}
+.team-option.selected .team-option-check{background:#f97316;border-color:#f97316;color:#fff}
+.confirm-card{text-align:center;max-width:460px;margin:0 auto}
+.confirm-logo{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(234,88,12,0.1));display:flex;align-items:center;justify-content:center;font-size:2.6rem;margin:0 auto 16px;border:3px solid #f97316;box-shadow:0 0 24px rgba(249,115,22,0.25)}
+.confirm-name{font-size:1.6rem;font-weight:800;margin-bottom:4px}
+.confirm-sport{font-size:0.85rem;color:rgba(255,255,255,0.45);margin-bottom:20px}
+.confirm-stats{display:flex;justify-content:center;gap:36px;margin-bottom:20px;padding:16px 0;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08)}
+.confirm-stat{text-align:center}
+.confirm-stat-value{font-size:1.6rem;font-weight:800;color:#fb923c}
+.confirm-stat-label{font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:3px}
+.confirm-bar{height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-bottom:18px}
+.confirm-bar-fill{height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:4px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+.confirm-warning{padding:12px 16px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:14px;color:#fdba74;font-size:0.85rem;font-weight:600;line-height:1.5}
+.success-card{text-align:center;padding:16px 0}
+.success-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-size:2.6rem;margin:0 auto 20px;animation:successPop 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes successPop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.success-title{font-size:1.6rem;font-weight:800;margin-bottom:8px}
+.success-desc{color:rgba(255,255,255,0.55);font-size:0.95rem;margin-bottom:6px}
+.success-desc strong{color:#fb923c}
+.success-sub{color:rgba(255,255,255,0.35);font-size:0.82rem;margin-bottom:24px}
+.vote-nav{display:flex;justify-content:space-between;margin-top:24px;gap:10px}
+.nav-btn{padding:12px 28px;border-radius:26px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all 0.2s;border:none}
+.nav-btn-prev{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12)}
+.nav-btn-prev:hover{background:rgba(255,255,255,0.14);color:white}
+.nav-btn-prev:disabled{opacity:0.3;cursor:not-allowed}
+.nav-btn-next{background:linear-gradient(135deg,#f97316,#ea580c);color:white;box-shadow:0 4px 14px rgba(249,115,22,0.3)}
+.nav-btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(249,115,22,0.4)}
+.nav-btn-next:disabled{opacity:0.35;cursor:not-allowed;transform:none}
+.nav-btn-submit{background:linear-gradient(135deg,#22c55e,#16a34a);color:white;box-shadow:0 4px 14px rgba(34,197,94,0.3)}
+.nav-btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(34,197,94,0.4)}
+.vote-skip{text-align:center;margin-top:18px}
+.vote-skip button{background:transparent;color:rgba(255,255,255,0.35);border:none;font-size:0.82rem;cursor:pointer;text-decoration:underline}
+.vote-skip button:hover{color:rgba(255,255,255,0.6)}
+
+/* ===== 首页 ===== */
+#homeView{background:linear-gradient(180deg,#0d1117 0%,#161b22 40%,#0d1117 100%)}
+.home-container{max-width:1360px;margin:0 auto;padding:20px 18px 50px}
+.home-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.home-topbar .ot-logo .ot-logo-mark{width:32px;height:32px}
+.home-topbar .ot-logo .ot-logo-text{font-size:1.1rem}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.topbar-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:8px 16px;border-radius:20px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.topbar-btn:hover{background:rgba(249,115,22,0.15);border-color:rgba(249,115,22,0.4);color:#fb923c}
+.topbar-btn.refreshing{opacity:0.6;pointer-events:none}
+.topbar-btn .spin{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* 早间新闻播报 */
+.morning-briefing{background:linear-gradient(135deg,#1a1f2e 0%,#161b22 100%);border-radius:24px;padding:24px 28px;border:1px solid rgba(249,115,22,0.2);box-shadow:0 12px 28px rgba(0,0,0,0.3);margin-bottom:20px;position:relative;overflow:hidden}
+.morning-briefing::before{content:'';position:absolute;top:-40%;right:-5%;width:240px;height:240px;background:radial-gradient(circle,rgba(249,115,22,0.1) 0%,transparent 70%);pointer-events:none}
+.morning-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;position:relative;z-index:1}
+.morning-title-group{display:flex;align-items:center;gap:12px}
+.morning-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(234,88,12,0.1));display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:1px solid rgba(249,115,22,0.3)}
+.morning-title{font-size:1.2rem;font-weight:800;color:#f0f6fc}
+.morning-date{font-size:0.82rem;color:#8b949e;margin-top:2px}
+.morning-player{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.play-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);color:white;border:none;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(249,115,22,0.35);transition:all 0.2s;flex-shrink:0}
+.play-btn:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(249,115,22,0.45)}
+.play-btn.playing{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 4px 16px rgba(34,197,94,0.35)}
+.player-progress{flex:1;min-width:120px;max-width:280px}
+.player-bar{height:5px;background:rgba(255,255,255,0.1);border-radius:3px;cursor:pointer;position:relative;overflow:hidden}
+.player-bar-fill{height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:3px;width:0%;transition:width 0.3s}
+.player-time{display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:5px}
+.morning-items{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);position:relative;z-index:1;max-height:160px;overflow-y:auto}
+.morning-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:0.85rem;color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.03)}
+.morning-item:last-child{border-bottom:none}
+.morning-item .num{color:#f97316;font-weight:700;font-size:0.78rem;min-width:20px}
+.morning-item .cat{background:rgba(249,115,22,0.15);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.72rem;font-weight:600;flex-shrink:0}
+.morning-item .title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 滚动播报 */
+.breaking-hero{background:linear-gradient(135deg,#161b22 0%,#1c2333 35%,#161b22 70%,#1a2236 100%);border-radius:24px;padding:24px 28px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 20px 40px rgba(0,0,0,0.4);margin-bottom:20px}
+.breaking-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;position:relative;z-index:1;flex-wrap:wrap;gap:10px}
+.hero-title-group{display:flex;align-items:center;gap:12px}
+.hero-live-dot{width:12px;height:12px;background:#ef4444;border-radius:50%;animation:livePulse 1.5s infinite;box-shadow:0 0 10px #ef4444}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.25)}}
+.hero-title{font-size:1.5rem;font-weight:800;letter-spacing:2px;color:#f0f6fc}
+.hero-subtitle{font-size:0.85rem;color:#8b949e;margin-top:2px}
+.hero-date{background:rgba(255,255,255,0.06);padding:8px 16px;border-radius:16px;font-size:0.82rem;color:#fb923c;font-weight:600}
+.ticker-big{position:relative;z-index:1;overflow:hidden;border-radius:16px;background:rgba(0,0,0,0.2);padding:16px 0}
+.ticker-track{display:flex;gap:50px;animation:tickerMove 45s linear infinite;width:max-content;align-items:center}
+@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-news{display:flex;align-items:center;gap:12px;flex-shrink:0;cursor:pointer;transition:opacity 0.2s}
+.ticker-news:hover{opacity:0.7}
+.ticker-cat{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:5px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;white-space:nowrap}
+.ticker-text{font-size:1rem;font-weight:600;color:#e6edf3;white-space:nowrap}
+.ticker-time{background:rgba(251,146,60,0.12);color:#fb923c;padding:4px 10px;border-radius:10px;font-size:0.72rem;font-weight:600;white-space:nowrap}
+
+.section-label{font-size:1.25rem;font-weight:800;color:#f0f6fc;padding-left:12px;border-left:4px solid #f97316;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-label .sub{font-size:0.78rem;font-weight:400;color:#8b949e;margin-left:8px}
+
+/* 我的主队 */
+.my-team-bar{background:linear-gradient(135deg,#1a1f2e 0%,#1e2a3f 50%,#1a1f2e 100%);border-radius:22px;padding:20px 24px;border:1px solid rgba(249,115,22,0.18);box-shadow:0 12px 24px rgba(0,0,0,0.25);color:white;position:relative;overflow:hidden;margin-bottom:20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.my-team-bar::before{content:'';position:absolute;top:-30%;right:-8%;width:240px;height:240px;background:radial-gradient(circle,rgba(249,115,22,0.1) 0%,transparent 70%);pointer-events:none}
+.my-team-bar-empty{text-align:center;width:100%;padding:8px 0}
+.my-team-bar-empty p{color:rgba(255,255,255,0.45);font-size:0.88rem;margin-bottom:10px}
+.my-team-bar-empty button{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;padding:9px 24px;border-radius:20px;font-weight:700;font-size:0.88rem;cursor:pointer}
+.my-team-logo{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(234,88,12,0.1));display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:2px solid #f97316;box-shadow:0 0 16px rgba(249,115,22,0.2);flex-shrink:0}
+.my-team-info{flex:1;min-width:160px}
+.my-team-label{font-size:0.68rem;color:#fb923c;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+.my-team-name{font-size:1.3rem;font-weight:800;margin-bottom:2px}
+.my-team-meta{font-size:0.78rem;color:rgba(255,255,255,0.45)}
+.my-team-bar button.change{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);padding:9px 18px;border-radius:20px;font-weight:700;font-size:0.82rem;cursor:pointer;flex-shrink:0;transition:all 0.2s}
+.my-team-bar button.change:hover{background:rgba(255,255,255,0.14);color:white}
+
+/* 12运动卡片 */
+.sports-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:900px){.sports-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:550px){.sports-grid{grid-template-columns:repeat(3,1fr)}}
+.sport-card{position:relative;border-radius:18px;padding:24px 14px;cursor:pointer;transition:all 0.3s;overflow:hidden;border:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center;text-align:center}
+.sport-card::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.06),transparent);pointer-events:none}
+.sport-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 16px 32px rgba(0,0,0,0.35);border-color:rgba(255,255,255,0.2)}
+.sport-card .icon{font-size:2.4rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.3))}
+.sport-card .name{font-size:1.05rem;font-weight:800;color:#fff;letter-spacing:1px}
+.sport-card .desc{font-size:0.72rem;color:rgba(255,255,255,0.55);line-height:1.3}
+.sport-card .enter-hint{font-size:0.7rem;color:rgba(255,255,255,0.35);margin-top:2px;opacity:0;transition:opacity 0.3s}
+.sport-card:hover .enter-hint{opacity:1}
+
+/* 盲盒 */
+.blindbox-big{background:linear-gradient(145deg,#1a1a2e 0%,#16213e 100%);border-radius:36px;padding:28px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 14px 24px rgba(0,0,0,0.25);border:1px solid rgba(249,115,22,0.18);color:white;margin-bottom:20px}
+.blindbox-info h2{font-size:1.6rem;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:10px}
+.blindbox-info p{color:#8b949e;margin:4px 0 0;font-size:0.88rem}
+.blindbox-btn{background:linear-gradient(135deg,#f97316,#ea580c);border:none;color:#fff;font-weight:800;font-size:1.2rem;padding:14px 32px;border-radius:50px;cursor:pointer;box-shadow:0 6px 20px rgba(249,115,22,0.35);transition:0.2s;display:flex;align-items:center;gap:8px}
+.blindbox-btn:hover{transform:scale(1.04)}
+.blindbox-btn:disabled{background:#444;cursor:not-allowed;transform:none;box-shadow:none}
+.blindbox-result-box{background:rgba(255,255,255,0.1);backdrop-filter:blur(6px);padding:12px 22px;border-radius:30px;font-weight:600;min-width:160px;text-align:center;border:1px solid rgba(255,255,255,0.08);font-size:0.9rem}
+.footer-text{text-align:center;color:rgba(255,255,255,0.22);font-size:0.75rem;margin-top:8px}
+
+/* ===== 运动专区页 ===== */
+#sportView{min-height:100vh;padding:64px 18px 50px}
+.sport-hero{text-align:center;padding:32px 18px 24px;border-radius:24px;margin-bottom:24px;position:relative;overflow:hidden}
+.sport-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0.08) 0%,transparent 70%);pointer-events:none}
+.sport-hero-icon{font-size:4rem;margin-bottom:10px;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.3))}
+.sport-hero h1{font-size:2.4rem;font-weight:900;letter-spacing:3px;margin-bottom:6px;text-shadow:0 3px 16px rgba(0,0,0,0.3)}
+.sport-hero p{font-size:1rem;opacity:0.65;max-width:560px;margin:0 auto}
+.sport-container{max-width:1160px;margin:0 auto}
+
+/* 联赛板块 */
+.league-section{margin-bottom:28px}
+.league-section h2{font-size:1.3rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-left:10px;border-left:4px solid}
+.league-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.league-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px)}
+.league-card:hover{transform:translateY(-3px);background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+.league-card .league-icon{font-size:1.8rem;margin-bottom:6px}
+.league-card .league-name{font-weight:700;font-size:0.95rem;margin-bottom:3px}
+.league-card .league-desc{font-size:0.75rem;opacity:0.55;line-height:1.4}
+
+/* 排行榜弹窗 */
+.rank-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:10001;align-items:center;justify-content:center;padding:18px}
+.rank-modal.show{display:flex}
+.rank-card{background:linear-gradient(180deg,#1c2333 0%,#161b22 100%);max-width:500px;width:100%;border-radius:24px;padding:24px;max-height:80vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 48px rgba(0,0,0,0.5);animation:popIn 0.3s ease}
+@keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+.rank-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.rank-header h3{font-size:1.3rem;font-weight:800}
+.rank-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.rank-close:hover{background:rgba(239,68,68,0.3);transform:rotate(90deg)}
+.rank-table{width:100%;border-collapse:collapse}
+.rank-table th{text-align:left;padding:9px 10px;font-size:0.78rem;color:rgba(255,255,255,0.45);border-bottom:1px solid rgba(255,255,255,0.08);font-weight:600}
+.rank-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.9rem}
+.rank-table tr:hover td{background:rgba(255,255,255,0.03)}
+.rank-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem}
+.rank-1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a1a2e}
+.rank-2{background:linear-gradient(135deg,#d1d5db,#9ca3af);color:#1a1a2e}
+.rank-3{background:linear-gradient(135deg,#d97706,#b45309);color:#fff}
+.rank-other{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.65)}
+.rank-team{font-weight:700}
+.rank-points{color:#fbbf24;font-weight:700}
+
+/* 明星板块 */
+.stars-section{margin-bottom:28px}
+.stars-section h2{font-size:1.3rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-left:10px;border-left:4px solid}
+.stars-grid{display:flex;flex-wrap:wrap;gap:14px}
+.star-card{background:rgba(255,255,255,0.06);border-radius:20px;padding:16px 12px;width:120px;text-align:center;border:1px solid rgba(255,255,255,0.08);transition:0.25s;cursor:pointer;backdrop-filter:blur(8px)}
+.star-card:hover{transform:scale(1.04);background:rgba(255,255,255,0.1);border-color:rgba(249,115,22,0.35)}
+.star-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#2a3a50;margin-bottom:8px;border:2px solid rgba(255,255,255,0.15)}
+.star-name{font-weight:700;font-size:0.9rem;margin-bottom:2px}
+.star-pos{font-size:0.72rem;opacity:0.55}
+
+/* 经典球员 */
+.legends-section{margin-bottom:28px}
+.legends-section h2{font-size:1.3rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-left:10px;border-left:4px solid #fbbf24}
+.legends-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.legend-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:18px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px)}
+.legend-card:hover{background:rgba(255,255,255,0.09);border-color:rgba(251,191,36,0.35);transform:translateX(3px)}
+.legend-photo{width:58px;height:58px;border-radius:50%;object-fit:cover;background:#2a3a50;border:2px solid rgba(251,191,36,0.35);flex-shrink:0}
+.legend-info{flex:1;min-width:0}
+.legend-name{font-weight:800;font-size:1rem;margin-bottom:2px}
+.legend-era{font-size:0.75rem;color:#fbbf24;margin-bottom:3px}
+.legend-desc{font-size:0.8rem;opacity:0.55;line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* 明星详情弹窗 */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:10001;align-items:center;justify-content:center;padding:18px}
+.modal-overlay.show{display:flex}
+.modal-card{background:linear-gradient(180deg,#1c2333 0%,#161b22 100%);max-width:420px;width:90%;border-radius:24px;padding:28px 24px;text-align:center;border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 40px rgba(0,0,0,0.5);animation:popIn 0.3s ease;max-height:85vh;overflow-y:auto}
+.modal-card img{width:100px;height:100px;border-radius:50%;object-fit:cover;margin-bottom:14px;border:3px solid #f97316;background:#2a3a50}
+.modal-card h3{font-size:1.5rem;color:#fff;margin-bottom:4px}
+.modal-card .pos{color:#fb923c;font-weight:700;margin-bottom:14px;font-size:0.9rem}
+.modal-card .meta{display:flex;justify-content:center;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.modal-card .meta span{font-size:0.78rem;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:10px}
+.modal-card p{color:#b0c4de;line-height:1.8;font-size:0.9rem;margin-bottom:20px;text-align:left}
+.modal-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.modal-btn{padding:10px 24px;border-radius:24px;font-weight:700;cursor:pointer;border:none;font-size:0.88rem;transition:0.2s;display:flex;align-items:center;gap:6px}
+.modal-btn.close{background:rgba(255,255,255,0.08);color:#ccc}
+.modal-btn.close:hover{background:rgba(255,255,255,0.14);color:white}
+.modal-btn.more{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff}
+.modal-btn.more:hover{transform:scale(1.04)}
+
+/* 新闻详情弹窗 */
+.news-modal{background:linear-gradient(180deg,#1c2333 0%,#161b22 100%);border-radius:24px;max-width:640px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 48px rgba(0,0,0,0.5);animation:newsSlideUp 0.35s cubic-bezier(0.16,1,0.3,1)}
+@keyframes newsSlideUp{from{opacity:0;transform:translateY(30px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.news-modal-header{padding:20px 24px 14px;border-bottom:1px solid rgba(255,255,255,0.06);position:relative}
+.news-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.06);border:none;color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.news-modal-close:hover{background:rgba(239,68,68,0.3);transform:rotate(90deg)}
+.news-modal-cat{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:5px 14px;border-radius:16px;font-size:0.78rem;font-weight:700;margin-bottom:10px}
+.news-modal-title{font-size:1.35rem;font-weight:800;color:#fff;line-height:1.4;margin-bottom:8px;padding-right:36px}
+.news-modal-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:0.78rem;color:rgba(255,255,255,0.4)}
+.news-modal-source{color:#fb923c;font-weight:600;cursor:pointer;text-decoration:underline}
+.news-modal-body{padding:18px 24px;overflow-y:auto;flex:1}
+.news-content{color:#c9d1d9;font-size:0.92rem;line-height:1.9}
+.news-content p{margin-bottom:12px}
+.news-content p:first-letter{font-size:1.25rem;font-weight:700;color:#fb923c}
+.news-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.news-tag{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);padding:4px 10px;border-radius:10px;font-size:0.75rem}
+
+/* 加载状态 */
+.loading-skeleton{display:flex;align-items:center;justify-content:center;padding:40px;color:rgba(255,255,255,0.35);font-size:0.9rem}
+.loading-skeleton .dot{animation:loadingBlink 1.2s infinite}
+.loading-skeleton .dot:nth-child(2){animation-delay:0.2s}
+.loading-skeleton .dot:nth-child(3){animation-delay:0.4s}
+@keyframes loadingBlink{0%,100%{opacity:0.3}50%{opacity:1}}
+
+/* Toast 提示 */
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(28,35,51,0.95);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:12px 24px;border-radius:16px;font-size:0.88rem;font-weight:600;z-index:100000;opacity:0;transition:all 0.3s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(34,197,94,0.4)}
+.toast.error{border-color:rgba(239,68,68,0.4)}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#fb923c,#f97316);color:#fff;text-align:center;padding:6px 16px;font-size:13px;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">Overtime 静态预览版 · 数据为预抓取快照 · 完整功能请部署后端版本</div>
+<div style="height:32px"></div>
+<!-- Overtime Logo SVG 定义 -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="ot-logo-svg" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="none" stroke="#f97316" stroke-width="2.5"/>
+      <circle cx="20" cy="20" r="13" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <line x1="20" y1="20" x2="20" y2="9" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="20" x2="28" y2="14" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <circle cx="20" cy="20" r="2.5" fill="#f97316"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="flash-overlay" id="flashOverlay"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ===== 封面页 ===== -->
+<div id="coverView" class="view active">
+  <div class="cover-glow">
+    <div class="cover-orb"></div>
+    <div class="cover-orb"></div>
+    <div class="cover-orb"></div>
+  </div>
+  <div class="cover-grid"></div>
+  <div class="cover-content">
+    <div class="cover-logo">
+      <div class="ot-logo-mark"><svg><use href="#ot-logo-svg"/></svg></div>
+      <div class="ot-logo-text">Over<span class="accent">time</span></div>
+    </div>
+    <div class="cover-badge"><span class="dot"></span>SPORTS PANORAMA</div>
+    <h1 class="cover-title">体坛风云</h1>
+    <div class="cover-sub-en">REAL-TIME SPORTS DATA &amp; NEWS</div>
+    <p class="cover-slogan">汇聚<span class="hl">12大运动</span> · 真实赛事数据 · 明星百科</p>
+    <div class="cover-icons">
+      <div class="cover-icon">⚽</div>
+      <div class="cover-icon">🏀</div>
+      <div class="cover-icon">🏸</div>
+      <div class="cover-icon">🏓</div>
+      <div class="cover-icon">🎾</div>
+      <div class="cover-icon">🏎️</div>
+    </div>
+    <button class="cover-enter-btn" onclick="enterVote()">进入 Overtime <span class="arrow">→</span></button>
+  </div>
+  <div class="cover-footer">Overtime · 体坛风云 2026 ｜ 数据来源：新浪体育 · 百度百科</div>
+</div>
+
+<!-- ===== 投票页 ===== -->
+<div id="voteView" class="view">
+  <div class="vote-container">
+    <div class="vote-header">
+      <div class="icon">🏆</div>
+      <h1>选择我的主队</h1>
+      <p>三步设定你支持的球队，首页将优先展示该队相关资讯</p>
+    </div>
+    <div class="step-indicator">
+      <div class="step-item active" data-step="1">
+        <div class="step-circle">1</div>
+        <div class="step-label">选球类</div>
+      </div>
+      <div class="step-line"><div class="step-line-fill" id="line1"></div></div>
+      <div class="step-item" data-step="2">
+        <div class="step-circle">2</div>
+        <div class="step-label">选球队</div>
+      </div>
+      <div class="step-line"><div class="step-line-fill" id="line2"></div></div>
+      <div class="step-item" data-step="3">
+        <div class="step-circle">3</div>
+        <div class="step-label">确认主队</div>
+      </div>
+    </div>
+    <div class="vote-card">
+      <div class="vote-step active" id="vstep1">
+        <div class="vote-step-desc">第一步：选择你关注的球类项目</div>
+        <div class="sport-cards" id="vSportCards"></div>
+      </div>
+      <div class="vote-step" id="vstep2">
+        <div class="vote-step-desc" id="vstep2Desc">第二步：选择你支持的球队</div>
+        <div class="team-list" id="vTeamList"></div>
+      </div>
+      <div class="vote-step" id="vstep3">
+        <div class="confirm-card">
+          <div class="confirm-logo" id="vConfirmLogo">⚽</div>
+          <div class="confirm-name" id="vConfirmName">球队名称</div>
+          <div class="confirm-sport" id="vConfirmSport">足球</div>
+          <div class="confirm-stats">
+            <div class="confirm-stat">
+              <div class="confirm-stat-value" id="vConfirmVotes">0</div>
+              <div class="confirm-stat-label">当前热度</div>
+            </div>
+            <div class="confirm-stat">
+              <div class="confirm-stat-value" id="vConfirmRank">0</div>
+              <div class="confirm-stat-label">人气排名</div>
+            </div>
+          </div>
+          <div class="confirm-bar"><div class="confirm-bar-fill" id="vConfirmBar" style="width:0%"></div></div>
+          <div class="confirm-warning">确认后将设为主队，首页优先展示该队相关新闻与动态</div>
+        </div>
+      </div>
+      <div class="vote-step" id="vstepSuccess">
+        <div class="success-card">
+          <div class="success-icon">✓</div>
+          <div class="success-title">主队设定成功！</div>
+          <div class="success-desc">你已将 <strong id="vSuccessTeam">球队</strong> 设为我的主队</div>
+          <div class="success-sub">即将进入 Overtime 首页...</div>
+        </div>
+      </div>
+    </div>
+    <div class="vote-nav">
+      <button class="nav-btn nav-btn-prev" id="vPrevBtn" onclick="votePrev()" disabled>上一步</button>
+      <button class="nav-btn nav-btn-next" id="vNextBtn" onclick="voteNext()" disabled>下一步</button>
+    </div>
+    <div class="vote-skip">
+      <button onclick="skipVote()">跳过设定，直接进入首页 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 首页 ===== -->
+<div id="homeView" class="view">
+  <div class="home-container">
+    <div class="home-topbar">
+      <div class="ot-logo">
+        <div class="ot-logo-mark"><svg><use href="#ot-logo-svg"/></svg></div>
+        <div class="ot-logo-text">Over<span class="accent">time</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" onclick="refreshNews()" id="refreshNewsBtn">
+          <span id="refreshNewsIcon">🔄</span> 刷新新闻
+        </button>
+        <button class="topbar-btn" onclick="goVote()">🏆 我的主队</button>
+      </div>
+    </div>
+
+    <!-- 早间新闻播报 -->
+    <div class="morning-briefing" id="morningBriefing">
+      <div class="morning-header">
+        <div class="morning-title-group">
+          <div class="morning-icon">📻</div>
+          <div>
+            <div class="morning-title">体坛早报 · 语音播报</div>
+            <div class="morning-date" id="morningDate">加载中...</div>
+          </div>
+        </div>
+        <div class="morning-player">
+          <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+          <div class="player-progress">
+            <div class="player-bar" onclick="seekAudio(event)">
+              <div class="player-bar-fill" id="playerBarFill"></div>
+            </div>
+            <div class="player-time">
+              <span id="playerCurrent">0:00</span>
+              <span id="playerDuration">0:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="morning-items" id="morningItems">
+        <div class="loading-skeleton">加载早报中<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+      </div>
+      <audio id="morningAudio" preload="none"></audio>
+    </div>
+
+    <!-- 滚动播报 -->
+    <div class="breaking-hero">
+      <div class="hero-top">
+        <div class="hero-title-group">
+          <div class="hero-live-dot"></div>
+          <div>
+            <div class="hero-title">实时快讯</div>
+            <div class="hero-subtitle">全球体育赛事实时滚动 · 点击新闻查看详情</div>
+          </div>
+        </div>
+        <div class="hero-date" id="heroDate"></div>
+      </div>
+      <div class="ticker-big">
+        <div class="ticker-track" id="tickerTrack">
+          <div class="loading-skeleton" style="padding:0 20px">加载新闻中<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 我的主队 -->
+    <div id="myTeamBar"></div>
+
+    <!-- 12运动卡片 -->
+    <div class="section-label">🎯 选择运动项目，进入专属专区 <span class="sub">真实数据 · 明星百科 · 联赛积分</span></div>
+    <div class="sports-grid" id="sportsGrid"></div>
+
+    <!-- 盲盒 -->
+    <div class="blindbox-big">
+      <div class="blindbox-info">
+        <h2>🎰 体育巨星盲盒</h2>
+        <p>从真实运动员库中随机抽取，抽中弹出个人简介与百科链接，每日限一次</p>
+      </div>
+      <button class="blindbox-btn" id="blindboxBtn" onclick="drawBlindBox()"><span>🧧</span> 抽盲盒</button>
+      <div class="blindbox-result-box" id="blindboxResult">✨ 未抽奖</div>
+    </div>
+    <div class="footer-text">Overtime · 体坛风云 ｜ 数据来源：新浪体育 · 百度百科 ｜ 点击运动卡片进入独立专区</div>
+  </div>
+</div>
+
+<!-- ===== 运动专区页 ===== -->
+<div id="sportView" class="view">
+  <button class="back-btn" onclick="goHome()">← 返回首页</button>
+  <div class="sport-container">
+    <div class="sport-hero" id="sportHero">
+      <div class="sport-hero-icon" id="sportHeroIcon">⚽</div>
+      <h1 id="sportHeroTitle">足球专区</h1>
+      <p id="sportHeroDesc">世界第一运动，汇聚五大联赛、欧冠、世界杯等顶级赛事</p>
+    </div>
+    <div id="sportContent">
+      <div class="loading-skeleton">加载专区数据中<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 排行榜弹窗 -->
+<div class="rank-modal" id="rankModal">
+  <div class="rank-card">
+    <div class="rank-header">
+      <h3 id="rankTitle">联赛积分榜</h3>
+      <button class="rank-close" onclick="closeRank()">✕</button>
+    </div>
+    <table class="rank-table">
+      <thead><tr><th>排名</th><th>球队</th><th>场次</th><th>积分</th></tr></thead>
+      <tbody id="rankBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 明星弹窗 -->
+<div class="modal-overlay" id="starModal">
+  <div class="modal-card">
+    <img id="modalStarImg" src="" alt="" onerror="this.style.background='#2a3a50';this.src='';">
+    <h3 id="modalStarName"></h3>
+    <div class="pos" id="modalStarPos"></div>
+    <div class="meta" id="modalStarMeta"></div>
+    <p id="modalStarDesc"></p>
+    <div class="modal-btns">
+      <button class="modal-btn close" onclick="closeStarModal()">关闭</button>
+      <button class="modal-btn more" id="modalStarMore" onclick="openBaike()">🔗 了解更多 · 百度百科</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新闻详情弹窗 -->
+<div class="modal-overlay" id="newsModal">
+  <div class="news-modal">
+    <div class="news-modal-header">
+      <button class="news-modal-close" onclick="closeNewsModal()">✕</button>
+      <div class="news-modal-cat" id="newsModalCat">⚽ 足球</div>
+      <h2 class="news-modal-title" id="newsModalTitle"></h2>
+      <div class="news-modal-meta">
+        <span>📅 <span id="newsModalTime"></span></span>
+        <span>📰 <span id="newsModalSource"></span></span>
+        <span class="news-modal-source" id="newsModalSourceLink" onclick="openNewsSource()">查看原文 →</span>
+      </div>
+    </div>
+    <div class="news-modal-body">
+      <div class="news-content" id="newsModalContent"></div>
+      <div class="news-tags">
+        <span class="news-tag">#体育</span>
+        <span class="news-tag">#赛事</span>
+        <span class="news-tag">#Overtime</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 全局状态 =====
+let voteStep = 1;
+let selectedSport = '';
+let selectedTeam = null;
+let myTeam = JSON.parse(localStorage.getItem('ot_myTeam') || 'null');
+let currentSport = '';
+let allNews = [];
+let allAthletes = [];
+let allStandings = {};
+let morningBriefing = null;
+let currentStarBaikeUrl = '';
+let currentNewsSourceUrl = '';
+let audioPlaying = false;
+let dataLoaded = false;
+
+async function ensureData() {
+    if (!dataLoaded) {
+        await loadAllData();
+        dataLoaded = true;
+    }
+}
+
+// 运动项目配置
+const sportsData = [
+  {name:'足球', icon:'⚽', desc:'世界第一运动', gradient:'linear-gradient(135deg,#1a5c2e,#2d8f4a)', bg:'linear-gradient(180deg,#0a1f12 0%,#161b22 50%,#0d1117 100%)', accent:'#22c55e', heroBg:'linear-gradient(135deg,#0d3320 0%,#1a5c35 50%,#0d3320 100%)', fullDesc:'世界第一运动，汇聚五大联赛、欧冠、世界杯等顶级赛事'},
+  {name:'篮球', icon:'🏀', desc:'热血灌篮对决', gradient:'linear-gradient(135deg,#9c420c,#d97706)', bg:'linear-gradient(180deg,#1f1205 0%,#161b22 50%,#0d1117 100%)', accent:'#f59e0b', heroBg:'linear-gradient(135deg,#3d1f08 0%,#6b3a10 50%,#3d1f08 100%)', fullDesc:'热血灌篮，NBA/CBA顶级联赛，飞人对决'},
+  {name:'羽毛球', icon:'🏸', desc:'羽球翻飞竞技', gradient:'linear-gradient(135deg,#1e6b3a,#27ae60)', bg:'linear-gradient(180deg,#0a1f12 0%,#161b22 50%,#0d1117 100%)', accent:'#27ae60', heroBg:'linear-gradient(135deg,#0d3325 0%,#1a5c40 50%,#0d3325 100%)', fullDesc:'羽球翻飞，汤尤杯、世锦赛，速度与技巧的完美结合'},
+  {name:'乒乓球', icon:'🏓', desc:'国球巅峰对决', gradient:'linear-gradient(135deg,#9c2d1e,#dc2626)', bg:'linear-gradient(180deg,#1f0a08 0%,#161b22 50%,#0d1117 100%)', accent:'#ef4444', heroBg:'linear-gradient(135deg,#3d0f0a 0%,#6b1a10 50%,#3d0f0a 100%)', fullDesc:'国球巅峰，WTT世乒赛，中国军团雄霸世界'},
+  {name:'网球', icon:'🎾', desc:'红土草地硬地', gradient:'linear-gradient(135deg,#a8820c,#eab308)', bg:'linear-gradient(180deg,#1f1a05 0%,#161b22 50%,#0d1117 100%)', accent:'#eab308', heroBg:'linear-gradient(135deg,#3d3208 0%,#6b5810 50%,#3d3208 100%)', fullDesc:'四大满贯，红土草地硬地，球王争霸'},
+  {name:'橄榄球', icon:'🏉', desc:'力量碰撞之美', gradient:'linear-gradient(135deg,#5c3a1a,#8b5a2b)', bg:'linear-gradient(180deg,#1a1208 0%,#161b22 50%,#0d1117 100%)', accent:'#a16207', heroBg:'linear-gradient(135deg,#332510 0%,#553d1a 50%,#332510 100%)', fullDesc:'力量碰撞，NFL超级碗，美式足球的激情'},
+  {name:'赛车', icon:'🏎️', desc:'速度与激情', gradient:'linear-gradient(135deg,#7a0a10,#dc143c)', bg:'linear-gradient(180deg,#1f0508 0%,#161b22 50%,#0d1117 100%)', accent:'#dc2626', heroBg:'linear-gradient(135deg,#3d0a10 0%,#6b1018 50%,#3d0a10 100%)', fullDesc:'速度与激情，F1大奖赛，引擎轰鸣的极限运动'},
+  {name:'排球', icon:'🏐', desc:'网前高空博弈', gradient:'linear-gradient(135deg,#1e3a5f,#3b82f6)', bg:'linear-gradient(180deg,#0a1528 0%,#161b22 50%,#0d1117 100%)', accent:'#3b82f6', heroBg:'linear-gradient(135deg,#0d2040 0%,#1a3a6a 50%,#0d2040 100%)', fullDesc:'网前高空博弈，世界联赛，中国女排的荣耀'},
+  {name:'棒球', icon:'⚾', desc:'投打跑守全才', gradient:'linear-gradient(135deg,#8b6914,#ca8a04)', bg:'linear-gradient(180deg,#1f1a05 0%,#161b22 50%,#0d1117 100%)', accent:'#ca8a04', heroBg:'linear-gradient(135deg,#3d3208 0%,#6b5810 50%,#3d3208 100%)', fullDesc:'投打跑守，MLB美职棒，智慧与力量的对决'},
+  {name:'高尔夫', icon:'⛳', desc:'优雅精准之道', gradient:'linear-gradient(135deg,#166b16,#22c55e)', bg:'linear-gradient(180deg,#0a1f0a 0%,#161b22 50%,#0d1117 100%)', accent:'#22c55e', heroBg:'linear-gradient(135deg,#0d3315 0%,#1a5c28 50%,#0d3315 100%)', fullDesc:'优雅精准，大师赛公开赛，绅士的运动'},
+  {name:'游泳', icon:'🏊', desc:'碧波竞速飞鱼', gradient:'linear-gradient(135deg,#0c6b9c,#0ea5e9)', bg:'linear-gradient(180deg,#051828 0%,#161b22 50%,#0d1117 100%)', accent:'#0ea5e9', heroBg:'linear-gradient(135deg,#082a4a 0%,#104a7a 50%,#082a4a 100%)', fullDesc:'碧波竞速，奥运世锦赛，飞鱼们的水中较量'},
+  {name:'电竞', icon:'🎮', desc:'数字竞技新时代', gradient:'linear-gradient(135deg,#5c1a8b,#9333ea)', bg:'linear-gradient(180deg,#150a28 0%,#161b22 50%,#0d1117 100%)', accent:'#a855f7', heroBg:'linear-gradient(135deg,#2a0d4a 0%,#4a1a7a 50%,#2a0d4a 100%)', fullDesc:'数字竞技，S赛TI赛，新时代的体育精神'}
+];
+
+// 投票向导数据
+const wizardSports = [
+  {key:'足球', icon:'⚽'},{key:'篮球', icon:'🏀'},{key:'羽毛球', icon:'🏸'},
+  {key:'乒乓球', icon:'🏓'},{key:'网球', icon:'🎾'}
+];
+const wizardTeams = {
+  '足球':[
+    {name:'皇家马德里', logo:'👑'},{name:'巴塞罗那', logo:'🔵🔴'},
+    {name:'曼联', logo:'🔴'},{name:'利物浦', logo:'🔴'},
+    {name:'拜仁慕尼黑', logo:'🔴'},{name:'巴黎圣日耳曼', logo:'🔵🔴'},
+    {name:'曼城', logo:'🔵'},{name:'阿森纳', logo:'🔴'}
+  ],
+  '篮球':[
+    {name:'洛杉矶湖人', logo:'💜💛'},{name:'金州勇士', logo:'💙💛'},
+    {name:'波士顿凯尔特人', logo:'☘️'},{name:'芝加哥公牛', logo:'🐂'},
+    {name:'迈阿密热火', logo:'🔥'},{name:'密尔沃基雄鹿', logo:'🦌'},
+    {name:'丹佛掘金', logo:'⛏️'},{name:'菲尼克斯太阳', logo:'☀️'}
+  ],
+  '羽毛球':[
+    {name:'中国羽毛球队', logo:'🇨🇳'},{name:'印尼羽毛球队', logo:'🇮🇩'},
+    {name:'丹麦羽毛球队', logo:'🇩🇰'},{name:'日本羽毛球队', logo:'🇯🇵'},
+    {name:'韩国羽毛球队', logo:'🇰🇷'},{name:'马来西亚羽毛球队', logo:'🇲🇾'}
+  ],
+  '乒乓球':[
+    {name:'中国乒乓球队', logo:'🇨🇳'},{name:'日本乒乓球队', logo:'🇯🇵'},
+    {name:'德国乒乓球队', logo:'🇩🇪'},{name:'韩国乒乓球队', logo:'🇰🇷'},
+    {name:'瑞典乒乓球队', logo:'🇸🇪'},{name:'法国乒乓球队', logo:'🇫🇷'}
+  ],
+  '网球':[
+    {name:'塞尔维亚队', logo:'🇷🇸'},{name:'西班牙队', logo:'🇪🇸'},
+    {name:'意大利队', logo:'🇮🇹'},{name:'俄罗斯队', logo:'🇷🇺'},
+    {name:'美国队', logo:'🇺🇸'},{name:'波兰队', logo:'🇵🇱'}
+  ]
+};
+
+// ===== 工具函数 =====
+function showToast(msg, type='') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+  setTimeout(() => { toast.className = 'toast ' + type; }, 2500);
+}
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function formatTime(seconds) {
+  if (!seconds || isNaN(seconds)) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// ===== API 请求 =====
+async function apiGet(url) {
+  try {
+    // 静态预览模式：从本地JSON读取
+    const staticMap = {
+      '/api/news': 'data/news.json',
+      '/api/athletes': 'data/athletes.json',
+      '/api/standings': 'data/standings.json',
+      '/api/morning-briefing': 'data/morning_briefing.json'
+    };
+    // 新闻详情：从本地数据查找
+    const newsMatch = url.match(/^\/api\/news\/(.+)$/);
+    if (newsMatch) {
+      const allData = await fetch('data/news.json').then(r => r.json());
+      const article = (allData.articles || []).find(a => a.id === newsMatch[1]);
+      return article || { success: false, error: '未找到' };
+    }
+    const localUrl = staticMap[url] || url;
+    const res = await fetch(localUrl);
+    return await res.json();
+  } catch (e) {
+    console.error('数据加载失败:', url, e);
+    return { success: false, error: e.message };
+  }
+}
+
+async function apiPost(url) {
+  // 静态预览模式：不支持实时刷新
+  return { status: 'static', message: '静态预览模式不支持实时刷新，请部署完整后端版本' };
+}
+
+// ===== 数据加载 =====
+async function loadAllData() {
+  console.log('[Overtime] 加载全部数据...');
+  const [newsRes, athletesRes, standingsRes, morningRes] = await Promise.all([
+    apiGet('/api/news'),
+    apiGet('/api/athletes'),
+    apiGet('/api/standings'),
+    apiGet('/api/morning-briefing')
+  ]);
+  
+  allNews = newsRes.articles || [];
+  allAthletes = athletesRes.athletes || [];
+  allStandings = standingsRes.standings || {};
+  morningBriefing = morningRes;
+  
+  console.log('[Overtime] 数据加载完成:', 
+    allNews.length, '条新闻,', 
+    allAthletes.length, '名运动员,',
+    Object.keys(allStandings).length, '个运动积分榜');
+  dataLoaded = true;
+  
+  return { allNews, allAthletes, allStandings, morningBriefing };
+}
+
+// ===== 封面 → 投票 =====
+function enterVote() {
+  const flash = document.getElementById('flashOverlay');
+  flash.classList.add('active');
+  setTimeout(() => {
+    document.getElementById('coverView').classList.remove('active');
+    showView('voteView');
+    initVote();
+    setTimeout(() => flash.classList.remove('active'), 600);
+  }, 350);
+}
+
+async function skipVote() {
+  await ensureData();
+  showView('homeView');
+  renderHome();
+}
+
+// ===== 投票逻辑 =====
+function initVote() {
+  voteStep = 1;
+  selectedSport = '';
+  selectedTeam = null;
+  updateVoteUI();
+  renderVoteSports();
+}
+
+function renderVoteSports() {
+  const container = document.getElementById('vSportCards');
+  container.innerHTML = '';
+  wizardSports.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'sport-card-select' + (selectedSport === s.key ? ' selected' : '');
+    card.onclick = () => {
+      selectedSport = s.key;
+      renderVoteSports();
+      document.getElementById('vNextBtn').disabled = false;
+    };
+    card.innerHTML = '<div class="icon">' + s.icon + '</div><div class="name">' + s.key + '</div>';
+    container.appendChild(card);
+  });
+}
+
+function renderVoteTeams() {
+  const teams = wizardTeams[selectedSport] || [];
+  document.getElementById('vstep2Desc').textContent = '第二步：选择你支持的' + selectedSport + '球队';
+  const list = document.getElementById('vTeamList');
+  list.innerHTML = '';
+  // 模拟热度数据
+  const sorted = teams.slice().sort(() => Math.random() - 0.5);
+  teams.forEach((t, i) => {
+    const votes = 5000 + Math.floor(Math.random() * 5000);
+    const rank = sorted.findIndex(x => x.name === t.name) + 1;
+    const option = document.createElement('div');
+    option.className = 'team-option' + (selectedTeam && selectedTeam.name === t.name ? ' selected' : '');
+    option.onclick = () => {
+      selectedTeam = { ...t, votes, rank };
+      renderVoteTeams();
+      document.getElementById('vNextBtn').disabled = false;
+    };
+    option.innerHTML = '<div class="team-option-logo">' + t.logo + '</div>'
+      + '<div class="team-option-info">'
+      + '<div class="team-option-name">' + t.name + '</div>'
+      + '<div class="team-option-votes">热度 <strong>' + votes + '</strong> · 排名第' + rank + '</div></div>'
+      + '<div class="team-option-check">' + (selectedTeam && selectedTeam.name === t.name ? '✓' : '') + '</div>';
+    list.appendChild(option);
+  });
+}
+
+function updateVoteUI() {
+  document.querySelectorAll('#voteView .step-item').forEach((item, i) => {
+    item.classList.remove('active', 'done');
+    if (i + 1 < voteStep) item.classList.add('done');
+    else if (i + 1 === voteStep) item.classList.add('active');
+  });
+  document.getElementById('line1').style.width = voteStep > 1 ? '100%' : '0%';
+  document.getElementById('line2').style.width = voteStep > 2 ? '100%' : '0%';
+  document.querySelectorAll('.vote-step').forEach(s => s.classList.remove('active'));
+  if (voteStep <= 3) document.getElementById('vstep' + voteStep).classList.add('active');
+  else document.getElementById('vstepSuccess').classList.add('active');
+  document.getElementById('vPrevBtn').disabled = voteStep <= 1;
+  const nextBtn = document.getElementById('vNextBtn');
+  if (voteStep === 1) { nextBtn.textContent = '下一步'; nextBtn.className = 'nav-btn nav-btn-next'; nextBtn.disabled = !selectedSport; }
+  else if (voteStep === 2) { nextBtn.textContent = '下一步'; nextBtn.className = 'nav-btn nav-btn-next'; nextBtn.disabled = !selectedTeam; }
+  else if (voteStep === 3) { nextBtn.textContent = '确认设定'; nextBtn.className = 'nav-btn nav-btn-submit'; nextBtn.disabled = false; }
+  else { nextBtn.textContent = '进入首页'; nextBtn.className = 'nav-btn nav-btn-submit'; nextBtn.disabled = false; }
+}
+
+async function voteNext() {
+  if (voteStep === 1) { voteStep = 2; renderVoteTeams(); }
+  else if (voteStep === 2) {
+    voteStep = 3;
+    document.getElementById('vConfirmLogo').textContent = selectedTeam.logo;
+    document.getElementById('vConfirmName').textContent = selectedTeam.name;
+    document.getElementById('vConfirmSport').textContent = selectedSport;
+    document.getElementById('vConfirmVotes').textContent = selectedTeam.votes;
+    document.getElementById('vConfirmRank').textContent = '第' + selectedTeam.rank + '名';
+    setTimeout(() => { document.getElementById('vConfirmBar').style.width = Math.min(100, selectedTeam.votes / 100) + '%'; }, 300);
+  }
+  else if (voteStep === 3) {
+    myTeam = { ...selectedTeam, sport: selectedSport };
+    localStorage.setItem('ot_myTeam', JSON.stringify(myTeam));
+    document.getElementById('vSuccessTeam').textContent = selectedTeam.name;
+    voteStep = 4;
+  }
+  else {
+    await ensureData();
+    showView('homeView');
+    renderHome();
+    return;
+  }
+  updateVoteUI();
+}
+
+function votePrev() {
+  if (voteStep > 1) {
+    voteStep--;
+    updateVoteUI();
+    if (voteStep === 1) renderVoteSports();
+    if (voteStep === 2) renderVoteTeams();
+  }
+}
+
+function changeTeam() {
+  myTeam = null;
+  localStorage.removeItem('ot_myTeam');
+  goVote();
+}
+
+function goVote() {
+  showView('voteView');
+  initVote();
+}
+
+async function goHome() {
+  await ensureData();
+  showView('homeView');
+  renderHome();
+}
+
+// ===== 首页渲染 =====
+function renderHome() {
+  // 设置日期
+  const now = new Date();
+  const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  document.getElementById('heroDate').textContent = 
+    now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 ' + weekdays[now.getDay()];
+  
+  renderNews();
+  renderSports();
+  renderMyTeamBar();
+  renderMorningBriefing();
+  renderBlindBoxState();
+}
+
+function renderBlindBoxState() {
+  if (localStorage.getItem('ot_blindBoxDate') === new Date().toDateString()) {
+    document.getElementById('blindboxBtn').disabled = true;
+    document.getElementById('blindboxResult').textContent = '⏰ 今日已抽取';
+  }
+}
+
+// 新闻渲染（主队优先）
+function renderNews() {
+  const track = document.getElementById('tickerTrack');
+  if (!allNews || allNews.length === 0) {
+    track.innerHTML = '<div class="loading-skeleton" style="padding:0 20px">暂无新闻数据，点击右上角刷新</div>';
+    return;
+  }
+  
+  // 主队优先排序
+  let sortedNews = [...allNews];
+  if (myTeam) {
+    const teamKeywords = [myTeam.name, myTeam.sport];
+    sortedNews.sort((a, b) => {
+      const aMatch = teamKeywords.some(kw => a.title.includes(kw)) ? 1 : 0;
+      const bMatch = teamKeywords.some(kw => b.title.includes(kw)) ? 1 : 0;
+      return bMatch - aMatch;
+    });
+  }
+  
+  let html = '';
+  // 复制两份用于无缝滚动
+  for (let copy = 0; copy < 2; copy++) {
+    sortedNews.forEach((n, idx) => {
+      const isTeamNews = myTeam && (n.title.includes(myTeam.name) || n.title.includes(myTeam.sport));
+      html += '<div class="ticker-news" onclick="showNews(\'' + n.id + '\')">'
+        + (isTeamNews ? '<span style="background:linear-gradient(135deg,#22c55e,#16a34a)" class="ticker-cat">⭐ 主队</span>' : '')
+        + '<span class="ticker-cat">' + n.category + '</span>'
+        + '<span class="ticker-text">' + escapeHtml(n.title) + '</span>'
+        + '<span class="ticker-time">' + (n.time || '刚刚') + '</span></div>';
+    });
+  }
+  track.innerHTML = html;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showNews(newsId) {
+  const n = allNews.find(a => a.id === newsId);
+  if (!n) return;
+  document.getElementById('newsModalCat').textContent = n.category;
+  document.getElementById('newsModalTitle').textContent = n.title;
+  document.getElementById('newsModalTime').textContent = n.time || '刚刚';
+  document.getElementById('newsModalSource').textContent = n.source || 'Overtime';
+  currentNewsSourceUrl = n.source_url || '';
+  document.getElementById('newsModalSourceLink').style.display = currentNewsSourceUrl ? 'inline' : 'none';
+  // 正文转段落
+  const content = n.content || '';
+  const paragraphs = content.split('\n').filter(p => p.trim().length > 0);
+  document.getElementById('newsModalContent').innerHTML = paragraphs.map(p => '<p>' + escapeHtml(p) + '</p>').join('');
+  document.getElementById('newsModal').classList.add('show');
+}
+
+function openNewsSource() {
+  if (currentNewsSourceUrl) {
+    window.open(currentNewsSourceUrl, '_blank');
+  }
+}
+
+function closeNewsModal() { document.getElementById('newsModal').classList.remove('show'); }
+
+function renderSports() {
+  const grid = document.getElementById('sportsGrid');
+  grid.innerHTML = '';
+  sportsData.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'sport-card';
+    card.style.background = s.gradient;
+    card.onclick = () => enterSport(s.name);
+    card.innerHTML = '<div class="icon">' + s.icon + '</div>'
+      + '<div class="name">' + s.name + '</div>'
+      + '<div class="desc">' + s.desc + '</div>'
+      + '<div class="enter-hint">点击进入专区 →</div>';
+    grid.appendChild(card);
+  });
+}
+
+function renderMyTeamBar() {
+  const bar = document.getElementById('myTeamBar');
+  if (myTeam) {
+    // 统计主队相关新闻数
+    const teamNewsCount = allNews.filter(n => 
+      n.title.includes(myTeam.name) || n.category === myTeam.sport
+    ).length;
+    bar.innerHTML = '<div class="my-team-bar">'
+      + '<div class="my-team-logo">' + myTeam.logo + '</div>'
+      + '<div class="my-team-info">'
+      + '<div class="my-team-label">MY TEAM · 我的主队</div>'
+      + '<div class="my-team-name">' + myTeam.name + '</div>'
+      + '<div class="my-team-meta">' + myTeam.sport + ' · 今日相关资讯 ' + teamNewsCount + ' 条</div></div>'
+      + '<button class="change" onclick="changeTeam()">更换主队</button></div>';
+  } else {
+    bar.innerHTML = '<div class="my-team-bar"><div class="my-team-bar-empty">'
+      + '<p>还没有设定我的主队，设定后首页将优先展示该队相关资讯</p>'
+      + '<button onclick="goVote()">去设定主队</button></div></div>';
+  }
+}
+
+// ===== 早间新闻语音播报 =====
+function renderMorningBriefing() {
+  const itemsEl = document.getElementById('morningItems');
+  const dateEl = document.getElementById('morningDate');
+  
+  if (!morningBriefing || !morningBriefing.text) {
+    dateEl.textContent = '暂无早报数据';
+    itemsEl.innerHTML = '<div class="loading-skeleton">早报生成中，请稍后刷新<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>';
+    document.getElementById('playBtn').disabled = true;
+    return;
+  }
+  
+  dateEl.textContent = morningBriefing.date || '';
+  document.getElementById('playBtn').disabled = !morningBriefing.audio_available;
+  
+  // 渲染早报条目
+  const articles = morningBriefing.articles || [];
+  if (articles.length > 0) {
+    itemsEl.innerHTML = articles.map((a, i) => 
+      '<div class="morning-item">'
+      + '<span class="num">' + (i + 1) + '</span>'
+      + '<span class="cat">' + (a.category || '综合') + '</span>'
+      + '<span class="title">' + escapeHtml(a.title) + '</span></div>'
+    ).join('');
+  } else {
+    itemsEl.innerHTML = '<div class="morning-item"><span class="title" style="color:rgba(255,255,255,0.4)">暂无早报条目</span></div>';
+  }
+  
+  // 设置音频源
+  const audio = document.getElementById('morningAudio');
+  if (morningBriefing.audio_url) {
+    audio.src = morningBriefing.audio_url;
+  }
+}
+
+function togglePlay() {
+  const audio = document.getElementById('morningAudio');
+  const btn = document.getElementById('playBtn');
+  
+  if (audioPlaying) {
+    audio.pause();
+    audioPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    if (!audio.src) {
+      showToast('语音文件暂不可用，请稍后刷新', 'error');
+      return;
+    }
+    audio.play().then(() => {
+      audioPlaying = true;
+      btn.textContent = '⏸';
+      btn.classList.add('playing');
+    }).catch(e => {
+      console.error('播放失败:', e);
+      showToast('播放失败，请刷新重试', 'error');
+    });
+  }
+}
+
+function seekAudio(event) {
+  const audio = document.getElementById('morningAudio');
+  if (!audio.duration) return;
+  const bar = event.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const percent = (event.clientX - rect.left) / rect.width;
+  audio.currentTime = percent * audio.duration;
+}
+
+// 音频事件
+document.addEventListener('DOMContentLoaded', () => {
+  const audio = document.getElementById('morningAudio');
+  if (audio) {
+    audio.addEventListener('timeupdate', () => {
+      const fill = document.getElementById('playerBarFill');
+      const current = document.getElementById('playerCurrent');
+      if (fill) fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+      if (current) current.textContent = formatTime(audio.currentTime);
+    });
+    audio.addEventListener('loadedmetadata', () => {
+      document.getElementById('playerDuration').textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener('ended', () => {
+      audioPlaying = false;
+      document.getElementById('playBtn').textContent = '▶';
+      document.getElementById('playBtn').classList.remove('playing');
+      document.getElementById('playerBarFill').style.width = '0%';
+      document.getElementById('playerCurrent').textContent = '0:00';
+    });
+  }
+});
+
+// ===== 刷新新闻 =====
+async function refreshNews() {
+  const btn = document.getElementById('refreshNewsBtn');
+  const icon = document.getElementById('refreshNewsIcon');
+  btn.classList.add('refreshing');
+  icon.classList.add('spin');
+  showToast('正在刷新新闻数据...');
+  
+  try {
+    const result = await apiPost('/api/refresh/news');
+    if (result.status === 'success') {
+      // 重新加载数据
+      const newsRes = await apiGet('/api/news');
+      allNews = newsRes.articles || [];
+      renderNews();
+      renderMyTeamBar();
+      showToast('新闻刷新成功，共 ' + allNews.length + ' 条', 'success');
+    } else {
+      showToast('刷新失败: ' + (result.message || '未知错误'), 'error');
+    }
+  } catch (e) {
+    showToast('刷新失败: ' + e.message, 'error');
+  } finally {
+    btn.classList.remove('refreshing');
+    icon.classList.remove('spin');
+  }
+}
+
+// ===== 运动专区 =====
+function enterSport(sportName) {
+  currentSport = sportName;
+  const sport = sportsData.find(s => s.name === sportName);
+  if (!sport) return;
+  
+  document.getElementById('sportView').style.background = sport.bg;
+  const hero = document.getElementById('sportHero');
+  hero.style.background = sport.heroBg;
+  document.getElementById('sportHeroIcon').textContent = sport.icon;
+  document.getElementById('sportHeroTitle').textContent = sport.name + '专区';
+  document.getElementById('sportHeroDesc').textContent = sport.fullDesc;
+  
+  renderSportContent(sport);
+  showView('sportView');
+}
+
+function renderSportContent(sport) {
+  const container = document.getElementById('sportContent');
+  let html = '';
+  const accent = sport.accent;
+  
+  // 联赛积分榜
+  const sportStandings = allStandings[sport.name] || {};
+  const leagueNames = Object.keys(sportStandings);
+  if (leagueNames.length > 0) {
+    html += '<div class="league-section">'
+      + '<h2 style="border-color:' + accent + ';color:#fff">🏆 联赛积分榜</h2>'
+      + '<div class="league-grid">';
+    leagueNames.forEach(lgName => {
+      const teams = sportStandings[lgName] || [];
+      html += '<div class="league-card" onclick="showRank(\'' + lgName + '\', \'' + sport.name + '\')">'
+        + '<div class="league-icon">📊</div>'
+        + '<div class="league-name">' + lgName + '</div>'
+        + '<div class="league-desc">' + teams.length + ' 支球队 · 点击查看积分榜</div></div>';
+    });
+    html += '</div></div>';
+  }
+  
+  // 圈内明星（从真实运动员数据中筛选）
+  const stars = allAthletes.filter(a => a.sport === sport.name);
+  if (stars.length > 0) {
+    html += '<div class="stars-section">'
+      + '<h2 style="border-color:' + accent + ';color:#fff">🌟 圈内明星</h2>'
+      + '<div class="stars-grid">';
+    stars.forEach((star, idx) => {
+      const photoHtml = star.photo 
+        ? '<img class="star-photo" src="' + star.photo + '" alt="' + star.name + '" onerror="this.style.background=\'#2a3a50\';this.src=\'\';">'
+        : '<div class="star-photo" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:rgba(255,255,255,0.3)">👤</div>';
+      html += '<div class="star-card" onclick="showStar(\'' + sport.name + '\',' + idx + ')">'
+        + photoHtml
+        + '<div class="star-name">' + star.name + '</div>'
+        + '<div class="star-pos">' + (star.position || '') + '</div></div>';
+    });
+    html += '</div></div>';
+  }
+  
+  // 该运动相关新闻
+  const sportNews = allNews.filter(n => n.category === sport.name);
+  if (sportNews.length > 0) {
+    html += '<div class="league-section">'
+      + '<h2 style="border-color:' + accent + ';color:#fff">📰 ' + sport.name + '资讯</h2>'
+      + '<div class="legends-grid">';
+    sportNews.slice(0, 6).forEach(n => {
+      html += '<div class="legend-card" onclick="showNews(\'' + n.id + '\')" style="cursor:pointer">'
+        + '<div style="width:48px;height:48px;border-radius:12px;background:rgba(249,115,22,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">📰</div>'
+        + '<div class="legend-info">'
+        + '<div class="legend-name" style="font-size:0.95rem">' + escapeHtml(n.title.substring(0, 30)) + (n.title.length > 30 ? '...' : '') + '</div>'
+        + '<div class="legend-era" style="color:#8b949e">' + (n.time || '刚刚') + ' · ' + (n.source || '') + '</div>'
+        + '<div class="legend-desc">' + escapeHtml((n.content || '').substring(0, 60)) + '...</div></div></div>';
+    });
+    html += '</div></div>';
+  }
+  
+  if (!html) {
+    html = '<div style="text-align:center;padding:50px 20px;color:rgba(255,255,255,0.4)">'
+      + '<div style="font-size:3.5rem;margin-bottom:14px">' + sport.icon + '</div>'
+      + '<div style="font-size:1.1rem">' + sport.name + '专区数据加载中，请刷新首页后重试</div></div>';
+  }
+  
+  container.innerHTML = html;
+}
+
+// 当前运动的明星列表（用于弹窗索引）
+let currentSportStars = [];
+
+function showStar(sportName, idx) {
+  currentSportStars = allAthletes.filter(a => a.sport === sportName);
+  const star = currentSportStars[idx];
+  if (!star) return;
+  
+  if (star.photo) {
+    document.getElementById('modalStarImg').src = star.photo;
+    document.getElementById('modalStarImg').style.display = '';
+  } else {
+    document.getElementById('modalStarImg').src = '';
+    document.getElementById('modalStarImg').style.display = 'none';
+  }
+  document.getElementById('modalStarName').textContent = star.name;
+  document.getElementById('modalStarPos').textContent = star.position || '';
+  
+  // 元信息
+  const metaEl = document.getElementById('modalStarMeta');
+  let metaHtml = '';
+  if (star.nationality) metaHtml += '<span>🌍 ' + star.nationality + '</span>';
+  if (star.birth) metaHtml += '<span>🎂 ' + star.birth + '</span>';
+  metaHtml += '<span>🏅 ' + star.sport + '</span>';
+  metaEl.innerHTML = metaHtml;
+  
+  document.getElementById('modalStarDesc').textContent = star.bio || '暂无简介';
+  
+  currentStarBaikeUrl = star.baike_url || ('https://baike.baidu.com/item/' + encodeURIComponent(star.name));
+  document.getElementById('starModal').classList.add('show');
+}
+
+function openBaike() {
+  if (currentStarBaikeUrl) {
+    window.open(currentStarBaikeUrl, '_blank');
+  }
+}
+
+function closeStarModal() { document.getElementById('starModal').classList.remove('show'); }
+
+// ===== 排行榜 =====
+function showRank(leagueName, sportName) {
+  document.getElementById('rankTitle').textContent = leagueName + ' · 积分榜';
+  const body = document.getElementById('rankBody');
+  const teams = (allStandings[sportName] && allStandings[sportName][leagueName]) || [];
+  
+  if (teams.length === 0) {
+    body.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,0.4)">暂无积分数据</td></tr>';
+  } else {
+    body.innerHTML = teams.map((r, i) => {
+      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+      return '<tr>'
+        + '<td><div class="rank-num ' + rankClass + '">' + (r.rank || i + 1) + '</div></td>'
+        + '<td class="rank-team">' + r.team + '</td>'
+        + '<td>' + (r.played || '-') + '</td>'
+        + '<td class="rank-points">' + (r.points || '-') + '</td></tr>';
+    }).join('');
+  }
+  document.getElementById('rankModal').classList.add('show');
+}
+
+function closeRank() { document.getElementById('rankModal').classList.remove('show'); }
+
+// ===== 盲盒 =====
+function drawBlindBox() {
+  const btn = document.getElementById('blindboxBtn');
+  const result = document.getElementById('blindboxResult');
+  const today = new Date().toDateString();
+  
+  if (localStorage.getItem('ot_blindBoxDate') === today) {
+    result.textContent = '⏰ 今日已抽取';
+    btn.disabled = true;
+    return;
+  }
+  
+  if (allAthletes.length === 0) {
+    showToast('运动员数据加载中，请稍后再试', 'error');
+    return;
+  }
+  
+  btn.disabled = true;
+  let count = 0;
+  const shuffle = setInterval(() => {
+    const r = allAthletes[Math.floor(Math.random() * allAthletes.length)];
+    result.textContent = '🎲 抽取中... ' + r.name;
+    count++;
+    if (count > 18) {
+      clearInterval(shuffle);
+      const star = allAthletes[Math.floor(Math.random() * allAthletes.length)];
+      result.textContent = '🎉 抽中：' + star.name;
+      localStorage.setItem('ot_blindBoxDate', today);
+      setTimeout(() => {
+        // 直接展示明星弹窗
+        currentSportStars = [star];
+        if (star.photo) {
+          document.getElementById('modalStarImg').src = star.photo;
+          document.getElementById('modalStarImg').style.display = '';
+        } else {
+          document.getElementById('modalStarImg').style.display = 'none';
+        }
+        document.getElementById('modalStarName').textContent = star.name;
+        document.getElementById('modalStarPos').textContent = star.position || '';
+        const metaEl = document.getElementById('modalStarMeta');
+        let metaHtml = '';
+        if (star.nationality) metaHtml += '<span>🌍 ' + star.nationality + '</span>';
+        if (star.birth) metaHtml += '<span>🎂 ' + star.birth + '</span>';
+        metaHtml += '<span>🏅 ' + star.sport + '</span>';
+        metaEl.innerHTML = metaHtml;
+        document.getElementById('modalStarDesc').textContent = star.bio || '暂无简介';
+        currentStarBaikeUrl = star.baike_url || ('https://baike.baidu.com/item/' + encodeURIComponent(star.name));
+        document.getElementById('starModal').classList.add('show');
+      }, 500);
+    }
+  }, 65);
+}
+
+// 点击遮罩关闭
+document.getElementById('starModal').addEventListener('click', function (e) { if (e.target === this) closeStarModal(); });
+document.getElementById('newsModal').addEventListener('click', function (e) { if (e.target === this) closeNewsModal(); });
+document.getElementById('rankModal').addEventListener('click', function (e) { if (e.target === this) closeRank(); });
+
+// ===== 初始化 =====
+window.addEventListener('load', async () => {
+  console.log('[Overtime] 页面加载完成，开始初始化...');
+  await loadAllData();
+  console.log('[Overtime] 初始化完成');
+});
+</script>
+</body>
+</html>

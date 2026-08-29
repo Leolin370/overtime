@@ -1,0 +1,82 @@
+{
+  "source": "网络抓取",
+  "scraped_at": "2026-08-29 16:29:52",
+  "standings": {
+    "篮球": {
+      "NBA": [
+        {
+          "rank": 1,
+          "team": "步行者",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 2,
+          "team": "尼克斯",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 3,
+          "team": "公牛",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 4,
+          "team": "骑士",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 5,
+          "team": "活塞",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 6,
+          "team": "雄鹿",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 7,
+          "team": "奇才",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 8,
+          "team": "黄蜂",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        },
+        {
+          "rank": 9,
+          "team": "老鹰",
+          "played": 0,
+          "wins": 0,
+          "losses": 0,
+          "points": 0
+        }
+      ]
+    }
+  }
+}
