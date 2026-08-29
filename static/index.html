@@ -35,10 +35,10 @@ a{color:inherit;text-decoration:none}
 .cover-grid{position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:50px 50px;z-index:0;pointer-events:none;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
 .cover-content{position:relative;z-index:10;text-align:center;padding:20px;max-width:700px;animation:coverFadeIn 1s ease-out}
 @keyframes coverFadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.cover-logo{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:28px}
-.cover-logo .ot-logo-mark{width:56px;height:56px}
-.cover-logo .ot-logo-text{font-size:2.2rem;letter-spacing:3px}
-.cover-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:7px 18px;border-radius:30px;font-size:0.8rem;font-weight:600;letter-spacing:2px;margin-bottom:24px}
+.cover-logo{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:32px}
+.cover-logo .ot-logo-mark{width:80px;height:80px;filter:drop-shadow(0 0 24px rgba(249,115,22,0.35))}
+.cover-logo .ot-logo-text{font-size:clamp(3.2rem,11vw,6.5rem);font-weight:900;letter-spacing:5px;background:linear-gradient(135deg,#ffffff 0%,#f0f6fc 40%,#fb923c 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:0 0 60px rgba(249,115,22,0.15)}
+.cover-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:#fb923c;padding:8px 22px;border-radius:30px;font-size:0.85rem;font-weight:600;letter-spacing:3px;margin-bottom:28px}
 .cover-badge .dot{width:7px;height:7px;border-radius:50%;background:#f97316;animation:coverBlink 1.2s ease-in-out infinite}
 @keyframes coverBlink{0%,100%{opacity:1}50%{opacity:0.3}}
 .cover-title{font-size:clamp(2.5rem,8vw,5rem);font-weight:900;letter-spacing:6px;line-height:1.15;margin-bottom:6px;color:#f0f6fc}
@@ -368,7 +368,6 @@ a{color:inherit;text-decoration:none}
       <div class="ot-logo-text">Over<span class="accent">time</span></div>
     </div>
     <div class="cover-badge"><span class="dot"></span>SPORTS PANORAMA</div>
-    <h1 class="cover-title">体坛风云</h1>
     <div class="cover-sub-en">REAL-TIME SPORTS DATA &amp; NEWS</div>
     <p class="cover-slogan">汇聚<span class="hl">12大运动</span> · 真实赛事数据 · 明星百科</p>
     <div class="cover-icons">
