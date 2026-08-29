@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="no-referrer">
-<title>Overtime · 体坛风云</title>
+<title>Overtime · 加时赛</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif}
 body{background:#0d1117;color:#e6edf3;min-height:100vh;overflow-x:hidden}
@@ -15,14 +14,16 @@ a{color:inherit;text-decoration:none}
 @keyframes viewFadeIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 .back-btn{position:fixed;top:20px;left:20px;z-index:100;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:10px 20px;border-radius:30px;font-size:0.9rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:all 0.2s}
 .back-btn:hover{background:rgba(255,255,255,0.12);transform:translateX(-3px)}
-
 /* ===== Overtime Logo ===== */
 .ot-logo{display:flex;align-items:center;gap:10px}
 .ot-logo-mark{width:36px;height:36px;position:relative;flex-shrink:0}
 .ot-logo-mark svg{width:100%;height:100%}
 .ot-logo-text{font-size:1.3rem;font-weight:800;letter-spacing:1px;background:linear-gradient(135deg,#fff,#f0f6fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .ot-logo-text .accent{color:#f97316;-webkit-text-fill-color:#f97316}
-
+.ot-logo-sub{font-size:0.6rem;color:#fb923c;font-weight:700;letter-spacing:2px;margin-top:1px}
+/* ===== 顶部公告 ===== */
+.site-banner{background:linear-gradient(90deg,#1e3a5f,#f97316);color:#fff;text-align:center;padding:7px 16px;font-size:13px;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3);position:relative;z-index:9000}
+.site-banner strong{color:#ffe4c4}
 /* ===== 封面页 ===== */
 #coverView{position:fixed;top:0;left:0;width:100%;height:100vh;background:#0d1117;z-index:9999;align-items:center;justify-content:center;overflow:hidden}
 #coverView.active{display:flex}
@@ -57,7 +58,6 @@ a{color:inherit;text-decoration:none}
 .flash-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center,rgba(255,255,255,0.8) 0%,rgba(249,115,22,0.3) 40%,transparent 70%);z-index:10000;pointer-events:none;opacity:0;transform:scale(0)}
 .flash-overlay.active{animation:flashExpand 0.6s cubic-bezier(0.4,0,0.2,1) forwards}
 @keyframes flashExpand{0%{opacity:0;transform:scale(0)}30%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(2.5)}}
-
 /* ===== 投票页 ===== */
 #voteView{background:linear-gradient(180deg,#0d1117 0%,#161b22 50%,#0d1117 100%);padding:60px 20px 40px;min-height:100vh}
 .vote-container{max-width:860px;margin:0 auto}
@@ -131,43 +131,50 @@ a{color:inherit;text-decoration:none}
 .vote-skip{text-align:center;margin-top:18px}
 .vote-skip button{background:transparent;color:rgba(255,255,255,0.35);border:none;font-size:0.82rem;cursor:pointer;text-decoration:underline}
 .vote-skip button:hover{color:rgba(255,255,255,0.6)}
-
 /* ===== 首页 ===== */
 #homeView{background:linear-gradient(180deg,#0d1117 0%,#161b22 40%,#0d1117 100%)}
-.home-container{max-width:1360px;margin:0 auto;padding:20px 18px 50px}
+.home-container{max-width:1360px;margin:0 auto;padding:20px 18px 60px}
 .home-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
 .home-topbar .ot-logo .ot-logo-mark{width:32px;height:32px}
 .home-topbar .ot-logo .ot-logo-text{font-size:1.1rem}
-.topbar-actions{display:flex;align-items:center;gap:8px}
+.topbar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .topbar-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:8px 16px;border-radius:20px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
 .topbar-btn:hover{background:rgba(249,115,22,0.15);border-color:rgba(249,115,22,0.4);color:#fb923c}
 .topbar-btn.refreshing{opacity:0.6;pointer-events:none}
 .topbar-btn .spin{animation:spin 1s linear infinite}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
 /* 早间新闻播报 */
 .morning-briefing{background:linear-gradient(135deg,#1a1f2e 0%,#161b22 100%);border-radius:24px;padding:24px 28px;border:1px solid rgba(249,115,22,0.2);box-shadow:0 12px 28px rgba(0,0,0,0.3);margin-bottom:20px;position:relative;overflow:hidden}
 .morning-briefing::before{content:'';position:absolute;top:-40%;right:-5%;width:240px;height:240px;background:radial-gradient(circle,rgba(249,115,22,0.1) 0%,transparent 70%);pointer-events:none}
-.morning-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;position:relative;z-index:1}
+.morning-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;position:relative;z-index:1}
 .morning-title-group{display:flex;align-items:center;gap:12px}
 .morning-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(234,88,12,0.1));display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:1px solid rgba(249,115,22,0.3)}
 .morning-title{font-size:1.2rem;font-weight:800;color:#f0f6fc}
 .morning-date{font-size:0.82rem;color:#8b949e;margin-top:2px}
-.morning-player{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
-.play-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);color:white;border:none;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(249,115,22,0.35);transition:all 0.2s;flex-shrink:0}
+.morning-player{display:flex;align-items:center;gap:12px;position:relative;z-index:1;flex:1;min-width:260px;max-width:460px}
+.play-btn{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);color:white;border:none;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(249,115,22,0.35);transition:all 0.2s;flex-shrink:0}
 .play-btn:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(249,115,22,0.45)}
 .play-btn.playing{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 4px 16px rgba(34,197,94,0.35)}
-.player-progress{flex:1;min-width:120px;max-width:280px}
-.player-bar{height:5px;background:rgba(255,255,255,0.1);border-radius:3px;cursor:pointer;position:relative;overflow:hidden}
-.player-bar-fill{height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:3px;width:0%;transition:width 0.3s}
-.player-time{display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:5px}
-.morning-items{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);position:relative;z-index:1;max-height:160px;overflow-y:auto}
+.play-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.player-progress{flex:1;min-width:140px}
+.player-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;cursor:pointer;position:relative;touch-action:none}
+.player-bar-fill{height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:3px;width:0%;position:relative;z-index:1}
+.player-bar-handle{position:absolute;top:50%;left:0;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #f97316;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 8px rgba(249,115,22,0.6);opacity:0;transition:opacity 0.2s;z-index:2}
+.player-bar:hover .player-bar-handle{opacity:1}
+.player-time{display:flex;justify-content:space-between;font-size:0.7rem;color:rgba(255,255,255,0.45);margin-top:5px}
+.player-volume{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.vol-btn{background:none;border:none;color:rgba(255,255,255,0.65);font-size:1.05rem;cursor:pointer;padding:2px}
+.vol-slider{width:64px;height:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.18);border-radius:3px;outline:none;cursor:pointer}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fb923c;cursor:pointer;border:none}
+.vol-slider::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#fb923c;cursor:pointer;border:none}
+.audio-mode-tag{font-size:0.68rem;color:#22c55e;background:rgba(34,197,94,0.12);padding:2px 8px;border-radius:8px;font-weight:700}
+.morning-items{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);position:relative;z-index:1;max-height:168px;overflow-y:auto}
 .morning-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:0.85rem;color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.03)}
 .morning-item:last-child{border-bottom:none}
 .morning-item .num{color:#f97316;font-weight:700;font-size:0.78rem;min-width:20px}
 .morning-item .cat{background:rgba(249,115,22,0.15);color:#fb923c;padding:2px 8px;border-radius:8px;font-size:0.72rem;font-weight:600;flex-shrink:0}
-.morning-item .title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
+.morning-item .title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.morning-item .title:hover{color:#fb923c}
 /* 滚动播报 */
 .breaking-hero{background:linear-gradient(135deg,#161b22 0%,#1c2333 35%,#161b22 70%,#1a2236 100%);border-radius:24px;padding:24px 28px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 20px 40px rgba(0,0,0,0.4);margin-bottom:20px}
 .breaking-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none}
@@ -180,18 +187,17 @@ a{color:inherit;text-decoration:none}
 .hero-date{background:rgba(255,255,255,0.06);padding:8px 16px;border-radius:16px;font-size:0.82rem;color:#fb923c;font-weight:600}
 .ticker-big{position:relative;z-index:1;overflow:hidden;border-radius:16px;background:rgba(0,0,0,0.2);padding:16px 0}
 .ticker-track{display:flex;gap:50px;animation:tickerMove 45s linear infinite;width:max-content;align-items:center}
+.ticker-track.paused{animation-play-state:paused}
 @keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-news{display:flex;align-items:center;gap:12px;flex-shrink:0;cursor:pointer;transition:opacity 0.2s}
 .ticker-news:hover{opacity:0.7}
 .ticker-cat{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:5px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;white-space:nowrap}
 .ticker-text{font-size:1rem;font-weight:600;color:#e6edf3;white-space:nowrap}
 .ticker-time{background:rgba(251,146,60,0.12);color:#fb923c;padding:4px 10px;border-radius:10px;font-size:0.72rem;font-weight:600;white-space:nowrap}
-
 .section-label{font-size:1.25rem;font-weight:800;color:#f0f6fc;padding-left:12px;border-left:4px solid #f97316;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .section-label .sub{font-size:0.78rem;font-weight:400;color:#8b949e;margin-left:8px}
-
 /* 我的主队 */
-.my-team-bar{background:linear-gradient(135deg,#1a1f2e 0%,#1e2a3f 50%,#1a1f2e 100%);border-radius:22px;padding:20px 24px;border:1px solid rgba(249,115,22,0.18);box-shadow:0 12px 24px rgba(0,0,0,0.25);color:white;position:relative;overflow:hidden;margin-bottom:20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.my-team-bar{background:linear-gradient(135deg,#1a1f2e 0%,#1e2a3f 50%,#1a1f2e 100%);border-radius:22px;padding:20px 24px;border:1px solid rgba(249,115,22,0.18);box-shadow:0 12px 24px rgba(0,0,0,0.25);color:white;position:relative;overflow:hidden;margin-bottom:16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .my-team-bar::before{content:'';position:absolute;top:-30%;right:-8%;width:240px;height:240px;background:radial-gradient(circle,rgba(249,115,22,0.1) 0%,transparent 70%);pointer-events:none}
 .my-team-bar-empty{text-align:center;width:100%;padding:8px 0}
 .my-team-bar-empty p{color:rgba(255,255,255,0.45);font-size:0.88rem;margin-bottom:10px}
@@ -203,7 +209,39 @@ a{color:inherit;text-decoration:none}
 .my-team-meta{font-size:0.78rem;color:rgba(255,255,255,0.45)}
 .my-team-bar button.change{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);padding:9px 18px;border-radius:20px;font-weight:700;font-size:0.82rem;cursor:pointer;flex-shrink:0;transition:all 0.2s}
 .my-team-bar button.change:hover{background:rgba(255,255,255,0.14);color:white}
-
+/* 主队专题 */
+.team-panel{background:linear-gradient(135deg,#151b27 0%,#1a2236 100%);border-radius:22px;padding:22px 24px;margin-bottom:20px;border:1px solid rgba(249,115,22,0.22);box-shadow:0 12px 24px rgba(0,0,0,0.25);position:relative;overflow:hidden}
+.team-panel::before{content:'';position:absolute;top:-40%;left:-5%;width:260px;height:260px;background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);pointer-events:none}
+.team-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.team-panel-title{font-size:1.15rem;font-weight:800;color:#f0f6fc;display:flex;align-items:center;gap:10px}
+.team-panel-title .tag{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-size:0.68rem;padding:3px 10px;border-radius:10px;font-weight:700;letter-spacing:1px}
+.tp-collapse{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.12);padding:7px 16px;border-radius:16px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.tp-collapse:hover{background:rgba(255,255,255,0.14);color:#fff}
+.team-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.team-panel-grid{grid-template-columns:1fr}}
+.tp-block{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:16px}
+.tp-block h3{font-size:0.92rem;font-weight:800;color:#f0f6fc;margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.tp-block h3 .more{font-size:0.72rem;color:#8b949e;font-weight:600;margin-left:auto;cursor:pointer}
+.tp-block h3 .more:hover{color:#fb923c}
+.match-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);margin-bottom:7px;font-size:0.84rem}
+.match-row:last-child{margin-bottom:0}
+.match-date{color:#8b949e;font-size:0.72rem;min-width:52px;flex-shrink:0}
+.match-teams{flex:1;display:flex;align-items:center;gap:8px;min-width:0}
+.match-team{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42%;font-weight:600}
+.match-team.home{text-align:right}
+.match-vs{color:rgba(255,255,255,0.3);font-size:0.72rem;flex-shrink:0}
+.match-score{font-weight:800;color:#fb923c;font-size:0.95rem;min-width:34px;text-align:center;flex-shrink:0}
+.match-status{font-size:0.68rem;padding:2px 8px;border-radius:8px;flex-shrink:0}
+.match-status.upcoming{background:rgba(59,130,246,0.15);color:#93c5fd}
+.match-status.ended{background:rgba(34,197,94,0.15);color:#4ade80}
+.match-status.live{background:rgba(239,68,68,0.2);color:#f87171;animation:livePulse 1.5s infinite}
+.tp-news-item{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.82rem;cursor:pointer}
+.tp-news-item:last-child{border-bottom:none}
+.tp-news-item:hover{color:#fb923c}
+.tp-news-item .dot{width:5px;height:5px;border-radius:50%;background:#3b82f6;flex-shrink:0}
+.tp-news-item .txt{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-news-item .tm{font-size:0.7rem;color:#8b949e;flex-shrink:0}
+.tp-empty{padding:14px;text-align:center;color:rgba(255,255,255,0.35);font-size:0.82rem}
 /* 12运动卡片 */
 .sports-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:24px}
 @media(max-width:900px){.sports-grid{grid-template-columns:repeat(4,1fr)}}
@@ -216,7 +254,6 @@ a{color:inherit;text-decoration:none}
 .sport-card .desc{font-size:0.72rem;color:rgba(255,255,255,0.55);line-height:1.3}
 .sport-card .enter-hint{font-size:0.7rem;color:rgba(255,255,255,0.35);margin-top:2px;opacity:0;transition:opacity 0.3s}
 .sport-card:hover .enter-hint{opacity:1}
-
 /* 盲盒 */
 .blindbox-big{background:linear-gradient(145deg,#1a1a2e 0%,#16213e 100%);border-radius:36px;padding:28px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 14px 24px rgba(0,0,0,0.25);border:1px solid rgba(249,115,22,0.18);color:white;margin-bottom:20px}
 .blindbox-info h2{font-size:1.6rem;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:10px}
@@ -225,27 +262,38 @@ a{color:inherit;text-decoration:none}
 .blindbox-btn:hover{transform:scale(1.04)}
 .blindbox-btn:disabled{background:#444;cursor:not-allowed;transform:none;box-shadow:none}
 .blindbox-result-box{background:rgba(255,255,255,0.1);backdrop-filter:blur(6px);padding:12px 22px;border-radius:30px;font-weight:600;min-width:160px;text-align:center;border:1px solid rgba(255,255,255,0.08);font-size:0.9rem}
-.footer-text{text-align:center;color:rgba(255,255,255,0.22);font-size:0.75rem;margin-top:8px}
-
+.footer-text{text-align:center;color:rgba(255,255,255,0.22);font-size:0.75rem;margin-top:8px;line-height:1.8}
+.footer-text a{color:rgba(255,255,255,0.35)}
+.footer-text a:hover{color:#fb923c}
 /* ===== 运动专区页 ===== */
 #sportView{min-height:100vh;padding:64px 18px 50px}
+#leagueView{min-height:100vh;padding:64px 18px 50px}
 .sport-hero{text-align:center;padding:32px 18px 24px;border-radius:24px;margin-bottom:24px;position:relative;overflow:hidden}
 .sport-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0.08) 0%,transparent 70%);pointer-events:none}
 .sport-hero-icon{font-size:4rem;margin-bottom:10px;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.3))}
 .sport-hero h1{font-size:2.4rem;font-weight:900;letter-spacing:3px;margin-bottom:6px;text-shadow:0 3px 16px rgba(0,0,0,0.3)}
 .sport-hero p{font-size:1rem;opacity:0.65;max-width:560px;margin:0 auto}
 .sport-container{max-width:1160px;margin:0 auto}
-
+/* 分区标题 */
+.zone-title{font-size:1.25rem;font-weight:800;margin:26px 0 14px;display:flex;align-items:center;gap:8px;padding-left:12px;border-left:4px solid;color:#f0f6fc}
+.zone-title .sub{font-size:0.75rem;color:#8b949e;font-weight:500}
+/* 赛程 */
+.sched-group{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px;margin-bottom:12px}
+.sched-group-title{font-size:0.92rem;font-weight:800;color:#f0f6fc;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sched-group-title .cnt{font-size:0.72rem;color:#8b949e;font-weight:600}
+.sched-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);margin-bottom:7px;font-size:0.85rem;transition:all 0.2s}
+.sched-row:last-child{margin-bottom:0}
+.sched-row:hover{background:rgba(255,255,255,0.08)}
 /* 联赛板块 */
-.league-section{margin-bottom:28px}
-.league-section h2{font-size:1.3rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-left:10px;border-left:4px solid}
 .league-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
-.league-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px)}
+.league-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+.league-card::after{content:'进入 →';position:absolute;right:12px;bottom:10px;font-size:0.68rem;color:rgba(255,255,255,0.3);opacity:0;transition:opacity 0.3s}
 .league-card:hover{transform:translateY(-3px);background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+.league-card:hover::after{opacity:1}
 .league-card .league-icon{font-size:1.8rem;margin-bottom:6px}
 .league-card .league-name{font-weight:700;font-size:0.95rem;margin-bottom:3px}
-.league-card .league-desc{font-size:0.75rem;opacity:0.55;line-height:1.4}
-
+.league-card .league-desc{font-size:0.75rem;opacity:0.55;line-height:1.4;padding-right:40px}
+.league-card .league-stat{font-size:0.7rem;color:#fb923c;margin-top:6px;font-weight:600}
 /* 排行榜弹窗 */
 .rank-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:10001;align-items:center;justify-content:center;padding:18px}
 .rank-modal.show{display:flex}
@@ -266,29 +314,20 @@ a{color:inherit;text-decoration:none}
 .rank-other{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.65)}
 .rank-team{font-weight:700}
 .rank-points{color:#fbbf24;font-weight:700}
-
 /* 明星板块 */
-.stars-section{margin-bottom:28px}
-.stars-section h2{font-size:1.3rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-left:10px;border-left:4px solid}
 .stars-grid{display:flex;flex-wrap:wrap;gap:14px}
 .star-card{background:rgba(255,255,255,0.06);border-radius:20px;padding:16px 12px;width:120px;text-align:center;border:1px solid rgba(255,255,255,0.08);transition:0.25s;cursor:pointer;backdrop-filter:blur(8px)}
 .star-card:hover{transform:scale(1.04);background:rgba(255,255,255,0.1);border-color:rgba(249,115,22,0.35)}
 .star-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#2a3a50;margin-bottom:8px;border:2px solid rgba(255,255,255,0.15)}
 .star-name{font-weight:700;font-size:0.9rem;margin-bottom:2px}
 .star-pos{font-size:0.72rem;opacity:0.55}
-
-/* 经典球员 */
-.legends-section{margin-bottom:28px}
-.legends-section h2{font-size:1.3rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-left:10px;border-left:4px solid #fbbf24}
-.legends-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.legend-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:18px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px)}
-.legend-card:hover{background:rgba(255,255,255,0.09);border-color:rgba(251,191,36,0.35);transform:translateX(3px)}
-.legend-photo{width:58px;height:58px;border-radius:50%;object-fit:cover;background:#2a3a50;border:2px solid rgba(251,191,36,0.35);flex-shrink:0}
-.legend-info{flex:1;min-width:0}
-.legend-name{font-weight:800;font-size:1rem;margin-bottom:2px}
-.legend-era{font-size:0.75rem;color:#fbbf24;margin-bottom:3px}
-.legend-desc{font-size:0.8rem;opacity:0.55;line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-
+/* 资讯卡 */
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.news-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:16px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:6px}
+.news-card:hover{background:rgba(255,255,255,0.09);border-color:rgba(249,115,22,0.35);transform:translateY(-3px)}
+.news-card .ncat{font-size:0.7rem;color:#fb923c;font-weight:700}
+.news-card .ntitle{font-size:0.95rem;font-weight:700;color:#f0f6fc;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-card .nmeta{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:auto}
 /* 明星详情弹窗 */
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:10001;align-items:center;justify-content:center;padding:18px}
 .modal-overlay.show{display:flex}
@@ -305,7 +344,6 @@ a{color:inherit;text-decoration:none}
 .modal-btn.close:hover{background:rgba(255,255,255,0.14);color:white}
 .modal-btn.more{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff}
 .modal-btn.more:hover{transform:scale(1.04)}
-
 /* 新闻详情弹窗 */
 .news-modal{background:linear-gradient(180deg,#1c2333 0%,#161b22 100%);border-radius:24px;max-width:640px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 48px rgba(0,0,0,0.5);animation:newsSlideUp 0.35s cubic-bezier(0.16,1,0.3,1)}
 @keyframes newsSlideUp{from{opacity:0;transform:translateY(30px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -322,24 +360,39 @@ a{color:inherit;text-decoration:none}
 .news-content p:first-letter{font-size:1.25rem;font-weight:700;color:#fb923c}
 .news-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
 .news-tag{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);padding:4px 10px;border-radius:10px;font-size:0.75rem}
-
+/* 数据来源标注 */
+.src-badge{display:inline-flex;align-items:center;gap:5px;font-size:0.7rem;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:10px;margin-left:8px;font-weight:500}
 /* 加载状态 */
 .loading-skeleton{display:flex;align-items:center;justify-content:center;padding:40px;color:rgba(255,255,255,0.35);font-size:0.9rem}
 .loading-skeleton .dot{animation:loadingBlink 1.2s infinite}
 .loading-skeleton .dot:nth-child(2){animation-delay:0.2s}
 .loading-skeleton .dot:nth-child(3){animation-delay:0.4s}
 @keyframes loadingBlink{0%,100%{opacity:0.3}50%{opacity:1}}
-
 /* Toast 提示 */
-.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(28,35,51,0.95);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:12px 24px;border-radius:16px;font-size:0.88rem;font-weight:600;z-index:100000;opacity:0;transition:all 0.3s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(28,35,51,0.95);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:12px 24px;border-radius:16px;font-size:0.88rem;font-weight:600;z-index:100000;opacity:0;transition:all 0.3s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.4);max-width:88vw}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.success{border-color:rgba(34,197,94,0.4)}
 .toast.error{border-color:rgba(239,68,68,0.4)}
+/* 回到顶部 */
+#scrollTopBtn{position:fixed;right:22px;bottom:24px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:1.2rem;border:none;cursor:pointer;box-shadow:0 6px 18px rgba(249,115,22,0.4);opacity:0;pointer-events:none;transform:translateY(12px);transition:all 0.3s;z-index:999}
+#scrollTopBtn.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+#scrollTopBtn:hover{transform:translateY(-3px)}
+/* 联赛详情 */
+.league-hero{text-align:center;padding:30px 18px 22px;border-radius:24px;margin-bottom:22px;position:relative;overflow:hidden}
+.league-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0.08) 0%,transparent 70%);pointer-events:none}
+.league-hero-icon{font-size:3.4rem;margin-bottom:8px}
+.league-hero h1{font-size:2rem;font-weight:900;letter-spacing:2px;margin-bottom:4px}
+.league-hero p{font-size:0.9rem;opacity:0.6}
+.sub-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sub-tab{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:8px 18px;border-radius:20px;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.sub-tab:hover{background:rgba(255,255,255,0.1);color:#fff}
+.sub-tab.active{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border-color:transparent}
+.league-note{background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.25);color:#fdba74;padding:12px 16px;border-radius:14px;font-size:0.82rem;line-height:1.6;margin-bottom:14px}
+.league-desc-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px;font-size:0.9rem;color:rgba(255,255,255,0.75);line-height:1.8}
 </style>
 </head>
 <body>
-<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#fb923c,#f97316);color:#fff;text-align:center;padding:6px 16px;font-size:13px;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">Overtime 静态预览版 · 数据为预抓取快照 · 完整功能请部署后端版本</div>
-<div style="height:32px"></div>
+<div class="site-banner">⚡ Overtime · <strong>加时赛</strong> ｜ 数据来源：新浪体育 / 百度百科 / 英超·西甲·意甲·德甲·法甲·欧足联官方（快照 2026-08-29）</div>
 <!-- Overtime Logo SVG 定义 -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -352,10 +405,8 @@ a{color:inherit;text-decoration:none}
     </symbol>
   </defs>
 </svg>
-
 <div class="flash-overlay" id="flashOverlay"></div>
 <div class="toast" id="toast"></div>
-
 <!-- ===== 封面页 ===== -->
 <div id="coverView" class="view active">
   <div class="cover-glow">
@@ -369,9 +420,9 @@ a{color:inherit;text-decoration:none}
       <div class="ot-logo-mark"><svg><use href="#ot-logo-svg"/></svg></div>
       <div class="ot-logo-text">Over<span class="accent">time</span></div>
     </div>
-    <div class="cover-badge"><span class="dot"></span>SPORTS PANORAMA</div>
+    <div class="cover-badge"><span class="dot"></span>OVERTIME · 加时赛</div>
     <div class="cover-sub-en">REAL-TIME SPORTS DATA &amp; NEWS</div>
-    <p class="cover-slogan">汇聚<span class="hl">12大运动</span> · 真实赛事数据 · 明星百科</p>
+    <p class="cover-slogan">汇聚<span class="hl">12大运动</span> · 真实赛事数据 · 明星百科 · 主队专题</p>
     <div class="cover-icons">
       <div class="cover-icon">⚽</div>
       <div class="cover-icon">🏀</div>
@@ -382,16 +433,15 @@ a{color:inherit;text-decoration:none}
     </div>
     <button class="cover-enter-btn" onclick="enterVote()">进入 Overtime <span class="arrow">→</span></button>
   </div>
-  <div class="cover-footer">Overtime · 体坛风云 2026 ｜ 数据来源：新浪体育 · 百度百科</div>
+  <div class="cover-footer">Overtime · 加时赛 2026 ｜ 数据来源：新浪体育 · 百度百科 · 各联赛官方</div>
 </div>
-
 <!-- ===== 投票页 ===== -->
 <div id="voteView" class="view">
   <div class="vote-container">
     <div class="vote-header">
       <div class="icon">🏆</div>
       <h1>选择我的主队</h1>
-      <p>三步设定你支持的球队，首页将优先展示该队相关资讯</p>
+      <p>三步设定你支持的球队，首页将为你打造「主队专题」</p>
     </div>
     <div class="step-indicator">
       <div class="step-item active" data-step="1">
@@ -434,7 +484,7 @@ a{color:inherit;text-decoration:none}
             </div>
           </div>
           <div class="confirm-bar"><div class="confirm-bar-fill" id="vConfirmBar" style="width:0%"></div></div>
-          <div class="confirm-warning">确认后将设为主队，首页优先展示该队相关新闻与动态</div>
+          <div class="confirm-warning">确认后设为我的主队，首页将为你呈现该队「近期赛程 + 专属资讯」专题</div>
         </div>
       </div>
       <div class="vote-step" id="vstepSuccess">
@@ -442,7 +492,7 @@ a{color:inherit;text-decoration:none}
           <div class="success-icon">✓</div>
           <div class="success-title">主队设定成功！</div>
           <div class="success-desc">你已将 <strong id="vSuccessTeam">球队</strong> 设为我的主队</div>
-          <div class="success-sub">即将进入 Overtime 首页...</div>
+          <div class="success-sub">即将进入 Overtime 首页，为你加载主队专题...</div>
         </div>
       </div>
     </div>
@@ -455,7 +505,6 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 </div>
-
 <!-- ===== 首页 ===== -->
 <div id="homeView" class="view">
   <div class="home-container">
@@ -463,6 +512,7 @@ a{color:inherit;text-decoration:none}
       <div class="ot-logo">
         <div class="ot-logo-mark"><svg><use href="#ot-logo-svg"/></svg></div>
         <div class="ot-logo-text">Over<span class="accent">time</span></div>
+        <div class="ot-logo-sub">加时赛</div>
       </div>
       <div class="topbar-actions">
         <button class="topbar-btn" onclick="refreshNews()" id="refreshNewsBtn">
@@ -471,36 +521,39 @@ a{color:inherit;text-decoration:none}
         <button class="topbar-btn" onclick="goVote()">🏆 我的主队</button>
       </div>
     </div>
-
     <!-- 早间新闻播报 -->
     <div class="morning-briefing" id="morningBriefing">
       <div class="morning-header">
         <div class="morning-title-group">
           <div class="morning-icon">📻</div>
           <div>
-            <div class="morning-title">体坛早报 · 语音播报</div>
+            <div class="morning-title">加时赛早报 · 语音播报</div>
             <div class="morning-date" id="morningDate">加载中...</div>
           </div>
         </div>
         <div class="morning-player">
           <button type="button" class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
           <div class="player-progress">
-            <div class="player-bar" onclick="seekAudio(event)">
+            <div class="player-bar" id="playerBar">
               <div class="player-bar-fill" id="playerBarFill"></div>
+              <div class="player-bar-handle" id="playerBarHandle"></div>
             </div>
             <div class="player-time">
               <span id="playerCurrent">0:00</span>
               <span id="playerDuration">0:00</span>
             </div>
           </div>
+          <div class="player-volume">
+            <button type="button" class="vol-btn" id="volBtn" onclick="muteToggle()">🔊</button>
+            <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="80" aria-label="音量">
+          </div>
         </div>
       </div>
       <div class="morning-items" id="morningItems">
         <div class="loading-skeleton">加载早报中<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
       </div>
-      <audio id="morningAudio" preload="metadata" src="audio/morning_20260829.mp3"></audio>
+      <audio id="morningAudio" preload="metadata" src="audio/morning_briefing.mp3"></audio>
     </div>
-
     <!-- 滚动播报 -->
     <div class="breaking-hero">
       <div class="hero-top">
@@ -519,14 +572,13 @@ a{color:inherit;text-decoration:none}
         </div>
       </div>
     </div>
-
     <!-- 我的主队 -->
     <div id="myTeamBar"></div>
-
+    <!-- 主队专题 -->
+    <div id="myTeamPanel"></div>
     <!-- 12运动卡片 -->
-    <div class="section-label">🎯 选择运动项目，进入专属专区 <span class="sub">真实数据 · 明星百科 · 联赛积分</span></div>
+    <div class="section-label">🎯 选择运动项目，进入专属专区 <span class="sub">真实数据 · 明星百科 · 联赛积分 · 赛程</span></div>
     <div class="sports-grid" id="sportsGrid"></div>
-
     <!-- 盲盒 -->
     <div class="blindbox-big">
       <div class="blindbox-info">
@@ -536,10 +588,12 @@ a{color:inherit;text-decoration:none}
       <button class="blindbox-btn" id="blindboxBtn" onclick="drawBlindBox()"><span>🧧</span> 抽盲盒</button>
       <div class="blindbox-result-box" id="blindboxResult">✨ 未抽奖</div>
     </div>
-    <div class="footer-text">Overtime · 体坛风云 ｜ 数据来源：新浪体育 · 百度百科 ｜ 点击运动卡片进入独立专区</div>
+    <div class="footer-text">
+      Overtime · 加时赛 ｜ 数据来源：<a href="https://sports.sina.com.cn" target="_blank" rel="noopener">新浪体育</a> · <a href="https://baike.baidu.com" target="_blank" rel="noopener">百度百科</a> · <a href="https://www.premierleague.com" target="_blank" rel="noopener">英超</a> · <a href="https://www.laliga.com" target="_blank" rel="noopener">西甲</a> · <a href="https://www.uefa.com" target="_blank" rel="noopener">欧足联</a> 等官方<br>
+      点击运动卡片进入独立专区 · 数据快照：2026-08-29
+    </div>
   </div>
 </div>
-
 <!-- ===== 运动专区页 ===== -->
 <div id="sportView" class="view">
   <button class="back-btn" onclick="goHome()">← 返回首页</button>
@@ -554,7 +608,20 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 </div>
-
+<!-- ===== 联赛详情页 ===== -->
+<div id="leagueView" class="view">
+  <button class="back-btn" id="leagueBackBtn" onclick="goBackSport()">← 返回专区</button>
+  <div class="sport-container">
+    <div class="league-hero" id="leagueHero">
+      <div class="league-hero-icon" id="leagueHeroIcon">🏆</div>
+      <h1 id="leagueHeroTitle">联赛</h1>
+      <p id="leagueHeroDesc"></p>
+    </div>
+    <div id="leagueContent">
+      <div class="loading-skeleton">加载联赛数据中<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+    </div>
+  </div>
+</div>
 <!-- 排行榜弹窗 -->
 <div class="rank-modal" id="rankModal">
   <div class="rank-card">
@@ -568,7 +635,6 @@ a{color:inherit;text-decoration:none}
     </table>
   </div>
 </div>
-
 <!-- 明星弹窗 -->
 <div class="modal-overlay" id="starModal">
   <div class="modal-card">
@@ -583,7 +649,6 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 </div>
-
 <!-- 新闻详情弹窗 -->
 <div class="modal-overlay" id="newsModal">
   <div class="news-modal">
@@ -600,21 +665,34 @@ a{color:inherit;text-decoration:none}
     <div class="news-modal-body">
       <div class="news-content" id="newsModalContent"></div>
       <div class="news-tags">
-        <span class="news-tag">#体育</span>
+        <span class="news-tag">#加时赛</span>
         <span class="news-tag">#赛事</span>
         <span class="news-tag">#Overtime</span>
       </div>
     </div>
   </div>
 </div>
-
+<button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <script>
+// ===== 真实数据（快照：2026-08-29）=====
+const NEWS = [{"id":"a2ff06d5bf21","category":"足球","title":"德甲夺冠赔率:拜仁断层领跑 多特第2莱比锡第3","content":"北京时间8月29日凌晨，2026-27赛季德甲联赛拉开战幕，揭幕战拜仁对阵斯图加特。相关机构即时更新了新赛季的夺冠赔率，卫冕冠军拜仁1赔1.12断层领跑，多特蒙德1赔11位列第2，莱比锡红牛1赔15排名第3，勒沃库森1赔20位列第4，其余球队均在1赔50以上。\n\n\n\n上赛季，拜仁整体表现出色，提前四轮夺冠，最终以89分遥遥领先群雄，夺得队史第34座德甲冠军奖杯。坐拥德甲霸主地位的拜仁，国内联赛竞争力难逢敌手，哈里凯恩持续高效输出，单赛季36球拿下联赛金靴，边锋奥利塞表现亮眼，基米希、穆西亚拉构建稳定中场核心。主帅孔帕尼打造成熟进攻体系，夏窗豪掷重金引进PSV中场萨巴里、法兰克福国脚左后卫布朗补强阵容，主力框架完整无明显漏洞。不过拜仁上赛季欧冠依旧没能突破瓶颈，止步八强。目前拜仁的夺冠赔率低至1.12，创下近几个赛季最低初始赔率，断层领跑全联赛，市场对其卫冕信心拉满。\n\n多特蒙德夺冠赔率为1赔11排名第2。上赛季多特赛季中途换帅后状态强势反弹，一路攀升至联赛亚军，稳稳拿下欧冠资格。今夏多特留住科贝尔、恩梅查等核心主力，仅边路布兰特离队，同时针对性补强锋线与中场厚度，主场威斯特法伦助威氛围加成巨大，是本赛季最有希望挑战拜仁统治的队伍，但整体阵容深度与拜仁差距明显，夺冠赔率差距悬殊。\n\n莱比锡红牛夺冠赔率为1赔15位居第3，上个赛季莱比锡稳定拿下联赛第四，重返欧冠赛场，队内年轻前锋斩获赛季最佳新秀。但今夏球队遭遇主力流失，锋线奥彭达、中场施拉格尔离队，同时更换主帅，新帅德米凯利斯需要时间磨合全新战术，尽管引进埃斯特夫、格鲁达补充战力，阵容磨合的不确定性让赔率维持高位。第四位是勒沃库森，夺冠赔率1赔20，曾经能和拜仁掰手腕的药厂今夏遭遇双重打击，功勋主帅阿隆索离任后再度换帅，后防两大核心格里马尔多、因卡皮耶分别转会马竞、阿森纳，攻防实力大幅下滑，即便签下博尼费斯、阿方索・莫雷拉补强锋线，也难以弥补后防空缺，新赛季争冠前景黯淡，基本退出争冠行列。其余球队，夺冠赔率最低的斯图加特也已达到1赔50，显然争冠的希望并不大。\n\n德甲夺冠赔率TOP10如下：","source":"新浪体育","source_url":"http://sports.sina.com.cn/l/2026-08-24/doc-inipkkzy2026154.shtml?cre=tianyi&mod=pcspth&loc=1&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12","time":"2026年08月29日 14:22","scraped_at":"2026-08-29 16:21:26"},{"id":"02e6315bc982","category":"综合","title":"中国第一个打破世界纪录的女运动员郑凤荣逝世，享年89岁","content":"澎湃新闻记者从相关方面获悉，女子跳高名宿、中国田径协会原副主席郑凤荣，于2026年8月25日因病逝世，享年89岁。\n\n公开资料显示，郑凤荣出生于1937年，女，山东济南人。1953年入选国家田径集训队，曾任中国田径协会副主席，是第三届全国人大代表，第五、六、九届全国政协委员。\n\n郑凤荣1954年获全国大中学生运动会女子跳高冠军。1957年11月17日，在北京田径运动会上以1.77米的成绩，打破女子跳高世界纪录，成为中国第一个打破世界纪录的女运动员。1963年6月26日，在南京五台山体育场，越过1.78米的高度。\n\n郑凤荣于1956年获运动健将称号，1959年获国家体委颁发的体育运动荣誉奖章。1987年，国际田联向她颁发了“国际田联75周年金质纪念章”。1994年，郑凤荣被评为建国45周年体坛45英杰之一。1995年5月获国际奥委会奥林匹克银质勋章。\n\n据中国妇女报微信公众号此前报道介绍，1957年10月20日，中苏田径友谊赛在北京体育学院举行。周恩来总理专程来观看，郑凤荣既兴奋又紧张。“我想跳1米75，结果没发挥好，三次都没过。”\n\n赛后周总理接见郑凤荣。当时看到总理微笑地拿着一束鲜花，郑凤荣紧张得有点不知所措。“贺老总说总理给你献花，你就拿着嘛。”郑凤荣形容自己几乎是“冲”过去，双手接住了花。“我说总理我这次没跳好，总理说很好嘛，你还年轻，时间还长着呢。你一定能打破世界纪录，因为我们是社会主义国家，不但有郑凤荣，将来会有李凤荣、张凤荣。”郑凤荣将总理的鼓励铭记在心，那次接见也成为她日后不断拼搏努力的动力源泉。\n\n短短27天后，在北京先农坛体育场举办的北京田径运动会中，郑凤荣成功地跳过了1.77米，打破了由美国运动员麦克·丹尼尔保持的1.76米的世界纪录。美联社惊呼：“一位20岁的中国姑娘在北京以有力的一跳警告世界田径界，六亿中国人不会永远是落后选手了。”人们亲切地称赞她是“宣布中国体育运动春天降临的一只燕子”。","source":"新浪体育","source_url":"http://k.sina.com.cn/article_5044281310_12ca99fde02002kmso.html?cre=tianyi&mod=pcspth&loc=2&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports","time":"2026年08月26日 12:14","scraped_at":"2026-08-29 16:21:29"},{"id":"7352255cdef7","category":"篮球","title":"帕克：文班可能已是NBA最好球员 非常高兴他成为了马刺的一员","content":"北京时间8月29日，马刺名宿托尼-帕克接受了媒体采访，期间谈到了自己的法国同乡文班亚马。\n\n“我真的非常高兴他（文班亚马）成为了马刺的一员，也非常高兴他能够代表法国国家队出战。我觉得，大家都知道，他现在可能已经是NBA最好的球员了。我希望他能为马刺和法国国家队带来很多座冠军奖杯。”帕克说道。（NBA官网）","source":"新浪体育","source_url":"http://k.sina.com.cn/article_2090512390_7c9ab00602003f5zy.html?cre=tianyi&mod=pcspth&loc=3&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12&from=sports","time":"2026年08月29日 07:55","scraped_at":"2026-08-29 16:21:30"},{"id":"2afc3ec0316a","category":"足球","title":"马内提醒C罗进球后未做SIU，C罗随即补做","content":"马内提醒C罗进球后未做SIU，C罗随即补做\n萨迪奥·马内提醒克里斯蒂亚诺·罗纳尔多，他在进球后没做SIU庆祝动作，然后跑去做了哈哈哈哈\n00:01/00:14\nLoaded: 100.00%\n特别声明：以上文章内容仅代表作者本人观点，不代表新浪网观点或立场。如有关于作品内容、版权或其它问题请于作品发表后的30日内与新浪网联系。\n赛博对话\n热搜时代\n一天零一页\n无双\n热浪之外\n来自于：四川\n权利保护声明页/Notice to Right Holders\n12条评论|27人参与\n网友评论\n登录|注册\n发布\n最热评论\nZoeDaddy甘肃兰州\n男人至死是少年，何尝不是一个美好呢。\n今天14:14\n查看对话\n赞5回复\n草根足球记录员：这波操作确实炸，球场上的老顽童们自己玩得开心最重要。赛亚人再强也得有点童心嘛\n今天14:15\n赞1回复\nnaizuiQAQ云南昆明\n罗三岁\n今天10:27\n赞4回复\n圣马力诺球王浙江绍兴\n足坛喜剧人，爱看\n今天14:16\n赞3回复\n最新评论\n用户6265978137广东佛山\n喷子们又开始骂骂咧咧了\n39分钟前\n赞回复\n念珅不念坤北京\n马内是不是玩儿他呢\n48分钟前\n赞回复\nhh_cx重庆\n等进球确认 \n今天14:58\n赞回复\n查看全部12条评论 >\n相关新闻\n投资热点尽在新浪财经APP>\n加载中","source":"新浪体育","source_url":"http://k.sina.com.cn/article_3509468472_md12e3d3803301sy9w.html?cre=tianyi&mod=pcspth&loc=4&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports","time":"2026年08月29日 07:49","scraped_at":"2026-08-29 16:21:33"},{"id":"4ef0935bf8f5","category":"综合","title":"山东省运会智能化水平对标国内高水平赛事","content":"本届省运会赛事设置38个大项、1081个小项，金牌总数1620枚，项目数量较上届增长19%，参赛运动员1.3万多人，教练员、裁判员超3000人，项目设置、参赛规模均刷新省运会历史纪录\n\n赛场上各代表团实力接近，奖牌分布多点开花，一批青少年体育苗子崭露头角，田径赛场7人次达运动健将标准，95人次达国家一级运动员水平，游泳预赛627人次达到国家一级运动员水平\n\n26日晚，山东省第二十六届运动会开幕式在临沂奥体公园体育场正式举行，9月5日闭幕。这是省运会首次落户革命老区临沂。\n\n山东省运动会自1950年举办至今，是我省规模最大、层级最高的综合性青少年体育盛会。\n\n本届省运会赛事设置38个大项、1081个小项，金牌总数1620枚，项目数量较上届增长19%，参赛运动员1.3万多人，教练员、裁判员超3000人，项目设置、参赛规模均刷新省运会历史纪录。\n\n据省体育局副局长魏淑波介绍，本届省运会预赛阶段已于7月17日全部收官，决赛分先期分散办赛、赛会集中办赛两个阶段推进。截至8月24日晚，省运会已经完成768个小项角逐，产生金牌1220枚，先期赛事运行平稳有序。\n\n本届省运会实行全省联动办赛，临沂承担34个项目决赛，青岛、威海、日照分别承接部分项目决赛，14个市参与预赛承办，形成全省办赛“一盘棋”格局。从完赛项目统计看，赛场上各代表团实力接近，奖牌分布多点开花，一批青少年体育苗子崭露头角，田径赛场7人次达运动健将标准，95人次达国家一级运动员水平，游泳预赛627人次达到国家一级运动员水平。\n\n为守住干净竞赛底线，省运会组委会设立赛风赛纪督导组，落实赛风赛纪与反兴奋剂准入制度，从严开展兴奋剂检查。赛事还大量运用鹰眼挑战、视频回放、人脸识别等科技手段辅助执裁，配套上线省运会信息化平台与官方App，赛事智能化水平对标国内高水平赛事。\n\n据了解，省运会开闭幕式期间，足球、排球、游泳、乒乓球等10个大项将集中开赛，比赛分布在临沂两区五县10个赛区。目前，省运会田径决赛已提前完成。羽毛球、乒乓球、射击（步手枪）等项目在办，足球（女子丙组）、射箭、举重、排球（乙组）、赛艇、游泳等项目进入人员报到和赛前测试环节。开闭幕式同期，还将举办第七届山东体育用品博览会等配套活动。\n\n作为承办地，临沂市共实施新建和改扩建比赛场馆33处。各场馆充分统筹办赛和赛后利用，深度融合商业、会展、文旅等多元功能，最大限度发挥场馆综合效益。\n\n借省运会举办契机，临沂开展城市环境提质行动，推动“省运+旅游+非遗+商贸”多元融合，放大赛事综合带动效应。","source":"新浪体育","source_url":"http://finance.sina.com.cn/roll/2026-08-27/doc-iniptnuz5893020.shtml?cre=tianyi&mod=pcspth&loc=5&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12","time":"2026年08月27日 12:36","scraped_at":"2026-08-29 16:21:37"},{"id":"967f2e735c3c","category":"综合","title":"不容任何闪失！赵勇换下龚翔宇始末，三次“倒地”是重中之重","content":"00:01/02:00\nLoaded: 19.24%\n特别声明：以上文章内容仅代表作者本人观点，不代表新浪网观点或立场。如有关于作品内容、版权或其它问题请于作品发表后的30日内与新浪网联系。\n赛博对话\n热搜时代\n一天零一页\n无双\n热浪之外\n来自于：辽宁\n权利保护声明页/Notice to Right Holders\n17条评论|66人参与\n网友评论\n登录|注册\n发布\n最热评论\n暖风所至9辽宁大连\n首先我不是很了解排球，但总觉得在领先这么多的情况下，为什么不让主力轮换休息一下，让她们保持体力应对接下来的比赛，最后全力对付日本队\n今天10:08\n赞11回复\n安倍不Lambda山东\n小宇的左腿受伤，王媛媛的右腿受伤，每次比赛时倒地，不能马上站起来，作为观众看着心里特别难受。为国家争光，不计较名利，踏实做事的品质在她们身上体现得很明显\n今天10:09\n赞10回复\n吃货界的霸主北京\n保护队员是最重要的责任\n今天10:09\n赞6回复\n最新评论\n用户7886335138山东济南\n女排主教练要善于保护关键主力，让她们在关健时刻，关健点发挥关键作用！\n今天12:11\n赞回复\n开启学渣逆袭福建厦门\n龚翔宇有结婚吗？\n今天10:38\n赞回复\n云霭gone江苏盐城\n她真的挺不容易的\n今天10:22\n赞回复\n查看全部17条评论 >\n相关新闻\n投资热点尽在新浪财经APP>\n加载中","source":"新浪体育","source_url":"http://k.sina.com.cn/article_1378361270_m52281fb600101ajxs.html?cre=tianyi&mod=pcspth&loc=6&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports&subch=vollyball","time":"2026年08月29日 08:43","scraped_at":"2026-08-29 16:21:40"},{"id":"b77577bd4102","category":"综合","title":"又轰下28+7+3！哈登得到一个优质帮手，总冠军有希望了","content":"哈登今夏为了骑士有薪资空间补强，跳出了最后一年合同（薪水4230万美元），并耐心等待，等着骑士完成了补强操作后才和骑士达成续约，哈登达成的新合同为3年9700万美元。\n\n骑士今夏引入了哪些球员呢？他们最瞩目的引援是4年8800万美元签换得到了沃特森，沃特森还不到24岁，他身高2米03，在上赛季约基奇缺阵一个月阶段，他打出了全明星级表现，这期间他打了15场比赛，场均22.1分5.8板2.8助1.1断1.5帽，命中率48.6%，场均2.3个三分，三分命中率44.3%。\n\n除了沃特森外，他们还引入了惠特莫尔、海佐尼亚、托马斯（今年的34号秀），其中海佐尼亚这笔引援创造了惊喜。\n\n骑士今夏一年280万美元合同将他签下，海佐尼亚今年31岁，身高2米03，来自克罗地亚，他是2015年的5号秀，曾效力过魔术、尼克斯、开拓者、灰熊，后来返回欧洲打球，2025-26赛季他效力西甲的皇马篮球俱乐部，场均17.4分4.9板1.9助，荣膺西甲联赛常规赛MVP。\n\n海佐尼亚今夏在欧洲赛场上表现亮眼，北京时间2026年8月22日，德国超级杯男篮四国赛半决赛，克罗地亚男篮vs土耳其男篮，海佐尼亚出战29分钟，17中11（三分10中5），11罚10中，轰下37分6板4助2断，最后时刻他投中后撤步三分，让克罗地亚从落后2分到反超1分，最终以95-94险胜了对手。\n\n北京时间2026年8月28日，男篮世界杯预选赛，克罗地亚男篮vs拉脱维亚男篮，海佐尼亚出战30分钟，13中8，15罚12中，砍下28分3板7助，正负值+24，带领克罗地亚男篮115-80大胜对手35分。\n\n海佐尼亚在欧洲赛场频频打出劲爆表现，他的竞技状态让骑士惊喜，他的得分能力很强，还有不俗的传球能力，他能成为哈登的优质帮手。\n\n新赛季骑士的首发预计为：哈登+米切尔+沃特森+莫布利+阿伦，替补为：海佐尼亚、泰森、梅里尔、惠特莫尔、托布、托马斯、汤姆林、波特等。上赛季的骑士杀入了东决，骑士如今的战力超过了上赛季，他们有能力争冠，哈登的总冠军有希望了。","source":"新浪体育","source_url":"http://k.sina.com.cn/article_2010922892_77dc3f8c00101cvv8.html?cre=tianyi&mod=pcspth&loc=7&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12&from=sports&subch=nba","time":"2026年08月28日 12:35","scraped_at":"2026-08-29 16:21:42"},{"id":"f3ccbf1d3a5c","category":"综合","title":"郑钦文说自己打得特别好","content":"郑钦文说自己打得特别好\n #郑钦文回应赛后哭了# 2026年美网女单资格赛决胜轮，经过两天的鏖战，@郑钦文Ana 6-4、3-6、6-0战胜普里丹金娜，拿到女单正赛名额。赛后郑钦文表示：“我很开心能取得今天的胜利，这对我来说特别不容易。我自己也觉得这三盘我打得特别好。” 郑钦文还聊到了自己激动落泪的原因，透露了自己的生病情况，在对话中她也一直在咳嗽。（咪咕体育）\n00:01/00:51\nLoaded: 0.00%\n特别声明：以上文章内容仅代表作者本人观点，不代表新浪网观点或立场。如有关于作品内容、版权或其它问题请于作品发表后的30日内与新浪网联系。\n赛博对话\n热搜时代\n一天零一页\n无双\n热浪之外\n来自于：四川\n权利保护声明页/Notice to Right Holders\n29条评论|36人参与\n网友评论\n登录|注册\n发布\n最热评论\n封面新闻四川成都\n郑钦文还聊到了自己激动落泪的原因，透露了自己的生病情况，在对话中她也一直在咳嗽。\n今天08:28\n赞2回复\n封面新闻四川成都\n赛后郑钦文表示：“我很开心能取得今天的胜利，这对我来说特别不容易。我自己也觉得这三盘我打得特别好。\n今天08:28\n赞1回复\n刘普Bruce四川*\n每赢一场都是自信心的回归 特别是对手一场比一场强 加油钦文\n今天13:28\n赞回复\n最新评论\n刘普Bruce四川*\n每赢一场都是自信心的回归 特别是对手一场比一场强 加油钦文\n今天13:28\n赞回复\n海河渔船天津\n发际线那么靠后啊\n今天11:23\n查看对话\n赞回复\npeekabookid：你这发际线确实挺靠后的\n今天11:31\n赞回复\n夸夸小猫猫北京\n郑钦文Ana超棒的，泪水中绽放的胜利之花，每一拍都是对坚韧最好的夸奖！\n今天11:15\n赞回复\n查看全部29条评论 >\n相关新闻\n投资热点尽在新浪财经APP>\n加载中","source":"新浪体育","source_url":"http://k.sina.com.cn/article_1496814565_m593793e5033024pcw.html?cre=tianyi&mod=pcspth&loc=8&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports","time":"2026年08月29日 08:12","scraped_at":"2026-08-29 16:21:44"},{"id":"9123271c0ac3","category":"综合","title":"1.3亿标价+死敌禁令！阿尔瓦雷斯转会大局已定，西蒙尼放行有内因","content":"今夏足坛转会市场持续震荡，马德里竞技的阵容调整迎来关键转折。最新消息显示，马竞前锋阿尔瓦雷斯的离队流程已迎来实质性进展，主帅西蒙尼正式批准球员转会，马竞为其设定1.3亿欧元的固定离队身价，同时出台一条硬性禁令：坚决不将球员出售给巴塞罗那。多重因素叠加下，这位阿根廷攻击手大概率将在今夏转会窗告别万达大都会球场，但是最可能的下家是阿森纳，小蜘蛛从曼城转投西甲马竞，如今却再度被动重返英超球队的确是打掉门牙往肚里咽。\n\n本赛季效力马竞期间，阿尔瓦雷斯始终未能完全锁定主力位置，竞技状态和比赛强度始终未能达到西蒙尼的战术要求。长期的出场节奏不稳定、战术适配度不足，让阿尔瓦雷斯更希望早日离队想法，且这一意愿十分坚定，从未发生动摇。此前西蒙尼多次公开表态，球队立场与俱乐部保持统一，外界一度认为马竞将全力留住这名实力派前锋。\n\n但事实并非如此，深谙球队现状的西蒙尼早已看清局势。他清楚阿尔瓦雷斯当下的竞技状态，无法匹配马竞高强度的比赛节奏和争冠需求，既然球员执意寻求新的发展平台，阿根廷铁帅并未强行留人，最终点头放行，彻底为球员的离队之路扫清了教练组层面的障碍。对于执教风格严苛、极度看重球员归属感与投入度的西蒙尼而言，与其留住心不在球队、状态不达标的球员，不如放手成全，让球队阵容保持纯粹的竞技凝聚力。\n\n此次转会风波的背后，球员经纪人团队成为关键导火索，也是马竞最终决心放手的重要原因。据悉，阿尔瓦雷斯的经纪人多次与马竞管理层发生激烈冲突，沟通矛盾持续激化，不仅严重损害了阿尔瓦雷斯在队内的处境与发展利益，也间接影响了球队的备战节奏和更衣室氛围。西蒙尼麾下的马竞，向来只接纳全身心投入球队、愿意为战术体系牺牲拼搏的球员，此次经纪团队的纠纷，也让俱乐部彻底坚定了出售球员的决心，但是赛季已经开启，送走大将也会间接的影响球队的实力。\n\n目前阿尔瓦雷斯的离队条件已经完全明晰，1.3亿欧元转会费是唯一硬性门槛，只要有球队满足该报价，马竞便会开启交易谈判。而整个转会市场最特殊、最关键的限制条件，便是针对巴萨的“独家禁令”。马竞方面态度极为坚决，几乎对巴萨彻底关闭谈判大门，这笔交易无关报价高低，而是涉及俱乐部之间的竞争立场与尊严问题，巴萨直接被排除在潜在下家名单之外，大幅收窄了阿尔瓦雷斯的转会选择范围。\n\n放眼转会市场，英超豪门阿森纳是目前最有意向的潜在买家。枪手一直关注阿尔瓦雷斯的赛场表现，认可其全能的攻击属性与终结能力，渴望将其招致麾下补强锋线。但目前最大的悬念在于，阿森纳是否愿意为这名球员砸出1.3亿欧元的全额转会费，高昂的报价门槛成为阻碍交易落地的最大阻碍。\n\n尽管被马竞明令禁止交易，巴萨并未彻底放弃引援希望。据转会消息透露，巴萨计划在今夏转会窗关闭前，向马竞提交一份全新的报价，试图尝试扭转局面。但结合马竞目前强硬的态度，这份新报价大概率难以改变最终结果，巴萨签下阿尔瓦雷斯的可能性微乎其微。\n\n如今，教练放行、球员愿走、售价明确，阿尔瓦雷斯的离队已然进入倒计时。接下来的短短数日，将成为这笔转会的关键窗口期。究竟是阿森纳巨资接盘，还是其他豪门半路截胡，亦或是交易僵持至窗口关闭，阿尔瓦雷斯的未来去向会引发各界的关注。这个事件的背后还是球员不尊重俱乐部造成的，因为世界杯期间阿尔瓦雷斯就公开表现想加盟巴萨，而西甲是三强争冠，马竞自然不想送给争冠对手这样的核心球员，由此矛盾不断升级，才有现在的窘境。","source":"新浪体育","source_url":"http://k.sina.com.cn/article_1399162162_5365853200102shq8.html?cre=tianyi&mod=pcspth&loc=9&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12&from=sports&subch=global","time":"2026年08月27日 20:45","scraped_at":"2026-08-29 16:21:46"},{"id":"bdc82b8ef397","category":"乒乓球","title":"国乒5人自愿放弃亚锦赛选拔资格","content":"国乒5人自愿放弃亚锦赛选拔资格\n#王楚钦孙颖莎不参加本届亚锦赛# 8月29日，中国乒协公示2026年亚锦赛选拔办法，国家队总教练秦志戬介绍：秦志戬表示，在亚锦赛之前有亚运会，年底还有混团世界杯，以及世界乒乓球职业大联盟（WTT）系列多站积分比赛，国家队参赛任务重。教练组在与队员充分沟通后，结合2026年后续重大国际赛事参赛安排及运动员个人实际需求，同意王楚钦、孙颖莎、王曼昱、陈幸同、何卓佳五名运动员自愿放弃本次选拔资格，周启豪不参与男单、男双、混双选拔。教练组将根据不同项目的备战练兵实际需求和对手情况，制定有针对性的选拔办法。\n00:00/00:36\nLoaded: 72.39%\n特别声明：以上文章内容仅代表作者本人观点，不代表新浪网观点或立场。如有关于作品内容、版权或其它问题请于作品发表后的30日内与新浪网联系。\n赛博对话\n热搜时代\n一天零一页\n无双\n热浪之外\n来自于：山东\n权利保护声明页/Notice to Right Holders\n2条评论|2人参与\n网友评论\n登录|注册\n发布\n最热评论\n生活帮山东济南\n#王楚钦孙颖莎不参加本届亚锦赛#\n今天14:09\n赞回复\n生活帮山东济南\n#国乒5人自愿放弃亚锦赛选拔资格#\n今天14:08\n赞回复\n最新评论\n生活帮山东济南\n#王楚钦孙颖莎不参加本届亚锦赛#\n今天14:09\n赞回复\n生活帮山东济南\n#国乒5人自愿放弃亚锦赛选拔资格#\n今天14:08\n赞回复\n查看全部2条评论 >\n相关新闻\n投资热点尽在新浪财经APP>\n加载中","source":"新浪体育","source_url":"http://k.sina.com.cn/article_1841812881_m6dc7d59103301s8lq.html?cre=tianyi&mod=pcspth&loc=10&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports","time":"2026年08月29日 14:07","scraped_at":"2026-08-29 16:21:48"},{"id":"ec418bd941bc","category":"综合","title":"热血赛场燃乡情 和美乡村焕活力","content":"大埔县湖寮镇第五届“崇承杯”和美乡村男子篮球比赛（村BA）圆满落幕\n\n热血赛场燃乡情 和美乡村焕活力\n\n大埔县湖寮镇第五届“崇承杯”和美乡村男子篮球比赛（村BA）中，球员奋勇争先。受访者供图\n\n近日，2026年大埔县湖寮镇第五届“崇承杯”和美乡村男子篮球比赛（村BA）决赛在县田家炳体育中心激情上演，本届赛事圆满落幕。\n\n经过前期小组赛、交叉淘汰赛层层比拼，双坑村、黎家坪村两支代表队突围晋级，站上总决赛赛场。赛场氛围热烈，大批群众到场观赛助威，呐喊喝彩声不断。双方队员斗志昂扬、敢打敢拼，战术配合默契，攻防节奏张弛有度，带来多轮精彩较量。经过激烈角逐，比分定格在93∶78，双坑村代表队斩获本届赛事冠军。赛后举行了颁奖仪式，为各获奖队伍现场颁奖，褒扬全体球员奋勇争先、团结协作的赛场风采。\n\n一场乡土篮球赛，凝聚浓浓邻里乡情。赛事依托群众喜爱的篮球运动丰富基层文化生活，增进了各村沟通往来，提振群众精气神，涵养文明乡风，为和美乡村建设增添强劲活力。\n\n“今天能拿下冠军特别激动。决赛对抗强度很大，过程非常不轻松。能够拿到这份荣誉，靠的是全队咬牙坚持、互相补位。”双坑村代表队队员表示，在高强度的比拼当中，不仅磨炼了抗压能力，也真切体会到团队协作的力量，这份真切的经历比奖杯本身更有意义。","source":"新浪体育","source_url":"http://k.sina.com.cn/article_7517400647_1c0126e47059094lww.html?cre=tianyi&mod=pcspth&loc=11&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12&from=sports","time":"2026年08月28日 00:00","scraped_at":"2026-08-29 16:21:50"},{"id":"e1134fbd28b4","category":"综合","title":"女篮许诺穿旗袍上街！秀超级大长腿，高出路人一大截，回头率100%","content":"女篮许诺穿旗袍上街！秀超级大长腿，高出路人一大截，回头率100%\n女篮许诺穿旗袍上街！秀超级大长腿，高出路人一大截，回头率100%#微博视频号迎新计划#\n00:01/01:09\nLoaded: 53.48%\n特别声明：以上文章内容仅代表作者本人观点，不代表新浪网观点或立场。如有关于作品内容、版权或其它问题请于作品发表后的30日内与新浪网联系。\n赛博对话\n热搜时代\n一天零一页\n无双\n热浪之外\n来自于：四川\n权利保护声明页/Notice to Right Holders\n1条评论|2人参与\n网友评论\n登录|注册\n发布\n最热评论\n用户7623443989天津\n这得找个多高的男朋友才能配得上。\n43分钟前\n赞1回复\n最新评论\n用户7623443989天津\n这得找个多高的男朋友才能配得上。\n43分钟前\n赞1回复\n查看全部1条评论 >\n相关新闻\n投资热点尽在新浪财经APP>\n加载中","source":"新浪体育","source_url":"http://k.sina.com.cn/article_2314713452_m89f7b96c03301c6fk.html?cre=tianyi&mod=pcspth&loc=12&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports","time":"2026年08月28日 10:47","scraped_at":"2026-08-29 16:21:52"},{"id":"4c9eb5544100","category":"综合","title":"克莱：伤病恢复过程枯燥而艰难 我咬牙坚持才得以重返赛场","content":"北京时间8月27日，热火新援克莱-汤普森在直播间里聊到了自己伤愈复出过程中的点滴。\n\n“恢复这条路真不好走。2020年休赛期跟腱受伤后，我的右腿肌肉萎缩得厉害，我只能日复一日地做那些枯燥的提踵、单腿深蹲。简直是种煎熬，但再难也得咬牙顶住。好在这几年医学进步了不少，加上队友们的支持，我才得以重新站回赛场。现在呢，我还是尽力保持状态，每天在自家后院的冷水池里泡一泡，做做恢复，已经成了日常。”克莱说道。","source":"新浪体育","source_url":"http://k.sina.com.cn/article_2090512390_7c9ab00602003f1s0.html?cre=tianyi&mod=pcspth&loc=13&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12&from=sports","time":"2026年08月27日 19:21","scraped_at":"2026-08-29 16:21:54"},{"id":"279e55bae7fe","category":"排球","title":"胜越南，中国女排出现奇兵，双率57%42%高于庄宇珊，可取代龚翔宇","content":"昨晚，中国女排32比0强势击败越南女排，如愿晋级半决赛，与冠军再进一步。半决赛中国女排对阵小组赛老对手伊朗，不出意外中国队取胜没有问题。\n\n本场比赛中国队能够击败越南，主要体现了网口火力的强大，吴梦洁轰18分，庄宇珊也轰下18分，双子星合砍36分。此外，还出现了一奇兵，没错，她就是替补上场的杨舒茗。本场比赛她三次上来都发挥了作用。\n\n第一局后段，两点换三点，赵勇换上杨舒茗，而她上场后就在二号位强攻钉地板，扣中一球。第二局22-21领先时，杨舒茗发替，他的发球直接得分，帮助球队23-21扩大优势，成为关键转折点。第三局杨舒茗又得到上场机会，龚翔宇状态不佳，赵勇直接用杨舒茗换下龚翔宇，而她登场后也不负所望，迎着两人拦防，在二号位强攻重炮钉地板。\n\n杨舒茗三次上场，三次都起到作用，进攻成功率和效率都高，在有限的时间里，他7扣4中一发得到5分，双率是57%42%，比二当家庄宇珊效率还要高，更是比主力接应龚翔宇高得多。龚翔宇本场比赛继续着不温不火的状态，全场15扣6中0失误1被拦，得到8分，她扣球比杨舒茗多两倍，可是得分并非多两倍，双率只有40%和33%，明显低于杨舒茗。赛后球迷大赞杨舒茗，称她是奇兵和潜力股。\n\n杨舒茗还很年轻，只有18岁，球迷纷纷说，她现在缺的是比赛，只要多让她打比赛，就能不断提升。确实无论是在世联赛，还是亚锦赛，赵勇给她上场的机会并不多，只是得到零星的时间。她不但能进攻，能发球，一传、防守也好，是个值得培养的年轻球员。希望赵勇多给杨舒茗机会，逐渐取代状态下滑，不温不火的龚翔宇。对此，大家怎么看？","source":"新浪体育","source_url":"http://k.sina.com.cn/article_1352367147_509b7c2b00101lwf4.html?cre=tianyi&mod=pcspth&loc=14&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=181&from=sports&subch=vollyball","time":"2026年08月29日 08:43","scraped_at":"2026-08-29 16:21:56"},{"id":"379ebd23d637","category":"综合","title":"阿里纳斯：克莱给字母哥拉开空间就好 有空间就能赢","content":"北京时间8月27日，在一档节目中，前NBA球员吉尔伯特-阿里纳斯对克莱-汤普森加盟热火赞不绝口，认为克莱的投射将与扬尼斯-阿德托昆博和巴姆-阿德巴约完美互补。\n\n阿里纳斯表示：“我喜欢克莱这个选择，实际上我超级看好克莱在那里的表现。就他们俩（扬尼斯和巴姆）打挡拆，克莱在外线游走。听着，只要每个人都能投篮，他们就会成功。只要空间拉开，让扬尼斯做扬尼斯的事就行。”","source":"新浪体育","source_url":"http://k.sina.com.cn/article_2090512390_7c9ab00602003f1sk.html?cre=tianyi&mod=pcspth&loc=15&r=0&rfunc=79&tj=cxvertical_pc_spth&tr=12&from=sports","time":"2026年08月27日 19:23","scraped_at":"2026-08-29 16:21:57"}];
+const ATHLETES = [{"name":"利昂内尔·梅西","sport":"足球","position":"前锋","photo":"https://bkimg.cdn.bcebos.com/smart/d31b0ef41bd5ad6eddc4ce779f962edbb6fd536696a3-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"利昂内尔·梅西（Lionel Messi），全名利昂内尔·安德烈斯·梅西·库奇蒂尼（Lionel Andrés Messi Cuccitini），昵称莱奥·梅西（Leo Messi），1987年6月24日出生于阿根廷圣菲省罗萨里奥，阿根廷职业足球运动员，司职前锋，现效力于美国职业足球大联盟的迈阿密国际足球俱乐部，亦担任球队队长 。 俱乐部方面，梅西于2000年进入拉玛西亚青训营。2004年，梅西与巴塞罗那足球俱乐部签下职业合同 。2009年，梅西帮助巴萨加冕六冠王，个人首次荣膺金球奖 。2011年，梅西帮助巴萨加冕五冠王 。2012年，梅西以91粒正式比赛进球刷新足坛单一自然年进球纪录，连续第四年荣膺金球奖 。2015年，梅西再度帮助巴萨加冕五冠王，个人第五次荣膺金球奖 。2019年，梅西第六次荣膺金球奖。2021年，梅西自由加盟巴黎圣日耳曼足球俱乐部 ，同年第七次荣膺金球奖 。2023年，梅西加盟迈阿密国际足球俱乐部 ，同年第八次荣膺金球奖 。2025年，梅西首夺美职联总冠军 。 国家队方面，梅西于2005年帮助阿根廷U20青年队夺得世青赛冠军。2008年，梅西帮助阿根廷国奥队夺得北","baike_url":"https://baike.baidu.com/item/%E5%88%A9%E6%98%82%E5%86%85%E5%B0%94%C2%B7%E6%A2%85%E8%A5%BF/3965248?fromtitle=%E6%A2%85%E8%A5%BF&fromid=741204","nationality":"","birth":"1987年6月24日"},{"name":"克里斯蒂亚诺·罗纳尔多","sport":"足球","position":"前锋","photo":"https://bkimg.cdn.bcebos.com/smart/b7003af33a87e950352ad43923654443fbf2b2111e6b-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"克里斯蒂亚诺·罗纳尔多（Cristiano Ronaldo），全名克里斯蒂亚诺·罗纳尔多·多斯·桑托斯·阿维罗（Cristiano Ronaldo dos Santos Aveiro），简称C罗，1985年2月5日出生于葡萄牙马德拉群岛丰沙尔，葡萄牙职业男子足球运动员，司职边锋/中锋 ，现效力于沙特阿拉伯职业足球联赛的利雅得胜利足球俱乐部 。 1995年，C罗加入马德拉国民足球俱乐部，1996年，转入葡萄牙体育足球俱乐部青训体系。2001年，在葡萄牙体育足球俱乐部经历U16、U17、U18、二线队和一线队5个不同级别赛事 。2003年，转会至曼彻斯特联足球俱乐部 ，并帮助球队夺得包含2007-08赛季欧洲冠军联赛冠军在内的10项锦标 ，个人收获2006-07赛季英格兰足球超级联赛最佳球员 、2008年金球奖、国际职业足球运动员联合会最佳球员、英超最佳球员、英超金靴等奖项 。2009年，转会至皇家马德里足球俱乐部，并在9年间帮助球队夺得包括2013-14赛季 、2015-16赛季、2016-17赛季、2017-18赛季4次欧洲冠军联赛冠军在内的16项锦标 ，个人4度荣获金球奖 。2022","baike_url":"https://baike.baidu.com/item/%E5%85%8B%E9%87%8C%E6%96%AF%E8%92%82%E4%BA%9A%E8%AF%BA%C2%B7%E7%BD%97%E7%BA%B3%E5%B0%94%E5%A4%9A/4510104?fromtitle=C%E7%BD%97&fromid=5955303","nationality":"","birth":"1985年2月5日"},{"name":"基利安·姆巴佩","sport":"足球","position":"前锋","photo":"https://bkimg.cdn.bcebos.com/smart/ac345982b2b7d0a20cf41563f8b261094b36adaf2c82-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"基利安·姆巴佩（Kylian Mbappé），全名基利安·桑米·姆巴佩·洛坦（Kylian Sanmi Mbappé Lottin），1998年12月20日出生于法国巴黎，法国职业足球运动员，司职前锋，现效力于西班牙足球甲级联赛的皇家马德里足球俱乐部 。 俱乐部方面，姆巴佩出道于法国克莱枫丹青训营。2013年，姆巴佩加盟摩纳哥足球俱乐部青年队。2016年，姆巴佩进入摩纳哥一线队。2017年8月，姆巴佩加盟巴黎圣日耳曼足球俱乐部。2024年6月，姆巴佩加盟皇家马德里足球俱乐部 。2024-25赛季，成为皇马队史第三位夺得欧洲金靴奖的球员 、皇马队史第15位斩获西甲金靴的球员 。2025年8月，姆巴佩入选2025年男子金球奖候选名单 。2026年5月，姆巴佩蝉联西甲金靴奖。 国家队方面，姆巴佩于2018年随法国国家男子足球队出征2018年俄罗斯世界杯并夺得冠军，个人荣膺世界杯最佳新秀奖并入选国际足联年度最佳阵容 。2021年，姆巴佩帮助法国队夺得2020-21赛季欧洲国家联赛冠军 。2022年，姆巴佩随法国队出征2022年卡塔尔世界杯并夺得亚军，个人荣膺世界杯金靴奖、银球奖 。2023年，","baike_url":"https://baike.baidu.com/item/%E5%9F%BA%E5%88%A9%E5%AE%89%C2%B7%E5%A7%86%E5%B7%B4%E4%BD%A9/19408535?fromtitle=%E5%A7%86%E5%B7%B4%E4%BD%A9&fromid=19416599","nationality":"","birth":"1998年12月20日"},{"name":"埃尔林·哈兰德","sport":"足球","position":"前锋","photo":"https://bkimg.cdn.bcebos.com/smart/4610b912c8fcc3cec3fd800da718c188d43f87948ac2-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"埃尔林·哈兰德（Erling Haaland），全名埃尔林·布劳特·哈兰德（Erling Braut Haaland），2000年7月21日出生于英国利兹，挪威职业足球运动员，司职中锋，现效力于英格兰足球超级联赛的曼彻斯特城足球俱乐部 。 俱乐部方面，哈兰德出道于挪威球队布吕讷的青训营，15岁在布吕讷一线队完成首秀 。2017年2月，哈兰德加盟莫尔德足球俱乐部 ，并随队参加挪威足球超级联赛。2019年1月，哈兰德加盟萨尔茨堡红牛足球俱乐部，随队夺得奥地利甲级联赛冠军和奥地利杯冠军 。同年12月，哈兰德加盟多特蒙德足球俱乐部 。2020年，哈兰德夺得金童奖 。2020-21赛季当选德甲最佳球员并荣获欧冠金靴奖，随队夺得2021年的德国杯冠军 。2022年6月，哈兰德加盟曼彻斯特城足球俱乐部 。2022-23赛季，哈兰德帮助曼城夺得英超冠军、足总杯冠军并首次夺得欧冠冠军，加冕三冠王 。哈兰德也包揽该赛季英超金靴、欧冠金靴和欧洲金靴 。2023年12月，哈兰德随曼城夺得世俱杯冠军，他本人也当选IFFHS2023年度最佳男足运动员 。2023-24赛季，哈兰德在英超打进27球卫冕金靴，并帮助曼","baike_url":"https://baike.baidu.com/item/%E5%9F%83%E5%B0%94%E6%9E%97%C2%B7%E5%93%88%E5%85%B0%E5%BE%B7/23507447?fromtitle=%E5%93%88%E5%85%B0%E5%BE%B7&fromid=20465802","nationality":"","birth":"2000年7月21日"},{"name":"祖德·贝林厄姆","sport":"足球","position":"中场","photo":"https://bkimg.cdn.bcebos.com/smart/1f178a82b9014a90f603c54d9c2a2e12b31bb15140b7-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"祖德·贝林厄姆（Jude Bellingham），全名祖德·维克托·威廉·贝林厄姆（Jude Victor William Bellingham） ，2003年6月29日出生于英国英格兰斯陶尔布里奇，英格兰职业男子足球运动员，司职中场，现效力于西班牙足球甲级联赛的皇家马德里足球俱乐部 。 俱乐部方面，贝林厄姆出道于伯明翰城足球俱乐部，2020年7月，贝林厄姆加盟德甲多特蒙德足球俱乐部 。2020-21赛季，贝林厄姆被德国足球协会评为德甲最佳新人 。2022-23赛季，贝林厄姆当选德甲最佳球员 。2023年，贝林厄姆加盟皇家马德里足球俱乐部，同年荣获金童奖和科帕奖 。2023-24赛季，贝林厄姆帮助皇马夺得西甲冠军和欧冠冠军 。2024年，贝林厄姆位列金球奖第三 。 国家队方面，贝林厄姆于2020年11月首次入选英格兰国家队，后随队出征2020年欧洲足球锦标赛、2022年卡塔尔世界杯、2024年德国欧洲杯 。2025年11月，贝林厄姆入选FIFPRO 2025年度男足最佳11人阵容。 2025年12月，贝林厄姆入选国际足联2025年度男足最佳阵容。 2026年5月，贝林厄姆入选英格兰队出","baike_url":"https://baike.baidu.com/item/%E7%A5%96%E5%BE%B7%C2%B7%E8%B4%9D%E6%9E%97%E5%8E%84%E5%A7%86","nationality":"英国 [332]、爱尔兰 [94]","birth":"2003年6月29日 [332]"},{"name":"内马尔","sport":"足球","position":"前锋","photo":"https://bkimg.cdn.bcebos.com/smart/e4dde71190ef76c6a7eff0aba94beafaaf51f2dec9a4-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"内马尔·达·席尔瓦·桑托斯·儒尼奥尔（Neymar da Silva Santos Júnior），简称内马尔，1992年2月5日出生于巴西圣保罗州，巴西职业男子足球运动员，司职前锋 ，现效力于巴西足球甲级联赛的桑托斯足球俱乐部 。 俱乐部方面，内马尔出身于桑托斯青训营。2009年，内马尔升入桑托斯一线队。在两度荣膺南美足球先生后，内马尔于2013年夏天转会加盟巴萨 。2013年夏天，内马尔随巴西队夺得联合会杯冠军 。2014-15赛季，内马尔帮助巴萨加冕“三冠王”，个人荣膺欧冠金靴和国王杯金靴 。2017年8月，内马尔以打破足坛纪录的2.22亿欧元转会费加盟巴黎圣日耳曼 ，并在加盟后的首个赛季荣膺法甲最佳球员 。2019-20赛季，内马尔帮助巴黎圣日耳曼首次打入欧冠决赛 。2023年8月，内马尔加盟利雅得新月 。2025年，内马尔重回桑托斯 。 国家队方面，2009年，内马尔入选巴西U17国青队，并随队出征国际足联U-17世界杯。 2010年，内马尔首次入选巴西国家队。 2012年，内马尔入选巴西国奥队出征2012年伦敦奥运会。 2014年，内马尔随巴西队征战巴西世界杯，并荣膺铜靴奖","baike_url":"https://baike.baidu.com/item/%E5%86%85%E9%A9%AC%E5%B0%94%C2%B7%E8%BE%BE%C2%B7%E5%B8%AD%E5%B0%94%E7%93%A6%C2%B7%E6%A1%91%E6%89%98%E6%96%AF%C2%B7%E5%84%92%E5%B0%BC%E5%A5%A5%E5%B0%94/13024110?fromtitle=%E5%86%85%E9%A9%AC%E5%B0%94&fromid=3431139","nationality":"","birth":"1992年2月5日"},{"name":"勒布朗·詹姆斯","sport":"篮球","position":"小前锋","photo":"https://bkimg.cdn.bcebos.com/smart/34fae6cd7b899e510fb30ab185ffce33c895d143a744-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"勒布朗·詹姆斯（LeBron James），全名勒布朗·雷蒙·詹姆斯（LeBron Raymone James），1984年12月30日出生于美国俄亥俄州阿克伦，美国职业篮球运动员，司职小前锋，效力于NBA费城76人队。 2003年NBA选秀，在首轮第1顺位被克利夫兰骑士队选中，2009年和2010年两次当选NBA常规赛最有价值球员（MVP）。2010年，转投迈阿密热火队。在效力热火的四年中，詹姆斯4次帮助球队打入NBA总决赛，两夺NBA总冠军，个人两次荣膺常规赛MVP和总决赛MVP（FMVP）。2014年，詹姆斯回归骑士。在回归骑士效力的四年中，詹姆斯4次帮助球队打入总决赛，其中于2016年夺得总冠军和FMVP。2018年，詹姆斯转投洛杉矶湖人队。2020年，詹姆斯夺得个人第4个总冠军以及个人第4个FMVP。 2021年，詹姆斯入选75大巨星。 2023年，詹姆斯成为NBA历史得分王，并夺得季中赛冠军和季中赛MVP。 2024年2月14日，詹姆斯在常规赛中连续1200场得分上双，创下历史新纪录；2025年3月5日，在湖人主场对阵鹈鹕的比赛中，40岁的勒布朗·詹姆斯以一记侧翼三分达成5","baike_url":"https://baike.baidu.com/item/%E5%8B%92%E5%B8%83%E6%9C%97%C2%B7%E8%A9%B9%E5%A7%86%E6%96%AF/1989503?fromtitle=%E8%A9%B9%E5%A7%86%E6%96%AF&fromid=14189565","nationality":"","birth":"1984年12月30日"},{"name":"斯蒂芬·库里","sport":"篮球","position":"控球后卫","photo":"https://bkimg.cdn.bcebos.com/smart/bd315c6034a85edf8db1cf18c90c1e23dd54564edfca-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"斯蒂芬·库里（Stephen Curry），全名沃德尔·斯蒂芬·库里二世（Wardell Stephen Curry II），1988年3月14日出生于美国俄亥俄州阿克伦，美国职业篮球运动员，司职控球后卫，效力于NBA金州勇士队。 斯蒂芬·库里于2009年通过选秀进入NBA后一直效力于金州勇士队，新秀赛季入选最佳新秀第一阵容；2014-15、2016-17、2017-18、2021-22赛季四次夺得NBA总冠军，并于2021-22赛季当选总决赛MVP（FMVP）。 其他荣誉方面，库里两次荣膺常规赛MVP。 2015-16、2020-21赛季两次荣膺常规赛得分王。 2021-22赛季荣膺全明星正赛MVP以及西部决赛MVP。 2023-24赛季当选最佳关键球员。 11次入选最佳阵容（4次一阵、5次二阵、2次三阵） 。12次入选全明星阵容，2次荣膺全明星正赛MVP。 2021年10月入选NBA75大巨星，12月加冕NBA历史三分王。 斯蒂芬·库里于2010年随美国队夺得土耳其世锦赛冠军。 2014年随美国队夺得西班牙篮球世界杯冠军。 2024年随美国队夺得巴黎奥运会男篮金牌。 斯蒂芬·库里是","baike_url":"https://baike.baidu.com/item/%E6%96%AF%E8%92%82%E8%8A%AC%C2%B7%E5%BA%93%E9%87%8C/902812?fromtitle=%E5%BA%93%E9%87%8C&fromid=8916710","nationality":"","birth":"1988年3月14日"},{"name":"尼古拉·约基奇","sport":"篮球","position":"中锋","photo":"https://bkimg.cdn.bcebos.com/smart/8c1001e93901213fb80ed90d96bf21d12f2eb8383f93-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"尼古拉·约基奇（Nikola Jokić），1995年2月19日出生于塞尔维亚松博尔（Sombor, Serbia），塞尔维亚职业篮球运动员，司职中锋，效力于NBA丹佛掘金队。 约基奇早期效力塞尔维亚联赛梅加青年队，2012年提拔至成年队开启职业生涯。 2014年NBA选秀，在第41顺位被丹佛掘金队选中。 2015年，正式登陆NBA；2015-16赛季，场均贡献10.0分7.0篮板2.4助攻，入选最佳新秀阵容一阵。 2016年8月，帮助塞尔维亚男篮夺得2016年里约奥运会男篮银牌。 2018-19赛季，首次入选NBA全明星并入选最佳阵容一阵，同时与掘金签下5年1.48亿顶薪合约。 2019-20赛季，入选最佳阵容二阵。2020-21赛季，场均轰下26.4分10.8篮板8.3助攻，斩获个人首座NBA常规赛MVP，成为NBA历史上少有的二轮秀MVP得主。 2021-22赛季，成功蝉联常规赛MVP，成为NBA历史第13位蝉联MVP的球员，入选最佳阵容一阵。 2022-23赛季，带领掘金以西部第一的战绩闯入季后赛，场均贡献30.2分14.0篮板7.2助攻，先后当选西部决赛MVP和总决赛MVP，","baike_url":"https://baike.baidu.com/item/%E5%B0%BC%E5%8F%A4%E6%8B%89%C2%B7%E7%BA%A6%E5%9F%BA%E5%A5%87","nationality":"","birth":"1995年2月19日"},{"name":"卢卡·东契奇","sport":"篮球","position":"后卫","photo":"https://bkimg.cdn.bcebos.com/smart/500fd9f9d72a6059252d7aeea16c239b033b5ab50cb4-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"卢卡·东契奇（Luka Dončić），1999年2月28日出生于斯洛文尼亚卢布尔雅那，斯洛文尼亚职业篮球运动员，司职控球后卫/得分后卫，效力于NBA洛杉矶湖人队。 卢卡·东契奇的职业生涯开始于西班牙篮球甲级联赛皇家马德里篮球俱乐部。2018年NBA选秀，卢卡·东契奇在首轮第3顺位被亚特兰大老鹰队选中，随后被交易至达拉斯独行侠队，2018-19赛季当选最佳新秀并入选最佳新秀阵容第一阵容。2019-20赛季入选全明星西部首发阵容以及最佳阵容第一阵容。 2020-21赛季入选全明星西部首发阵容以及最佳阵容第一阵容。 2021-22赛季入选全明星替补阵容以及最佳阵容第一阵容。 2022-23赛季入选全明星西部首发阵容以及最佳阵容第一阵容。 2023-24赛季入选全明星西部首发阵容以及最佳阵容第一阵容并荣膺得分王。 2024-25赛季被交易至洛杉矶湖人队。 2025-26赛季入选最佳阵容第一阵容并荣膺得分王。 2017年，卢卡·东契奇随斯洛文尼亚国家队夺得男篮欧洲杯冠军。 2021年夏天，卢卡·东契奇随斯洛文尼亚男篮首次打进东京奥运会。同年8月，东契奇入选FIBA2020年东京奥运会男篮最佳阵","baike_url":"https://baike.baidu.com/item/%E5%8D%A2%E5%8D%A1%C2%B7%E4%B8%9C%E5%A5%91%E5%A5%87/20290865?fromtitle=%E4%B8%9C%E5%A5%91%E5%A5%87&fromid=23588257","nationality":"","birth":"1999年2月28日"},{"name":"林丹","sport":"羽毛球","position":"男单","photo":"https://bkimg.cdn.bcebos.com/smart/b21bb051f8198618367a8e55d5b539738bd4b21c4893-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"林丹，1983年10月14日出生于福建省龙岩市上杭县临江镇，中国前职业男子羽毛球运动员。 1988年，林丹开始接触羽毛球。 2000年，进入国家队。2002年8月首次登上羽毛球世界排名第一的位置。 2005年12月，获首个单项世界冠军（世界杯），并于2006年卫冕。 因其在各项世界比赛中夺冠，长时间占据世界排名第一，被称为\"超级丹\"。 于2008年北京奥运会、2012年伦敦奥运会获得羽毛球男单冠军。 2006-2013年间，五次获世锦赛男单冠军。 2004至2018年，六次获汤姆斯杯冠军。 2005至2015年，五次获苏迪曼杯冠军。 2004至2016年，六次获全英赛冠军。 于2010年实现\"全满贯\"， 2014年实现双圈\"全满贯\"。 2018年5月6日，新西兰羽毛球公开赛，林丹在决赛中以2-0击败印尼选手乔纳坦·克里斯蒂，打破了13个月的\"冠军荒\"，获得2018年的首个冠军；8月23日，获雅加达亚运会羽毛球男团冠军。 2019年4月，林丹获马来西亚羽毛球公开赛男单冠军。 林丹职业生涯共66个冠军头衔，其中世界冠军20个。2020年7月4日，林丹正式宣布退役，结束自己的球员生涯。 20","baike_url":"https://baike.baidu.com/item/%E6%9E%97%E4%B8%B9/2674","nationality":"中国 [125]","birth":"1983年10月14日"},{"name":"陈雨菲","sport":"羽毛球","position":"女单","photo":"https://bkimg.cdn.bcebos.com/smart/f11f3a292df5e0fe9925aea3312f23a85edf8db1d448-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"陈雨菲，1998年3月1日出生于浙江省杭州市桐庐县，国际级运动健将 ，中国羽毛球运动员，中国国家羽毛球队成员，第十四届全国人民代表大会代表，毕业于北京体育大学。 2017年，获中华人民共和国第十三届运动会羽毛球女单冠军 。2018年，获2018中国（福州）羽毛球公开赛女单冠军 。2019年，获全英羽毛球公开赛女单冠军 、瑞士羽毛球公开赛女单冠军 、2019年苏迪曼杯世界羽毛球混合团体锦标赛混合团体冠军 、澳大利亚羽毛球公开赛女单冠军 、泰国羽毛球公开赛女单冠军 、2019中国（福州）羽毛球公开赛女单冠军 、中国香港羽毛球公开赛女单冠军 、世界羽联世界巡回赛总决赛女单冠军 。2020年，获世界羽联超级500赛马来西亚大师赛女单冠军 。2021年，获2020年东京奥运会羽毛球女单冠军 、2021年中华人民共和国第十四届运动会羽毛球女单冠军 、2021年苏迪曼杯世界羽毛球混合团体锦标赛冠军、尤伯杯羽毛球团体赛冠军 。2021年，被共青团中央、全国青联授予中国青年五四奖章 ；被授予全国五一劳动奖章 。 2024年6月，获2024年印度尼西亚羽毛球公开赛女单冠军 。 2025年，获2025亚洲羽","baike_url":"https://baike.baidu.com/item/%E9%99%88%E9%9B%A8%E8%8F%B2/16039088","nationality":"","birth":"1998年3月1日"},{"name":"马龙","sport":"乒乓球","position":"男单","photo":"https://bkimg.cdn.bcebos.com/smart/6d81800a19d8bc3eb135d19c30dcb11ea8d3fd1fef17-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"马龙，男，1988年10月20日出生于辽宁省鞍山市，国际级运动健将 ，中国乒乓球运动员，前中国男子乒乓球队队员 ，2017年本科毕业于上海交通大学 ，是首位集奥运会、世锦赛、世界杯、亚运会、亚锦赛、亚洲杯、巡回赛总决赛、全运会单打冠军于一身的超级全满贯男子选手 。 马龙5岁开始学习乒乓球，2003年进入国家队。2012年，在世界杯中夺得首个世界单打冠军 。2013年蝉联亚锦赛男单冠军，成首位亚锦赛男单三连冠选手 ；5月入选国际乒联名人堂 。次年成就亚洲杯四冠 ；4月，当选中国乒乓男队队长 。2015年，连续夺得苏州世乒赛、乒乓球世界杯、国际乒联世界巡回赛总决赛男单冠军，成历史首位一年内取得这三项冠军的男球员 。2016年里约奥运会，夺得男单、男团冠军 。2017年6月，在德国杜塞尔多夫世乒赛夺冠 ；9月，第十三届全运会乒乓球男单夺冠 。2020年10月，摘得全国乒乓球锦标赛双打金牌 。2021年，获东京奥运会乒乓球男单、男团冠军 。2024年4月，获2024年乒乓球世界杯男单冠军，第三次夺得世界杯男单冠军 ；7月，担任巴黎奥运会开幕式中国体育代表团旗手 ；8月，夺得2024年巴黎奥运会","baike_url":"https://baike.baidu.com/item/%E9%A9%AC%E9%BE%99/35974","nationality":"","birth":"1988年10月20日"},{"name":"樊振东","sport":"乒乓球","position":"男单","photo":"https://bkimg.cdn.bcebos.com/smart/4b90f603738da977391232e5dd0cef198618377a45f5-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"樊振东，1997年1月22日出生于广东省广州市，祖籍湖南省衡阳市祁东县，中国乒乓球运动员，国际级运动健将，上海市青联常委、体育界别副主任，现效力于杜塞尔多夫俱乐部。 2008年入选八一队，2012年进入国家队，同年斩获乒乓球世青赛男单、混双、男团三项冠军。 2013年参加波兰公开赛成为巡回赛史上最年轻男单冠军，并于全运会获得男团、男双冠军及男单亚军。2014年以17岁103天成为中国男乒史上最年轻世界冠军，同年实现青奥会乒乓球青年赛事大满贯。 2016年首夺世界杯单打冠军，2018年首次登顶世界排名第一。 其职业生涯共获四届世界杯（2016、2018-2020）、两届世乒赛（2021、2023）及2024年巴黎奥运会男单冠军，成为第十位大满贯、第三位超级全满贯选手。2019年世界军人运动会勇夺四枚金牌并荣立一等功。2022年首夺WTT大满贯男单冠军且成为全锦赛史上首位男单“四冠王”，同年助中国队实现世乒赛男团十连冠。2023年卫冕世乒赛男单冠军并为中国队达成世乒赛男单十连冠。2024年巴黎奥运会获男单、男团双金，同年12月退出世界排名。2026年7月1日消息，樊振东正式加盟德甲杜塞尔多","baike_url":"https://baike.baidu.com/item/%E6%A8%8A%E6%8C%AF%E4%B8%9C/1039651","nationality":"中国","birth":"1997年1月22日"},{"name":"孙颖莎","sport":"乒乓球","position":"女单","photo":"https://bkimg.cdn.bcebos.com/smart/b812c8fcc3cec3fdfc03b38747d1c33f8794a5c289b2-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"孙颖莎，女，2000年11月4日出生于河北省石家庄市，国际级运动健将，中国女子乒乓球运动员。效力于中国国家乒乓球队，现女单世界第一。 2015年，进入国家二队。2017年，升入一队 ；6月，首次在日本公开赛中斩获女单、女双冠军 ；7月，世界排名从无直接“空降”至世界第10 ；同年获2017年世青赛女单、女双、女团三冠 。2018年，获青奥会女单冠军。 。2019年，获世锦赛女双冠军、世界杯女团冠军，首次获亚锦赛与全锦赛女单冠军 。2020年，获WTT澳门国际乒乓球女单冠军，是WTT历史上首位冠军 。2021年，获东京奥运会乒乓球女单亚军、女团冠军； 11月，世乒赛女单亚军、女双冠军、混双冠军。 12月，2021年WTT世界杯女单冠军 。2022年，首次登顶世界第一，成为世界乒坛首位“00后”世界第一。 2023年，获WTT新加坡大满贯女单、女双、混双冠军，成为WTT大满贯赛史上首位“三冠王” ；5月，获德班世乒赛女单冠军、混双冠军，成为世乒赛历史上首位00后单打冠军，成就世乒赛金满贯。 2024年，首获世界杯女单冠军； 2024年巴黎奥运会获混双金牌、女团金牌、女单银牌，混双金牌是中国","baike_url":"https://baike.baidu.com/item/%E5%AD%99%E9%A2%96%E8%8E%8E","nationality":"","birth":"2000年11月4日"},{"name":"诺瓦克·德约科维奇","sport":"网球","position":"男单","photo":"https://bkimg.cdn.bcebos.com/smart/86d6277f9e2f0708283808dd017caf99a9014d0854ef-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"诺瓦克·德约科维奇（Novak Djokovic），1987年5月22日出生于塞尔维亚贝尔格莱德，塞尔维亚职业网球运动员。 2003年，德约科维奇转为职业球员。2006年，首获ATP巡回赛单打冠军。2007年9月首次闯入大满贯男单决赛获得美网亚军。2008年，首次获得大满贯冠军（澳网）。2011年，首次获得赛季三冠王（澳网、温网、美网），2020年，再次问鼎ATP1000大师赛西南公开赛， 达成“双圈金大师”。2021年，成为公开赛时期以来，首位成就双圈全满贯的男子球员。同时第2次赛季大满贯全部打进决赛（获得3冠1亚），并实现澳网第2次三连冠。2022年，达成温网四连冠。2023年，德约科维奇第3次在年度四项大满贯赛事中均打进决赛，赢下三个冠军（澳网、法网、美网），创造了史无前例的“三圈全满贯”纪录，同时大满贯数量累计达到24冠追平玛格丽特·考特并列历史第一位。 2024年8月4日，德约科维奇2:0（7-63、7-62）战胜卡洛斯·阿尔卡拉斯，获得2024年巴黎奥运会网球男子单打金牌，实现了个人职业生涯的金满贯。 12月26日，被新华社体育部评为“2024年国际十佳运动员”。 2026","baike_url":"https://baike.baidu.com/item/%E8%AF%BA%E7%93%A6%E5%85%8B%C2%B7%E5%BE%B7%E7%BA%A6%E7%A7%91%E7%BB%B4%E5%A5%87/3824639?fromtitle=%E5%BE%B7%E7%BA%A6%E7%A7%91%E7%BB%B4%E5%A5%87&fromid=5321909","nationality":"","birth":"1987年5月22日"},{"name":"卡洛斯·阿尔卡拉斯","sport":"网球","position":"男单","photo":"https://bkimg.cdn.bcebos.com/smart/d439b6003af33a87e950bba6700507385343fbf21f4f-bkimg-process,v_1,rw_1,rh_1,maxl_216,pad_1,color_ffffff?x-bce-process=image/format,f_auto","bio":"卡洛斯·阿尔卡拉斯（Carlos Alcaraz），2003年5月5日出生于西班牙穆尔西亚埃尔帕尔马，西班牙网球运动员，持拍方式为右手双反 。 2018年，阿尔卡拉斯转入职业网坛 。2021年，阿尔卡拉斯在乌玛格获得巡回赛首冠；在米兰获得ATP新生力量总决赛冠军；在美网成为公开赛年代最年轻美网男单八强 。 2022年，阿尔卡拉斯在美网复制了纳达尔19岁大满贯夺冠的壮举，成为首位00后大满贯男单冠军，以19岁4个月的年龄成为ATP历史最年轻世界第一，并结束费纳德穆对年终第一长达18年的垄断 ；在里约成为ATP500赛历史最年轻冠军 ；在迈阿密获得大师赛首冠，成为赛会历史最年轻冠军与大师赛历史第三年轻冠军 ；在马德里连克纳达尔、德约、兹维列夫夺冠，成为历史首位红土连克德纳的球员，历史最年轻面对德纳均取得胜绩的球员，历史最年轻在红土巡回赛击败纳达尔的球员 。 2023年，在印第安维尔斯成为历史最年轻集齐阳光双赛冠军的球员 ；在温网决赛五盘击败德约科维奇夺冠 。2024年，首度夺得法网冠军，成为公开赛年代夺得硬地、草地、红土三种场地类型大满贯冠军最年轻的男球员 。 2025年，在罗马大师赛决赛","baike_url":"https://baike.baidu.com/item/%E5%8D%A1%E6%B4%9B%E6%96%AF%C2%B7%E9%98%BF%E5%B0%94%E5%8D%A1%E6%8B%89%E6%96%AF/24344234","nationality":"","birth":"2003年5月5日"},{"name":"马克斯·维斯塔潘","sport":"赛车","position":"F1车手","photo":"https://bkimg.cdn.bcebos.com/smart/a8773912b31bb051f81968dd3527cdb44aed2f734a8a-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"马克斯·维斯塔潘（Max Verstappen），全名马克斯·艾米利亚·维斯塔潘（Max Emilian Verstappen） ，1997年9月30日出生于比利时哈塞尔特，荷兰一级方程式赛车运动员，效力于红牛车队 。 维斯塔潘4岁开始接触卡丁车。2014年，跨入汽车级别赛事 ；同年签约红牛青年车手培训营 。2015年，代表红牛二队征战F1大奖赛，成为F1历史上最年轻车手。2016年，被提拔到红牛一队，首次代表车队出战便赢得西班牙大奖赛冠军，成为F1历史上最年轻分站冠军车手 。2021年，在所参加的22站比赛中18次登上领奖台，并拿下10个分站赛冠军，凭借395.5分赢得职业生涯首个F1年度车手总冠军 。2022年，取得15场F1大奖赛胜利，打破迈克尔·舒马赫和塞巴斯蒂安·维特尔共同保持的13场单赛季最多胜利纪录 ，并提前卫冕F1年度车手总冠军 。2023年，以十连冠创造F1历史最长车手连胜纪录，实现年度车手总冠军三连冠 。2024年，实现年度车手总冠军四连冠 。2025年12月1日，F1卡塔尔大奖赛，维斯塔潘夺冠。 12月，维斯塔潘获得2025赛季世界一级方程式锦标赛年度车手亚军。 ","baike_url":"https://baike.baidu.com/item/%E9%A9%AC%E5%85%8B%E6%96%AF%C2%B7%E7%BB%B4%E6%96%AF%E5%A1%94%E6%BD%98/15418093?fromtitle=%E7%BB%B4%E6%96%AF%E5%A1%94%E6%BD%98&fromid=19673476","nationality":"","birth":"1997年9月30日"},{"name":"刘易斯·汉密尔顿","sport":"赛车","position":"F1车手","photo":"https://bkimg.cdn.bcebos.com/smart/622762d0f703918fa0ecb6e60664319759ee3d6d6edf-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"刘易斯·汉密尔顿（Lewis Hamilton），男，1985年1月7日出生于英国英格兰斯蒂夫尼奇，英格兰一级方程式赛车运动员，是F1史上首位黑人车手，效力于法拉利车队。 汉密尔顿8岁起开始练习卡丁车， 后签约迈凯伦的车手发展计划。 2007年3月，澳大利亚大奖赛暨揭幕战，汉密尔顿F1首秀便站上了领奖台，获得季军。 初登F1舞台便创下连续9站登领奖台的纪录，以1分之差获得年度亚军。 2008年11月，成为F1史上首位夺取总冠军的黑人车手； 2010年、2012年、2013年获得年度第四名，2009年、2011年获得年度第五名； 2012年9月，梅赛德斯AMG车队官方宣布和汉密尔顿签约三年，2013赛季开始为梅赛德斯效力。 2015年10月，提前三轮加盟车手总冠军。 2017年均获得F1世界冠军； 2018年第五次获得F1世界冠军； 同年，被新华社体育部评为2018年国际十佳运动员。 2019年4月，汉密尔顿在上海站获得F1历史上第1000站的冠军。 11月，获得2019赛季F1总冠军； 2020年10月，夺得第91个F1分站冠军，平舒马赫的分站冠军数纪录； 同月，获得2020赛季F1葡","baike_url":"https://baike.baidu.com/item/%E5%88%98%E6%98%93%E6%96%AF%C2%B7%E6%B1%89%E5%AF%86%E5%B0%94%E9%A1%BF","nationality":"","birth":"1985年1月7日"},{"name":"朱婷","sport":"排球","position":"主攻","photo":"https://bkimg.cdn.bcebos.com/smart/9a504fc2d5628535e5dd427d59b361c6a7efce1bc560-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"朱婷，女，1994年11月29日出生于中国河南省周口市郸城县秋渠乡朱大楼村 ，国际级运动健将 ，中国女子排球运动员，效力于中国国家女子排球队，曾担任中国女排队长，现效力于意大利科内利亚诺俱乐部。 2013年，朱婷正式入选中国国家女子排球队。2015年女排世界杯，中国女排时隔11年再获冠军，朱婷首次获得MVP。2016年8月21日，中国女排时隔12年再获奥运冠军，朱婷加冕里约奥运会女排MVP与最佳主攻； 里约奥运会结束后，朱婷加盟土耳其瓦基弗银行俱乐部，开始留洋之路。 2019-20赛季，朱婷回国加盟天津女排，以联赛13战全胜的战绩拿下冠军，同时斩获了个人联赛首个MVP。 2020-21赛季，朱婷荣膺排超联赛最有价值球员奖。 2021年9月，朱婷随河南女排出征第十四届全运会。 2023年5月28日，意大利斯坎迪奇女排官宣朱婷征战2023-24赛季意大利女排联赛消息。 2024年4月8日，确认将会在世界女排联赛期间回归国家队。 4月10日，入选中国国家女子排球队参加2024年世界女子排球联赛的23人名单。 5月22日，朱婷离开斯坎迪奇女排俱乐部。 2024年6月27日，朱婷加盟意大利科内利","baike_url":"https://baike.baidu.com/item/%E6%9C%B1%E5%A9%B7/5613955","nationality":"","birth":"1994年11月29日"},{"name":"大谷翔平","sport":"棒球","position":"投打双修","photo":"https://bkimg.cdn.bcebos.com/smart/a6efce1b9d16fdfaaf51d23ae1d39b5494eef11fcde9-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"大谷翔平（Shohei Ohtani），1994年7月5日出生于日本岩手县奥州市，日本男子棒球运动员，现效力于美国职业棒球大联盟（MLB）洛杉矶道奇队 ，是MLB当今唯一投打兼修的“二刀流”（Two-way）球员 。 大谷高中时即展现出色投球天赋，2012年高中毕业后，大谷在日本职棒选秀会上被北海道日本火腿斗士队以第一指名选中，原计划直接挑战MLB的大谷 被日本火腿队提出的培养计划说服并加盟 ，2013年即以“二刀流”身份征战日职棒赛场，2014年成为日职棒历史首位取得10场胜投并击出10支本垒打的球员 ，2015年成为日职棒“投手三冠王”（最多胜投、最高胜率、最优秀防御率） ，2016年当选常规赛最有价值球员（MVP）并率队赢得日本大赛冠军 。 2017年底，大谷加盟MLB洛杉矶天使队，并在新秀赛季即初步以二刀流立足，当选美国联盟年度最佳新秀 ；2021赛季，大谷首次在投打两端均展现出统治级实力，全票当选美联常规赛MVP ，并创造同时以指定打击和投手身份入选MLB全明星的历史 ，又在2023年再度全票当选美联MVP，但在天使效力6年间均未进入季后赛 。 2023年12月，大谷以10年","baike_url":"https://baike.baidu.com/item/%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3","nationality":"","birth":"1994年7月5日"},{"name":"泰格·伍兹","sport":"高尔夫","position":"高尔夫球手","photo":"https://bkimg.cdn.bcebos.com/smart/0ff41bd5ad6eddc451dadcc15887a1fd5266d01695cf-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"泰格·伍兹（Tiger Woods），全名艾德瑞克·泰格·伍兹（Eldrick Tiger Woods），1975年12月30日出生于美国加利福尼亚，美国高尔夫球手。 泰格·伍兹在3岁击出9洞48杆佳绩 ，5岁登上《高尔夫文摘》。 18岁成最年轻美国业余赛冠军，1994至1996年获三连冠。 1996年，赢得两场锦标赛冠军，荣获“年度最佳运动员”称号。 1997年，泰格·伍兹以创纪录优势赢得美国大师赛，成为首位非裔或亚裔冠军，世界排名升至第一。 同年，四夺赛事冠军，成为美巡赛第200位百万富翁。1998年，赛季初即夺冠，全年表现出色，年终排名世界第一。1999年泰格·伍兹9次夺冠，包括5场连续胜利，奖金榜首位。 2000年，与耐克达成1.05亿美元代言协议，全年10次夺冠，囊括多项大赛，继续排名世界第一。2001年至2004年间，泰格·伍兹多次赢得大满贯及重要赛事冠军，奖金累计攀升。2005至2009年间，持续斩获包括美国名人赛、英国公开赛在内的多项大赛冠军。2011年，获得雪佛龙世界高尔夫挑战赛冠军。 2012年，阿诺·帕尔默邀请赛、纪念高球赛、AT&T全美锦标赛冠军。 2017年1","baike_url":"https://baike.baidu.com/item/%E6%B3%B0%E6%A0%BC%C2%B7%E4%BC%8D%E5%85%B9/2248825","nationality":"","birth":"1975年12月30日"},{"name":"迈克尔·菲尔普斯","sport":"游泳","position":"自由泳/蝶泳","photo":"https://bkimg.cdn.bcebos.com/smart/024f78f0f736afc379318261e440fcc4b74543a9b424-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"迈克尔·菲尔普斯（Michael Phelps），全名迈克尔·弗雷德·菲尔普斯二世（Michael Fred Phelps II），男， 1985年6月30日出生于美国马里兰州巴尔的摩，美国前职业游泳运动员。 7岁时，菲尔普斯开始学习游泳。 2000年8月13日，成为68年来入选美国游泳队的最年轻的男子运动员。 2001年，打破200米蝶泳世界纪录。 2003年，在巴塞罗那游泳世锦赛获得4金2银共6块奖牌，打破5次世界纪录。 2004年，在雅典奥运会斩获6金2铜，成为历史第二位在单届奥运会夺取八枚奖牌的运动员。 2007年，在墨尔本游泳世锦赛夺得7枚金牌创造单届世锦赛金牌纪录。 2008年，在北京奥运会夺得8金，成为单届奥运会夺取金牌最多的选手。 2012年，在伦敦奥运会斩获4金2银，以22枚奥运奖牌（18枚金牌）登顶奥运历史金牌及奖牌榜。 2016年，在里约奥运会获得5金1银； 同年，宣布退役。 菲尔普斯是史上首位连续4届奥运会夺冠的游泳运动员，职业生涯共获得28枚奥运奖牌（其中23枚金牌），在奥运会历史上断崖式领先。 共29次打破个人项目世界纪录，在巅峰时期一度保有男子200米自由","baike_url":"https://baike.baidu.com/item/%E8%BF%88%E5%85%8B%E5%B0%94%C2%B7%E8%8F%B2%E5%B0%94%E6%99%AE%E6%96%AF/4849141?fromtitle=%E8%8F%B2%E5%B0%94%E6%99%AE%E6%96%AF&fromid=366235","nationality":"","birth":"1985年6月30日"},{"name":"李相赫","sport":"电竞","position":"中单","photo":"https://bkimg.cdn.bcebos.com/smart/c9fcc3cec3fdfc039245a4e095629094a4c27d1e886c-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"李相赫（Lee Sang-hyeok），ID：Faker，绰号“大魔王”，1996年5月7日出生于韩国首尔江西区， 韩国电子竞技运动员，《英雄联盟》职业选手，司职中单，效力于国际电子竞技俱乐部T1英雄联盟分部。 2013年2月，被招入SKTelecom T1#2队，该队伍于同年11月更名为SKTelecom T1 K队， 之后与SKTelecom T1 S队伍合并，更名为T1。 在T1战队的职业生涯中，他分别在2013年、2015年、2016年、2023年、2024年和2025年，六次获世界总决赛冠军。此外，还十次获LCK冠军，包括2013年夏季赛、2014年冬季赛、2015年春夏两季、2016年春季赛、2017年春季赛、2019年春夏两季、2020年春季赛以及2022年春季赛。在MSI季中冠军赛上，Faker在2016年和2017年两次夺冠。 其个人荣誉包括2016年韩国电竞年度大赏年度最佳电竞选手、2017年The Game Awards最佳电竞选手、2019年韩国电竞名人堂Stars部门等。 2022年11月28日，T1宣布与Faker续约三年。在2023年9月29日，Faker","baike_url":"https://baike.baidu.com/item/%E6%9D%8E%E7%9B%B8%E8%B5%AB/19669683","nationality":"","birth":"1996年5月7日"},{"name":"帕特里克·马霍姆斯","sport":"橄榄球","position":"四分卫","photo":"https://bkimg.cdn.bcebos.com/smart/0b55b319ebc4b74543a940afeda709178a82b901bf4d-bkimg-process,v_1,rw_16,rh_9,maxl_640,pad_1?x-bce-process=image/format,f_auto","bio":"帕特里克·马霍姆斯(Patrick Mahomes，全名Patrick Lavon Mahomes II)， 1995年9月17日出生于美国得克萨斯州泰勒市，美国职业橄榄球运动员，司职四分卫，效力于美国国家橄榄球联盟（NFL）的堪萨斯城酋长队。 2017年，马霍姆斯在NFL选秀大会中在首轮第10顺位被堪萨斯城酋长队选中。 2020年2月3日，在2020年NFL超级碗总决赛中，酋长队以31-20逆转战胜49人队夺冠，引领球队上演翻盘的马霍姆斯当选超级碗MVP。 马霍姆斯以24岁138天的年龄成为超级碗历史上第5年轻的首发四分卫，同时成为第3位在25岁前捧起隆巴迪杯的四分卫。 另外，马霍姆斯也成为历史上第一个在25岁之前就拿到超级碗和NFL联盟MVP的四分卫。 2021年，帕特里克·马霍姆斯荣获2021年劳伦斯世界体育奖年度突破奖。 2023年在NFL职业橄榄球大联盟“超级碗”比赛中，堪萨斯城酋长队以38:35险胜费城老鹰，拿下第57届超级碗冠军，马霍姆斯获得MVP，包揽了常规赛与超级碗最有价值球员。 2024年2月12日，在第58届超级碗比赛中，马霍姆斯加时赛压哨绝杀，帮助堪萨斯城酋长加","baike_url":"https://baike.baidu.com/item/%E5%B8%95%E7%89%B9%E9%87%8C%E5%85%8B%C2%B7%E9%A9%AC%E9%9C%8D%E5%A7%86%E6%96%AF/24305493?fromtitle=%E9%A9%AC%E9%9C%8D%E5%A7%86%E6%96%AF&fromid=24305391","nationality":"","birth":"1995年9月17日"}];
+const STANDINGS = {"足球":{"英超联赛":[{"rank":1,"team":"阿森纳","played":38,"wins":26,"draws":7,"losses":5,"goals_for":71,"goals_against":27,"goal_diff":44,"points":85},{"rank":2,"team":"曼城","played":38,"wins":23,"draws":9,"losses":6,"goals_for":77,"goals_against":35,"goal_diff":42,"points":78},{"rank":3,"team":"曼联","played":38,"wins":20,"draws":11,"losses":7,"goals_for":69,"goals_against":50,"goal_diff":19,"points":71},{"rank":4,"team":"阿斯顿维拉","played":38,"wins":19,"draws":8,"losses":11,"goals_for":56,"goals_against":49,"goal_diff":7,"points":65},{"rank":5,"team":"利物浦","played":38,"wins":17,"draws":9,"losses":12,"goals_for":63,"goals_against":53,"goal_diff":10,"points":60},{"rank":6,"team":"伯恩茅斯","played":38,"wins":13,"draws":18,"losses":7,"goals_for":58,"goals_against":54,"goal_diff":4,"points":57},{"rank":7,"team":"桑德兰","played":38,"wins":14,"draws":12,"losses":12,"goals_for":42,"goals_against":48,"goal_diff":-6,"points":54},{"rank":8,"team":"布莱顿","played":38,"wins":14,"draws":11,"losses":13,"goals_for":52,"goals_against":46,"goal_diff":6,"points":53},{"rank":9,"team":"布伦特福德","played":38,"wins":14,"draws":11,"losses":13,"goals_for":55,"goals_against":52,"goal_diff":3,"points":53},{"rank":10,"team":"切尔西","played":38,"wins":14,"draws":10,"losses":14,"goals_for":58,"goals_against":52,"goal_diff":6,"points":52},{"rank":11,"team":"富勒姆","played":38,"wins":15,"draws":7,"losses":16,"goals_for":47,"goals_against":51,"goal_diff":-4,"points":52},{"rank":12,"team":"纽卡斯尔","played":38,"wins":14,"draws":7,"losses":17,"goals_for":53,"goals_against":55,"goal_diff":-2,"points":49},{"rank":13,"team":"埃弗顿","played":38,"wins":13,"draws":10,"losses":15,"goals_for":47,"goals_against":50,"goal_diff":-3,"points":49},{"rank":14,"team":"利兹联","played":38,"wins":11,"draws":14,"losses":13,"goals_for":49,"goals_against":56,"goal_diff":-7,"points":47},{"rank":15,"team":"水晶宫","played":38,"wins":11,"draws":12,"losses":15,"goals_for":41,"goals_against":51,"goal_diff":-10,"points":45},{"rank":16,"team":"诺丁汉森林","played":38,"wins":11,"draws":11,"losses":16,"goals_for":48,"goals_against":51,"goal_diff":-3,"points":44},{"rank":17,"team":"热刺","played":38,"wins":10,"draws":11,"losses":17,"goals_for":48,"goals_against":57,"goal_diff":-9,"points":41},{"rank":18,"team":"西汉姆","played":38,"wins":10,"draws":9,"losses":19,"goals_for":46,"goals_against":65,"goal_diff":-19,"points":39},{"rank":19,"team":"伯恩利","played":38,"wins":4,"draws":10,"losses":24,"goals_for":38,"goals_against":75,"goal_diff":-37,"points":22},{"rank":20,"team":"狼队","played":38,"wins":3,"draws":11,"losses":24,"goals_for":27,"goals_against":68,"goal_diff":-41,"points":20}],"西甲联赛":[{"rank":1,"team":"巴塞罗那","played":38,"wins":31,"draws":1,"losses":6,"goals_for":95,"goals_against":36,"goal_diff":59,"points":94},{"rank":2,"team":"皇家马德里","played":38,"wins":27,"draws":5,"losses":6,"goals_for":77,"goals_against":35,"goal_diff":42,"points":86},{"rank":3,"team":"比利亚雷亚尔","played":38,"wins":22,"draws":6,"losses":10,"goals_for":72,"goals_against":46,"goal_diff":26,"points":72},{"rank":4,"team":"马德里竞技","played":38,"wins":21,"draws":6,"losses":11,"goals_for":62,"goals_against":44,"goal_diff":18,"points":69},{"rank":5,"team":"皇家贝蒂斯","played":38,"wins":15,"draws":15,"losses":8,"goals_for":59,"goals_against":48,"goal_diff":11,"points":60},{"rank":6,"team":"塞尔塔","played":38,"wins":14,"draws":12,"losses":12,"goals_for":53,"goals_against":48,"goal_diff":5,"points":54},{"rank":7,"team":"赫塔费","played":38,"wins":15,"draws":6,"losses":17,"goals_for":32,"goals_against":38,"goal_diff":-6,"points":51},{"rank":8,"team":"巴列卡诺","played":38,"wins":12,"draws":14,"losses":12,"goals_for":41,"goals_against":44,"goal_diff":-3,"points":50},{"rank":9,"team":"瓦伦西亚","played":38,"wins":13,"draws":10,"losses":15,"goals_for":46,"goals_against":55,"goal_diff":-9,"points":49},{"rank":10,"team":"皇家社会","played":38,"wins":11,"draws":13,"losses":14,"goals_for":59,"goals_against":61,"goal_diff":-2,"points":46},{"rank":11,"team":"西班牙人","played":38,"wins":12,"draws":10,"losses":16,"goals_for":43,"goals_against":55,"goal_diff":-12,"points":46},{"rank":12,"team":"毕尔巴鄂竞技","played":38,"wins":13,"draws":6,"losses":19,"goals_for":43,"goals_against":58,"goal_diff":-15,"points":45},{"rank":13,"team":"埃尔切","played":38,"wins":10,"draws":13,"losses":15,"goals_for":49,"goals_against":57,"goal_diff":-8,"points":43},{"rank":14,"team":"阿拉维斯","played":38,"wins":11,"draws":10,"losses":17,"goals_for":44,"goals_against":56,"goal_diff":-12,"points":43},{"rank":15,"team":"塞维利亚","played":38,"wins":12,"draws":7,"losses":19,"goals_for":46,"goals_against":60,"goal_diff":-14,"points":43},{"rank":16,"team":"奥萨苏纳","played":38,"wins":11,"draws":9,"losses":18,"goals_for":44,"goals_against":50,"goal_diff":-6,"points":42},{"rank":17,"team":"马略卡","played":38,"wins":11,"draws":9,"losses":18,"goals_for":47,"goals_against":57,"goal_diff":-10,"points":42},{"rank":18,"team":"莱万特","played":38,"wins":11,"draws":9,"losses":18,"goals_for":47,"goals_against":61,"goal_diff":-14,"points":42},{"rank":19,"team":"赫罗纳","played":38,"wins":9,"draws":14,"losses":15,"goals_for":39,"goals_against":55,"goal_diff":-16,"points":41},{"rank":20,"team":"奥维耶多","played":38,"wins":6,"draws":11,"losses":21,"goals_for":26,"goals_against":60,"goal_diff":-34,"points":29}],"德甲联赛":[{"rank":1,"team":"拜仁慕尼黑","played":34,"wins":28,"draws":5,"losses":1,"goals_for":122,"goals_against":36,"goal_diff":86,"points":89},{"rank":2,"team":"多特蒙德","played":34,"wins":22,"draws":7,"losses":5,"goals_for":70,"goals_against":34,"goal_diff":36,"points":73},{"rank":3,"team":"莱比锡红牛","played":34,"wins":20,"draws":5,"losses":9,"goals_for":66,"goals_against":47,"goal_diff":19,"points":65},{"rank":4,"team":"斯图加特","played":34,"wins":18,"draws":8,"losses":8,"goals_for":71,"goals_against":49,"goal_diff":22,"points":62},{"rank":5,"team":"霍芬海姆","played":34,"wins":18,"draws":7,"losses":9,"goals_for":65,"goals_against":52,"goal_diff":13,"points":61},{"rank":6,"team":"勒沃库森","played":34,"wins":17,"draws":8,"losses":9,"goals_for":68,"goals_against":47,"goal_diff":21,"points":59},{"rank":7,"team":"弗赖堡","played":34,"wins":13,"draws":8,"losses":13,"goals_for":51,"goals_against":57,"goal_diff":-6,"points":47},{"rank":8,"team":"法兰克福","played":34,"wins":11,"draws":11,"losses":12,"goals_for":61,"goals_against":65,"goal_diff":-4,"points":44},{"rank":9,"team":"奥格斯堡","played":34,"wins":12,"draws":7,"losses":15,"goals_for":45,"goals_against":61,"goal_diff":-16,"points":43},{"rank":10,"team":"美因茨","played":34,"wins":10,"draws":10,"losses":14,"goals_for":44,"goals_against":53,"goal_diff":-9,"points":40},{"rank":11,"team":"柏林联合","played":34,"wins":10,"draws":9,"losses":15,"goals_for":44,"goals_against":58,"goal_diff":-14,"points":39},{"rank":12,"team":"门兴格拉德巴赫","played":34,"wins":9,"draws":11,"losses":14,"goals_for":42,"goals_against":53,"goal_diff":-11,"points":38},{"rank":13,"team":"汉堡","played":34,"wins":9,"draws":11,"losses":14,"goals_for":40,"goals_against":54,"goal_diff":-14,"points":38},{"rank":14,"team":"科隆","played":34,"wins":7,"draws":11,"losses":16,"goals_for":49,"goals_against":63,"goal_diff":-14,"points":32},{"rank":15,"team":"云达不莱梅","played":34,"wins":8,"draws":8,"losses":18,"goals_for":37,"goals_against":60,"goal_diff":-23,"points":32},{"rank":16,"team":"沃尔夫斯堡","played":34,"wins":7,"draws":8,"losses":19,"goals_for":45,"goals_against":69,"goal_diff":-24,"points":29},{"rank":17,"team":"海登海姆","played":34,"wins":6,"draws":8,"losses":20,"goals_for":41,"goals_against":72,"goal_diff":-31,"points":26},{"rank":18,"team":"圣保利","played":34,"wins":6,"draws":8,"losses":20,"goals_for":29,"goals_against":60,"goal_diff":-31,"points":26}],"意甲联赛":[{"rank":1,"team":"国际米兰","played":38,"wins":27,"draws":6,"losses":5,"goals_for":89,"goals_against":35,"goal_diff":54,"points":87},{"rank":2,"team":"那不勒斯","played":38,"wins":23,"draws":7,"losses":8,"goals_for":58,"goals_against":36,"goal_diff":22,"points":76},{"rank":3,"team":"罗马","played":38,"wins":23,"draws":4,"losses":11,"goals_for":59,"goals_against":31,"goal_diff":28,"points":73},{"rank":4,"team":"科莫","played":38,"wins":20,"draws":11,"losses":7,"goals_for":65,"goals_against":29,"goal_diff":36,"points":71},{"rank":5,"team":"AC米兰","played":38,"wins":20,"draws":10,"losses":8,"goals_for":53,"goals_against":35,"goal_diff":18,"points":70},{"rank":6,"team":"尤文图斯","played":38,"wins":19,"draws":12,"losses":7,"goals_for":61,"goals_against":34,"goal_diff":27,"points":69},{"rank":7,"team":"亚特兰大","played":38,"wins":15,"draws":14,"losses":9,"goals_for":51,"goals_against":36,"goal_diff":15,"points":59},{"rank":8,"team":"博洛尼亚","played":38,"wins":16,"draws":8,"losses":14,"goals_for":49,"goals_against":46,"goal_diff":3,"points":56},{"rank":9,"team":"拉齐奥","played":38,"wins":14,"draws":12,"losses":12,"goals_for":41,"goals_against":40,"goal_diff":1,"points":54},{"rank":10,"team":"乌迪内斯","played":38,"wins":14,"draws":8,"losses":16,"goals_for":45,"goals_against":48,"goal_diff":-3,"points":50},{"rank":11,"team":"萨索洛","played":38,"wins":14,"draws":7,"losses":17,"goals_for":46,"goals_against":50,"goal_diff":-4,"points":49},{"rank":12,"team":"帕尔马","played":38,"wins":11,"draws":12,"losses":15,"goals_for":28,"goals_against":46,"goal_diff":-18,"points":45},{"rank":13,"team":"都灵","played":38,"wins":12,"draws":9,"losses":17,"goals_for":44,"goals_against":63,"goal_diff":-19,"points":45},{"rank":14,"team":"卡利亚里","played":38,"wins":11,"draws":10,"losses":17,"goals_for":40,"goals_against":53,"goal_diff":-13,"points":43},{"rank":15,"team":"佛罗伦萨","played":38,"wins":9,"draws":15,"losses":14,"goals_for":41,"goals_against":50,"goal_diff":-9,"points":42},{"rank":16,"team":"热那亚","played":38,"wins":10,"draws":11,"losses":17,"goals_for":41,"goals_against":51,"goal_diff":-10,"points":41},{"rank":17,"team":"莱切","played":38,"wins":10,"draws":8,"losses":20,"goals_for":28,"goals_against":50,"goal_diff":-22,"points":38},{"rank":18,"team":"克雷莫纳","played":38,"wins":8,"draws":10,"losses":20,"goals_for":32,"goals_against":57,"goal_diff":-25,"points":34},{"rank":19,"team":"维罗纳","played":38,"wins":3,"draws":12,"losses":23,"goals_for":25,"goals_against":61,"goal_diff":-36,"points":21},{"rank":20,"team":"比萨","played":38,"wins":2,"draws":12,"losses":24,"goals_for":26,"goals_against":71,"goal_diff":-45,"points":18}],"法甲联赛":[{"rank":1,"team":"巴黎圣日耳曼","played":34,"wins":24,"draws":4,"losses":6,"goals_for":74,"goals_against":29,"goal_diff":45,"points":76},{"rank":2,"team":"朗斯","played":34,"wins":22,"draws":4,"losses":8,"goals_for":66,"goals_against":35,"goal_diff":31,"points":70},{"rank":3,"team":"里尔","played":34,"wins":18,"draws":7,"losses":9,"goals_for":52,"goals_against":37,"goal_diff":15,"points":61},{"rank":4,"team":"里昂","played":34,"wins":18,"draws":6,"losses":10,"goals_for":53,"goals_against":40,"goal_diff":13,"points":60},{"rank":5,"team":"马赛","played":34,"wins":18,"draws":5,"losses":11,"goals_for":63,"goals_against":45,"goal_diff":18,"points":59},{"rank":6,"team":"雷恩","played":34,"wins":17,"draws":8,"losses":9,"goals_for":59,"goals_against":50,"goal_diff":9,"points":59},{"rank":7,"team":"摩纳哥","played":34,"wins":16,"draws":6,"losses":12,"goals_for":60,"goals_against":54,"goal_diff":6,"points":54},{"rank":8,"team":"斯特拉斯堡","played":34,"wins":15,"draws":8,"losses":11,"goals_for":58,"goals_against":47,"goal_diff":11,"points":53},{"rank":9,"team":"图卢兹","played":34,"wins":12,"draws":9,"losses":13,"goals_for":47,"goals_against":46,"goal_diff":1,"points":45},{"rank":10,"team":"洛里昂","played":34,"wins":11,"draws":12,"losses":11,"goals_for":48,"goals_against":51,"goal_diff":-3,"points":45},{"rank":11,"team":"巴黎FC","played":34,"wins":11,"draws":11,"losses":12,"goals_for":47,"goals_against":50,"goal_diff":-3,"points":44},{"rank":12,"team":"布雷斯特","played":34,"wins":10,"draws":9,"losses":15,"goals_for":43,"goals_against":55,"goal_diff":-12,"points":39},{"rank":13,"team":"昂热","played":34,"wins":9,"draws":9,"losses":16,"goals_for":29,"goals_against":48,"goal_diff":-19,"points":36},{"rank":14,"team":"勒阿弗尔","played":34,"wins":7,"draws":14,"losses":13,"goals_for":32,"goals_against":44,"goal_diff":-12,"points":35},{"rank":15,"team":"欧塞尔","played":34,"wins":8,"draws":10,"losses":16,"goals_for":34,"goals_against":44,"goal_diff":-10,"points":34},{"rank":16,"team":"尼斯","played":34,"wins":7,"draws":11,"losses":16,"goals_for":37,"goals_against":60,"goal_diff":-23,"points":32},{"rank":17,"team":"南特","played":34,"wins":5,"draws":9,"losses":20,"goals_for":29,"goals_against":52,"goal_diff":-23,"points":24},{"rank":18,"team":"梅斯","played":34,"wins":3,"draws":8,"losses":23,"goals_for":32,"goals_against":76,"goal_diff":-44,"points":17}]},"篮球":{"NBA":[{"rank":1,"team":"步行者","played":0,"wins":0,"losses":0,"points":0},{"rank":2,"team":"尼克斯","played":0,"wins":0,"losses":0,"points":0},{"rank":3,"team":"公牛","played":0,"wins":0,"losses":0,"points":0},{"rank":4,"team":"骑士","played":0,"wins":0,"losses":0,"points":0},{"rank":5,"team":"活塞","played":0,"wins":0,"losses":0,"points":0},{"rank":6,"team":"雄鹿","played":0,"wins":0,"losses":0,"points":0},{"rank":7,"team":"奇才","played":0,"wins":0,"losses":0,"points":0},{"rank":8,"team":"黄蜂","played":0,"wins":0,"losses":0,"points":0},{"rank":9,"team":"老鹰","played":0,"wins":0,"losses":0,"points":0}]}};
+const MORNING = {"date":"2026年08月29日","text":"各位早上好，欢迎收听Overtime加时赛早报，今天是2026年08月29日。以下是今日体育要闻：第1条，足球：德甲夺冠赔率：拜仁断层领跑，多特第二，莱比锡第三。北京时间8月29日凌晨，2026-27赛季德甲联赛拉开战幕，揭幕战拜仁对阵斯图加特。相关机构即时更新了新赛季的夺冠赔率，卫冕冠军拜仁1赔1.12断层领跑，多特蒙德1赔11位列第二，莱比锡红牛1赔15排名第三。第2条，足球：马内提醒C罗进球后未做SIU庆祝动作，C罗随即补做。第3条，综合：中国第一位打破世界纪录的女运动员郑凤荣逝世，享年89岁。第4条，综合：山东省运会智能化水平对标国内高水平赛事，项目设置、参赛规模均刷新省运会历史纪录。第5条，篮球：帕克表示，文班亚马可能已是NBA最好的球员，非常高兴他成为了马刺的一员。第6条，乒乓球：国乒5人自愿放弃亚锦赛选拔资格，王楚钦、孙颖莎不参加本届亚锦赛。第7条，排球：中国女排3比2击败越南女排，如愿晋级半决赛。以上就是今日加时赛早报的全部内容，感谢收听，祝您一天好心情。","articles":[{"id":"a2ff06d5bf21","title":"德甲夺冠赔率：拜仁断层领跑 多特第二 莱比锡第三","category":"足球"},{"id":"2afc3ec0316a","title":"马内提醒C罗进球后未做SIU庆祝动作，C罗随即补做","category":"足球"},{"id":"02e6315bc982","title":"中国第一位打破世界纪录的女运动员郑凤荣逝世，享年89岁","category":"综合"},{"id":"4ef0935bf8f5","title":"山东省运会智能化水平对标国内高水平赛事","category":"综合"},{"id":"7352255cdef7","title":"帕克：文班可能已是NBA最好球员 非常高兴他成为马刺一员","category":"篮球"},{"id":"bdc82b8ef397","title":"国乒5人自愿放弃亚锦赛选拔资格","category":"乒乓球"},{"id":"279e55bae7fe","title":"胜越南，中国女排出现奇兵，晋级半决赛","category":"排球"}],"audio_url":"audio/morning_briefing.mp3"};
+const SCHEDULES = {"英超联赛":[{"round":"第1轮","date":"08-22 03:00","home":"阿森纳","away":"考文垂","status":"未开始","note":"揭幕战 · 酋长球场"},{"round":"第1轮","date":"08-22 19:30","home":"赫尔城","away":"曼联","status":"未开始"},{"round":"第1轮","date":"08-22 22:00","home":"埃弗顿","away":"水晶宫","status":"未开始"},{"round":"第1轮","date":"08-22 22:00","home":"伊普斯维奇","away":"桑德兰","status":"未开始"},{"round":"第1轮","date":"08-22 22:00","home":"诺丁汉森林","away":"利兹联","status":"未开始"},{"round":"第1轮","date":"08-22 23:30","home":"布伦特福德","away":"托特纳姆热刺","status":"未开始"},{"round":"第1轮","date":"08-23 22:00","home":"布莱顿","away":"阿斯顿维拉","status":"未开始"},{"round":"第1轮","date":"08-23 22:00","home":"曼城","away":"伯恩茅斯","status":"未开始"},{"round":"第1轮","date":"08-24 03:00","home":"纽卡斯尔联","away":"利物浦","status":"未开始","note":"首轮焦点战"}],"西甲联赛":[{"round":"第1轮","date":"08-16 02:30","home":"阿拉维斯","away":"赫塔菲","hs":"3","as":"0","status":"已结束"},{"round":"第1轮","date":"08-16 02:30","home":"塞维利亚","away":"巴列卡诺","hs":"2","as":"1","status":"已结束"},{"round":"第1轮","date":"08-26 03:30","home":"皇家马德里","away":"皇家社会","status":"未开始","note":"皇马首秀 · 伯纳乌"},{"round":"第1轮","date":"08-28 03:00","home":"毕尔巴鄂竞技","away":"巴塞罗那","status":"未开始"},{"round":"第1轮","date":"08-29 03:00","home":"马德里竞技","away":"赫罗纳","status":"未开始"}],"意甲联赛":[{"round":"第1轮","date":"08-22 02:30","home":"国际米兰","away":"蒙扎","status":"未开始"},{"round":"第1轮","date":"08-22 02:30","home":"乌迪内斯","away":"科莫","status":"未开始"},{"round":"第1轮","date":"08-22 02:30","home":"热那亚","away":"那不勒斯","status":"未开始"},{"round":"第1轮","date":"08-22 02:30","home":"帕尔马","away":"卡利亚里","status":"未开始"},{"round":"第1轮","date":"08-23 02:30","home":"佛罗西诺内","away":"尤文图斯","status":"未开始"},{"round":"第1轮","date":"08-23 02:30","home":"威尼斯","away":"莱切","status":"未开始"},{"round":"第1轮","date":"08-23 02:30","home":"亚特兰大","away":"萨索洛","status":"未开始"},{"round":"第1轮","date":"08-23 02:30","home":"都灵","away":"AC米兰","status":"未开始"},{"round":"第1轮","date":"08-24 02:30","home":"博洛尼亚","away":"拉齐奥","status":"未开始"},{"round":"第1轮","date":"08-24 02:30","home":"罗马","away":"佛罗伦萨","status":"未开始"}],"法甲联赛":[{"round":"第1轮","date":"08-22 02:45","home":"马赛","away":"斯特拉斯堡","status":"未开始","note":"揭幕战"},{"round":"第1轮","date":"08-22 23:15","home":"朗斯","away":"欧塞尔","status":"未开始"},{"round":"第1轮","date":"08-23 02:45","home":"里尔","away":"尼斯","status":"未开始"},{"round":"第1轮","date":"08-23 02:45","home":"摩纳哥","away":"勒阿弗尔","status":"未开始"},{"round":"第1轮","date":"08-24 02:45","home":"巴黎圣日耳曼","away":"雷恩","status":"未开始","note":"卫冕冠军主场"}],"德甲联赛":[{"round":"第1轮","date":"08-29 02:30","home":"拜仁慕尼黑","away":"斯图加特","status":"未开始","note":"揭幕战 · 安联球场"}],"欧冠联赛":[{"round":"联赛阶段","date":"9月起","home":"皇家马德里","away":"国际米兰","status":"未开始","note":"皇马主场"},{"round":"联赛阶段","date":"9月起","home":"皇家马德里","away":"埃因霍温","status":"未开始","note":"皇马主场"},{"round":"联赛阶段","date":"9月起","home":"皇家马德里","away":"莱比锡","status":"未开始","note":"皇马主场"},{"round":"联赛阶段","date":"9月起","home":"阿森纳","away":"皇家马德里","status":"未开始","note":"皇马客场"},{"round":"联赛阶段","date":"9月起","home":"罗马","away":"皇家马德里","status":"未开始","note":"皇马客场"},{"round":"联赛阶段","date":"9月起","home":"巴塞罗那","away":"巴黎圣日耳曼","status":"未开始","note":"焦点对决"},{"round":"联赛阶段","date":"9月起","home":"曼城","away":"巴塞罗那","status":"未开始","note":"巴萨客场"},{"round":"联赛阶段","date":"9月起","home":"阿斯顿维拉","away":"巴塞罗那","status":"未开始","note":"巴萨客场"},{"round":"联赛阶段","date":"9月起","home":"拜仁慕尼黑","away":"阿森纳","status":"未开始"},{"round":"联赛阶段","date":"9月起","home":"曼联","away":"拜仁慕尼黑","status":"未开始","note":"拜仁客场"},{"round":"联赛阶段","date":"9月起","home":"拜仁慕尼黑","away":"马德里竞技","status":"未开始"}]};
+const LEAGUES = {"足球":[{"name":"英超联赛","icon":"🏴","desc":"英格兰顶级联赛 · 20队 · 卫冕冠军阿森纳"},{"name":"西甲联赛","icon":"🇪🇸","desc":"西班牙顶级联赛 · 20队 · 卫冕冠军巴塞罗那"},{"name":"意甲联赛","icon":"🇮🇹","desc":"意大利顶级联赛 · 20队 · 卫冕冠军国际米兰"},{"name":"德甲联赛","icon":"🇩🇪","desc":"德国顶级联赛 · 18队 · 卫冕冠军拜仁慕尼黑"},{"name":"法甲联赛","icon":"🇫🇷","desc":"法国顶级联赛 · 18队 · 卫冕冠军巴黎圣日耳曼"},{"name":"欧冠联赛","icon":"⭐","desc":"欧足联冠军联赛 · 36队瑞士轮新赛制"}],"篮球":[{"name":"NBA","icon":"🏀","desc":"美国职业篮球联赛 · 新赛季10月开赛"},{"name":"CBA","icon":"🇨🇳","desc":"中国男子篮球职业联赛"}],"羽毛球":[{"name":"世界羽联巡回赛","icon":"🏸","desc":"汤姆斯杯 · 尤伯杯 · 世锦赛"},{"name":"苏迪曼杯","icon":"🏆","desc":"羽毛球混合团体赛"}],"乒乓球":[{"name":"WTT大满贯","icon":"🏓","desc":"世界乒联职业巡回赛"},{"name":"世界乒乓球锦标赛","icon":"🏆","desc":"单项世锦赛"}],"网球":[{"name":"四大满贯","icon":"🎾","desc":"澳网 · 法网 · 温网 · 美网"},{"name":"ATP/WTA巡回赛","icon":"🏆","desc":"职业网球巡回赛"}],"橄榄球":[{"name":"NFL","icon":"🏉","desc":"美国国家橄榄球联盟 · 超级碗"}],"赛车":[{"name":"F1大奖赛","icon":"🏎️","desc":"世界一级方程式锦标赛 · 新规元年"}],"排球":[{"name":"世界女排联赛","icon":"🏐","desc":"国际排联旗舰赛事"},{"name":"世界排球锦标赛","icon":"🏆","desc":"排球最高殿堂"}],"棒球":[{"name":"MLB","icon":"⚾","desc":"美国职棒大联盟"}],"高尔夫":[{"name":"四大满贯","icon":"⛳","desc":"大师赛 · 英国公开赛等"}],"游泳":[{"name":"世界游泳锦标赛","icon":"🏊","desc":"国际泳联最高级别赛事"},{"name":"奥运会游泳","icon":"🥇","desc":"四年一届 · 世界最高殿堂"}],"电竞":[{"name":"英雄联盟全球总决赛","icon":"🎮","desc":"S系列赛 · 年度最高荣誉"},{"name":"DOTA2国际邀请赛","icon":"🏆","desc":"TI · 奖金最高电竞赛事"}]};
+const SPORT_EVENTS = {"网球":[{"date":"08-24 至 09-13","name":"2026 美国网球公开赛","desc":"硬地大满贯 · 郑钦文等中国球员参赛","status":"进行中"},{"date":"2026","name":"ATP / WTA 巡回赛","desc":"职业网坛赛季巡回进行中","status":"进行中"}],"排球":[{"date":"2026-08","name":"中国女排 3:2 越南","desc":"女排世锦赛 · 晋级半决赛，将与伊朗争决赛","status":"已结束"}],"乒乓球":[{"date":"2026-09","name":"2026 亚洲乒乓球锦标赛","desc":"王楚钦、孙颖莎等5人自愿放弃本届亚锦赛资格","status":"未开始"},{"date":"2026","name":"WTT 系列赛","desc":"多站积分赛持续进行","status":"进行中"}],"羽毛球":[{"date":"2026","name":"世界羽联巡回赛","desc":"各站公开赛进行中","status":"进行中"}],"赛车":[{"date":"2026赛季","name":"F1 2026 世界一级方程式锦标赛","desc":"新规元年 · 24站大奖赛进行中","status":"进行中"}],"高尔夫":[{"date":"2026","name":"PGA 巡回赛","desc":"四大满贯巡回赛季进行中","status":"进行中"}],"游泳":[{"date":"2026","name":"世界泳联赛事","desc":"长池/短池世锦赛巡回","status":"进行中"}],"电竞":[{"date":"2026-09","name":"英雄联盟全球总决赛","desc":"2026 S赛 即将开战","status":"未开始"}],"棒球":[{"date":"2026赛季","name":"MLB 常规赛","desc":"美职棒大联盟常规赛进行中","status":"进行中"}],"橄榄球":[{"date":"2026-09","name":"NFL 2026-27 赛季","desc":"新赛季即将开战","status":"未开始"}],"篮球":[{"date":"2026-10","name":"NBA 2026-27 赛季","desc":"新赛季将于10月开赛","status":"未开始"}],"足球":[]};
+const SPORTS = [{"name":"足球","icon":"⚽","desc":"世界第一运动","gradient":"linear-gradient(135deg,#1a5c2e,#2d8f4a)","bg":"linear-gradient(180deg,#0a1f12 0%,#161b22 50%,#0d1117 100%)","accent":"#22c55e","heroBg":"linear-gradient(135deg,#0d3320 0%,#1a5c35 50%,#0d3320 100%)","fullDesc":"世界第一运动，汇聚五大联赛、欧冠、世界杯等顶级赛事"},{"name":"篮球","icon":"🏀","desc":"热血灌篮对决","gradient":"linear-gradient(135deg,#9c420c,#d97706)","bg":"linear-gradient(180deg,#1f1205 0%,#161b22 50%,#0d1117 100%)","accent":"#f59e0b","heroBg":"linear-gradient(135deg,#3d1f08 0%,#6b3a10 50%,#3d1f08 100%)","fullDesc":"热血灌篮，NBA/CBA顶级联赛，飞人对决"},{"name":"羽毛球","icon":"🏸","desc":"羽球翻飞竞技","gradient":"linear-gradient(135deg,#1e6b3a,#27ae60)","bg":"linear-gradient(180deg,#0a1f12 0%,#161b22 50%,#0d1117 100%)","accent":"#27ae60","heroBg":"linear-gradient(135deg,#0d3325 0%,#1a5c40 50%,#0d3325 100%)","fullDesc":"羽球翻飞，汤尤杯、世锦赛，速度与技巧的完美结合"},{"name":"乒乓球","icon":"🏓","desc":"国球巅峰对决","gradient":"linear-gradient(135deg,#9c2d1e,#dc2626)","bg":"linear-gradient(180deg,#1f0a08 0%,#161b22 50%,#0d1117 100%)","accent":"#ef4444","heroBg":"linear-gradient(135deg,#3d0f0a 0%,#6b1a10 50%,#3d0f0a 100%)","fullDesc":"国球巅峰，WTT世乒赛，中国军团雄霸世界"},{"name":"网球","icon":"🎾","desc":"红土草地硬地","gradient":"linear-gradient(135deg,#a8820c,#eab308)","bg":"linear-gradient(180deg,#1f1a05 0%,#161b22 50%,#0d1117 100%)","accent":"#eab308","heroBg":"linear-gradient(135deg,#3d3208 0%,#6b5810 50%,#3d3208 100%)","fullDesc":"四大满贯，红土草地硬地，球王争霸"},{"name":"橄榄球","icon":"🏉","desc":"力量碰撞之美","gradient":"linear-gradient(135deg,#5c3a1a,#8b5a2b)","bg":"linear-gradient(180deg,#1a1208 0%,#161b22 50%,#0d1117 100%)","accent":"#a16207","heroBg":"linear-gradient(135deg,#332510 0%,#553d1a 50%,#332510 100%)","fullDesc":"力量碰撞，NFL超级碗，美式足球的激情"},{"name":"赛车","icon":"🏎️","desc":"速度与激情","gradient":"linear-gradient(135deg,#7a0a10,#dc143c)","bg":"linear-gradient(180deg,#1f0508 0%,#161b22 50%,#0d1117 100%)","accent":"#dc2626","heroBg":"linear-gradient(135deg,#3d0a10 0%,#6b1018 50%,#3d0a10 100%)","fullDesc":"速度与激情，F1大奖赛，引擎轰鸣的极限运动"},{"name":"排球","icon":"🏐","desc":"网前高空博弈","gradient":"linear-gradient(135deg,#1e3a5f,#3b82f6)","bg":"linear-gradient(180deg,#0a1528 0%,#161b22 50%,#0d1117 100%)","accent":"#3b82f6","heroBg":"linear-gradient(135deg,#0d2040 0%,#1a3a6a 50%,#0d2040 100%)","fullDesc":"网前高空博弈，世界联赛，中国女排的荣耀"},{"name":"棒球","icon":"⚾","desc":"投打跑守全才","gradient":"linear-gradient(135deg,#8b6914,#ca8a04)","bg":"linear-gradient(180deg,#1f1a05 0%,#161b22 50%,#0d1117 100%)","accent":"#ca8a04","heroBg":"linear-gradient(135deg,#3d3208 0%,#6b5810 50%,#3d3208 100%)","fullDesc":"投打跑守，MLB美职棒，智慧与力量的对决"},{"name":"高尔夫","icon":"⛳","desc":"优雅精准之道","gradient":"linear-gradient(135deg,#166b16,#22c55e)","bg":"linear-gradient(180deg,#0a1f0a 0%,#161b22 50%,#0d1117 100%)","accent":"#22c55e","heroBg":"linear-gradient(135deg,#0d3315 0%,#1a5c28 50%,#0d3315 100%)","fullDesc":"优雅精准，大师赛公开赛，绅士的运动"},{"name":"游泳","icon":"🏊","desc":"碧波竞速飞鱼","gradient":"linear-gradient(135deg,#0c6b9c,#0ea5e9)","bg":"linear-gradient(180deg,#051828 0%,#161b22 50%,#0d1117 100%)","accent":"#0ea5e9","heroBg":"linear-gradient(135deg,#082a4a 0%,#104a7a 50%,#082a4a 100%)","fullDesc":"碧波竞速，奥运世锦赛，飞鱼们的水中较量"},{"name":"电竞","icon":"🎮","desc":"数字竞技新时代","gradient":"linear-gradient(135deg,#5c1a8b,#9333ea)","bg":"linear-gradient(180deg,#150a28 0%,#161b22 50%,#0d1117 100%)","accent":"#a855f7","heroBg":"linear-gradient(135deg,#2a0d4a 0%,#4a1a7a 50%,#2a0d4a 100%)","fullDesc":"数字竞技，S赛TI赛，新时代的体育精神"}];
+const WIZARD_SPORTS = [{"key":"足球","icon":"⚽"},{"key":"篮球","icon":"🏀"},{"key":"羽毛球","icon":"🏸"},{"key":"乒乓球","icon":"🏓"},{"key":"网球","icon":"🎾"}];
+const WIZARD_TEAMS = {"足球":[{"name":"皇家马德里","logo":"👑"},{"name":"巴塞罗那","logo":"🔵🔴"},{"name":"曼联","logo":"🔴"},{"name":"利物浦","logo":"🔴"},{"name":"拜仁慕尼黑","logo":"🔴"},{"name":"巴黎圣日耳曼","logo":"🔵🔴"},{"name":"曼城","logo":"🔵"},{"name":"阿森纳","logo":"🔴"},{"name":"国际米兰","logo":"🐍"},{"name":"AC米兰","logo":"🟠⚫"}],"篮球":[{"name":"洛杉矶湖人","logo":"💜💛"},{"name":"金州勇士","logo":"💙💛"},{"name":"波士顿凯尔特人","logo":"☘️"},{"name":"芝加哥公牛","logo":"🐂"},{"name":"迈阿密热火","logo":"🔥"},{"name":"密尔沃基雄鹿","logo":"🦌"},{"name":"丹佛掘金","logo":"⛏️"},{"name":"菲尼克斯太阳","logo":"☀️"}],"羽毛球":[{"name":"中国羽毛球队","logo":"🇨🇳"},{"name":"印尼羽毛球队","logo":"🇮🇩"},{"name":"丹麦羽毛球队","logo":"🇩🇰"},{"name":"日本羽毛球队","logo":"🇯🇵"},{"name":"韩国羽毛球队","logo":"🇰🇷"},{"name":"马来西亚羽毛球队","logo":"🇲🇾"}],"乒乓球":[{"name":"中国乒乓球队","logo":"🇨🇳"},{"name":"日本乒乓球队","logo":"🇯🇵"},{"name":"德国乒乓球队","logo":"🇩🇪"},{"name":"韩国乒乓球队","logo":"🇰🇷"},{"name":"瑞典乒乓球队","logo":"🇸🇪"},{"name":"法国乒乓球队","logo":"🇫🇷"}],"网球":[{"name":"塞尔维亚队","logo":"🇷🇸"},{"name":"西班牙队","logo":"🇪🇸"},{"name":"意大利队","logo":"🇮🇹"},{"name":"俄罗斯队","logo":"🇷🇺"},{"name":"美国队","logo":"🇺🇸"},{"name":"波兰队","logo":"🇵🇱"}]};
+
 // ===== 全局状态 =====
 let voteStep = 1;
 let selectedSport = '';
 let selectedTeam = null;
 let myTeam = JSON.parse(localStorage.getItem('ot_myTeam') || 'null');
 let currentSport = '';
+let currentLeague = '';
 let allNews = [];
 let allAthletes = [];
 let allStandings = {};
@@ -622,160 +700,96 @@ let morningBriefing = null;
 let currentStarBaikeUrl = '';
 let currentNewsSourceUrl = '';
 let audioPlaying = false;
-let dataLoaded = false;
-
-async function ensureData() {
-    if (!dataLoaded) {
-        await loadAllData();
-        dataLoaded = true;
-    }
-}
-
-// 运动项目配置
-const sportsData = [
-  {name:'足球', icon:'⚽', desc:'世界第一运动', gradient:'linear-gradient(135deg,#1a5c2e,#2d8f4a)', bg:'linear-gradient(180deg,#0a1f12 0%,#161b22 50%,#0d1117 100%)', accent:'#22c55e', heroBg:'linear-gradient(135deg,#0d3320 0%,#1a5c35 50%,#0d3320 100%)', fullDesc:'世界第一运动，汇聚五大联赛、欧冠、世界杯等顶级赛事'},
-  {name:'篮球', icon:'🏀', desc:'热血灌篮对决', gradient:'linear-gradient(135deg,#9c420c,#d97706)', bg:'linear-gradient(180deg,#1f1205 0%,#161b22 50%,#0d1117 100%)', accent:'#f59e0b', heroBg:'linear-gradient(135deg,#3d1f08 0%,#6b3a10 50%,#3d1f08 100%)', fullDesc:'热血灌篮，NBA/CBA顶级联赛，飞人对决'},
-  {name:'羽毛球', icon:'🏸', desc:'羽球翻飞竞技', gradient:'linear-gradient(135deg,#1e6b3a,#27ae60)', bg:'linear-gradient(180deg,#0a1f12 0%,#161b22 50%,#0d1117 100%)', accent:'#27ae60', heroBg:'linear-gradient(135deg,#0d3325 0%,#1a5c40 50%,#0d3325 100%)', fullDesc:'羽球翻飞，汤尤杯、世锦赛，速度与技巧的完美结合'},
-  {name:'乒乓球', icon:'🏓', desc:'国球巅峰对决', gradient:'linear-gradient(135deg,#9c2d1e,#dc2626)', bg:'linear-gradient(180deg,#1f0a08 0%,#161b22 50%,#0d1117 100%)', accent:'#ef4444', heroBg:'linear-gradient(135deg,#3d0f0a 0%,#6b1a10 50%,#3d0f0a 100%)', fullDesc:'国球巅峰，WTT世乒赛，中国军团雄霸世界'},
-  {name:'网球', icon:'🎾', desc:'红土草地硬地', gradient:'linear-gradient(135deg,#a8820c,#eab308)', bg:'linear-gradient(180deg,#1f1a05 0%,#161b22 50%,#0d1117 100%)', accent:'#eab308', heroBg:'linear-gradient(135deg,#3d3208 0%,#6b5810 50%,#3d3208 100%)', fullDesc:'四大满贯，红土草地硬地，球王争霸'},
-  {name:'橄榄球', icon:'🏉', desc:'力量碰撞之美', gradient:'linear-gradient(135deg,#5c3a1a,#8b5a2b)', bg:'linear-gradient(180deg,#1a1208 0%,#161b22 50%,#0d1117 100%)', accent:'#a16207', heroBg:'linear-gradient(135deg,#332510 0%,#553d1a 50%,#332510 100%)', fullDesc:'力量碰撞，NFL超级碗，美式足球的激情'},
-  {name:'赛车', icon:'🏎️', desc:'速度与激情', gradient:'linear-gradient(135deg,#7a0a10,#dc143c)', bg:'linear-gradient(180deg,#1f0508 0%,#161b22 50%,#0d1117 100%)', accent:'#dc2626', heroBg:'linear-gradient(135deg,#3d0a10 0%,#6b1018 50%,#3d0a10 100%)', fullDesc:'速度与激情，F1大奖赛，引擎轰鸣的极限运动'},
-  {name:'排球', icon:'🏐', desc:'网前高空博弈', gradient:'linear-gradient(135deg,#1e3a5f,#3b82f6)', bg:'linear-gradient(180deg,#0a1528 0%,#161b22 50%,#0d1117 100%)', accent:'#3b82f6', heroBg:'linear-gradient(135deg,#0d2040 0%,#1a3a6a 50%,#0d2040 100%)', fullDesc:'网前高空博弈，世界联赛，中国女排的荣耀'},
-  {name:'棒球', icon:'⚾', desc:'投打跑守全才', gradient:'linear-gradient(135deg,#8b6914,#ca8a04)', bg:'linear-gradient(180deg,#1f1a05 0%,#161b22 50%,#0d1117 100%)', accent:'#ca8a04', heroBg:'linear-gradient(135deg,#3d3208 0%,#6b5810 50%,#3d3208 100%)', fullDesc:'投打跑守，MLB美职棒，智慧与力量的对决'},
-  {name:'高尔夫', icon:'⛳', desc:'优雅精准之道', gradient:'linear-gradient(135deg,#166b16,#22c55e)', bg:'linear-gradient(180deg,#0a1f0a 0%,#161b22 50%,#0d1117 100%)', accent:'#22c55e', heroBg:'linear-gradient(135deg,#0d3315 0%,#1a5c28 50%,#0d3315 100%)', fullDesc:'优雅精准，大师赛公开赛，绅士的运动'},
-  {name:'游泳', icon:'🏊', desc:'碧波竞速飞鱼', gradient:'linear-gradient(135deg,#0c6b9c,#0ea5e9)', bg:'linear-gradient(180deg,#051828 0%,#161b22 50%,#0d1117 100%)', accent:'#0ea5e9', heroBg:'linear-gradient(135deg,#082a4a 0%,#104a7a 50%,#082a4a 100%)', fullDesc:'碧波竞速，奥运世锦赛，飞鱼们的水中较量'},
-  {name:'电竞', icon:'🎮', desc:'数字竞技新时代', gradient:'linear-gradient(135deg,#5c1a8b,#9333ea)', bg:'linear-gradient(180deg,#150a28 0%,#161b22 50%,#0d1117 100%)', accent:'#a855f7', heroBg:'linear-gradient(135deg,#2a0d4a 0%,#4a1a7a 50%,#2a0d4a 100%)', fullDesc:'数字竞技，S赛TI赛，新时代的体育精神'}
-];
-
-// 投票向导数据
-const wizardSports = [
-  {key:'足球', icon:'⚽'},{key:'篮球', icon:'🏀'},{key:'羽毛球', icon:'🏸'},
-  {key:'乒乓球', icon:'🏓'},{key:'网球', icon:'🎾'}
-];
-const wizardTeams = {
-  '足球':[
-    {name:'皇家马德里', logo:'👑'},{name:'巴塞罗那', logo:'🔵🔴'},
-    {name:'曼联', logo:'🔴'},{name:'利物浦', logo:'🔴'},
-    {name:'拜仁慕尼黑', logo:'🔴'},{name:'巴黎圣日耳曼', logo:'🔵🔴'},
-    {name:'曼城', logo:'🔵'},{name:'阿森纳', logo:'🔴'}
-  ],
-  '篮球':[
-    {name:'洛杉矶湖人', logo:'💜💛'},{name:'金州勇士', logo:'💙💛'},
-    {name:'波士顿凯尔特人', logo:'☘️'},{name:'芝加哥公牛', logo:'🐂'},
-    {name:'迈阿密热火', logo:'🔥'},{name:'密尔沃基雄鹿', logo:'🦌'},
-    {name:'丹佛掘金', logo:'⛏️'},{name:'菲尼克斯太阳', logo:'☀️'}
-  ],
-  '羽毛球':[
-    {name:'中国羽毛球队', logo:'🇨🇳'},{name:'印尼羽毛球队', logo:'🇮🇩'},
-    {name:'丹麦羽毛球队', logo:'🇩🇰'},{name:'日本羽毛球队', logo:'🇯🇵'},
-    {name:'韩国羽毛球队', logo:'🇰🇷'},{name:'马来西亚羽毛球队', logo:'🇲🇾'}
-  ],
-  '乒乓球':[
-    {name:'中国乒乓球队', logo:'🇨🇳'},{name:'日本乒乓球队', logo:'🇯🇵'},
-    {name:'德国乒乓球队', logo:'🇩🇪'},{name:'韩国乒乓球队', logo:'🇰🇷'},
-    {name:'瑞典乒乓球队', logo:'🇸🇪'},{name:'法国乒乓球队', logo:'🇫🇷'}
-  ],
-  '网球':[
-    {name:'塞尔维亚队', logo:'🇷🇸'},{name:'西班牙队', logo:'🇪🇸'},
-    {name:'意大利队', logo:'🇮🇹'},{name:'俄罗斯队', logo:'🇷🇺'},
-    {name:'美国队', logo:'🇺🇸'},{name:'波兰队', logo:'🇵🇱'}
-  ]
-};
+let ttsMode = false;
+let ttsUtterance = null;
+let ttsIdx = 0;
+let ttsSimTimer = null;
+let currentSportStars = [];
+let newsCount = 0;
 
 // ===== 工具函数 =====
-function showToast(msg, type='') {
+function showToast(msg, type) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
-  toast.className = 'toast show ' + type;
-  setTimeout(() => { toast.className = 'toast ' + type; }, 2500);
+  toast.className = 'toast show ' + (type || '');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(function(){ toast.className = 'toast ' + (type || ''); }, 2600);
 }
-
 function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
-
 function formatTime(seconds) {
-  if (!seconds || isNaN(seconds)) return '0:00';
+  if (!seconds || isNaN(seconds) || seconds < 0) return '0:00';
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return m + ':' + (s < 10 ? '0' : '') + s;
 }
-
-// ===== API 请求 =====
-async function apiGet(url) {
-  try {
-    // 静态预览模式：从本地JSON读取
-    const staticMap = {
-      '/api/news': 'data/news.json',
-      '/api/athletes': 'data/athletes.json',
-      '/api/standings': 'data/standings.json',
-      '/api/morning-briefing': 'data/morning_briefing.json'
-    };
-    // 新闻详情：从本地数据查找
-    const newsMatch = url.match(/^\/api\/news\/(.+)$/);
-    if (newsMatch) {
-      const allData = await fetch('data/news.json').then(r => r.json());
-      const article = (allData.articles || []).find(a => a.id === newsMatch[1]);
-      return article || { success: false, error: '未找到' };
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text == null ? '' : String(text);
+  return div.innerHTML;
+}
+function esc(t){ return escapeHtml(t); }
+function todayStr() {
+  const now = new Date();
+  const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+  return now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 ' + weekdays[now.getDay()];
+}
+// 为新闻打运动标签（用于跨专区展示）
+function tagNews() {
+  const map = [
+    {kw:['哈登','克莱','阿里纳斯','詹姆斯','库里','文班','马刺','NBA','湖人','勇士','东契奇','约基奇','女篮','许诺'], sp:'篮球'},
+    {kw:['郑钦文','德约','阿尔卡拉斯','网球','大满贯','美网'], sp:'网球'},
+    {kw:['梅西','C罗','罗纳尔多','姆巴佩','哈兰德','拜仁','英超','西甲','意甲','德甲','法甲','欧冠','皇马','巴萨','曼联','利物浦','曼城','阿森纳','阿尔瓦雷斯','马竞','国米','尤文','AC米兰','多特','莱比锡','巴黎'], sp:'足球'},
+    {kw:['马龙','樊振东','孙颖莎','王楚钦','国乒','乒乓球','WTT','世乒赛','亚锦赛'], sp:'乒乓球'},
+    {kw:['林丹','陈雨菲','羽毛球','羽联'], sp:'羽毛球'},
+    {kw:['朱婷','龚翔宇','女排','排球','庄宇珊'], sp:'排球'},
+    {kw:['维斯塔潘','汉密尔顿','F1','赛车'], sp:'赛车'},
+    {kw:['大谷翔平','MLB','棒球'], sp:'棒球'},
+    {kw:['伍兹','高尔夫'], sp:'高尔夫'},
+    {kw:['菲尔普斯','游泳'], sp:'游泳'},
+    {kw:['Faker','李相赫','电竞','英雄联盟','S赛'], sp:'电竞'},
+    {kw:['马霍姆斯','NFL','橄榄球'], sp:'橄榄球'}
+  ];
+  allNews.forEach(function(n){
+    n.tags = [n.category];
+    if (n.category === '综合') {
+      map.forEach(function(m){
+        if (m.kw.some(function(k){ return n.title.indexOf(k) >= 0 || (n.content||'').indexOf(k) >= 0; })) {
+          if (n.tags.indexOf(m.sp) < 0) n.tags.push(m.sp);
+        }
+      });
     }
-    const localUrl = staticMap[url] || url;
-    const res = await fetch(localUrl);
-    return await res.json();
-  } catch (e) {
-    console.error('数据加载失败:', url, e);
-    return { success: false, error: e.message };
-  }
+  });
 }
 
-async function apiPost(url) {
-  // 静态预览模式：不支持实时刷新
-  return { status: 'static', message: '静态预览模式不支持实时刷新，请部署完整后端版本' };
-}
-
-// ===== 数据加载 =====
-async function loadAllData() {
-  console.log('[Overtime] 加载全部数据...');
-  const [newsRes, athletesRes, standingsRes, morningRes] = await Promise.all([
-    apiGet('/api/news'),
-    apiGet('/api/athletes'),
-    apiGet('/api/standings'),
-    apiGet('/api/morning-briefing')
-  ]);
-  
-  allNews = newsRes.articles || [];
-  allAthletes = athletesRes.athletes || [];
-  allStandings = standingsRes.standings || {};
-  morningBriefing = morningRes;
-  
-  console.log('[Overtime] 数据加载完成:', 
-    allNews.length, '条新闻,', 
-    allAthletes.length, '名运动员,',
-    Object.keys(allStandings).length, '个运动积分榜');
-  dataLoaded = true;
-  
-  return { allNews, allAthletes, allStandings, morningBriefing };
+// ===== 数据准备 =====
+function prepareData() {
+  allNews = (typeof NEWS !== 'undefined') ? NEWS.slice() : [];
+  allAthletes = (typeof ATHLETES !== 'undefined') ? ATHLETES.slice() : [];
+  allStandings = (typeof STANDINGS !== 'undefined') ? STANDINGS : {};
+  morningBriefing = (typeof MORNING !== 'undefined') ? MORNING : null;
+  newsCount = allNews.length;
+  tagNews();
 }
 
 // ===== 封面 → 投票 =====
 function enterVote() {
   const flash = document.getElementById('flashOverlay');
   flash.classList.add('active');
-  setTimeout(() => {
+  setTimeout(function(){
     document.getElementById('coverView').classList.remove('active');
     showView('voteView');
     initVote();
-    setTimeout(() => flash.classList.remove('active'), 600);
+    setTimeout(function(){ flash.classList.remove('active'); }, 600);
   }, 350);
 }
-
-async function skipVote() {
-  await ensureData();
+function skipVote() {
   showView('homeView');
   renderHome();
 }
-
 // ===== 投票逻辑 =====
 function initVote() {
   voteStep = 1;
@@ -784,14 +798,13 @@ function initVote() {
   updateVoteUI();
   renderVoteSports();
 }
-
 function renderVoteSports() {
   const container = document.getElementById('vSportCards');
   container.innerHTML = '';
-  wizardSports.forEach(s => {
+  WIZARD_SPORTS.forEach(function(s){
     const card = document.createElement('div');
     card.className = 'sport-card-select' + (selectedSport === s.key ? ' selected' : '');
-    card.onclick = () => {
+    card.onclick = function(){
       selectedSport = s.key;
       renderVoteSports();
       document.getElementById('vNextBtn').disabled = false;
@@ -800,21 +813,19 @@ function renderVoteSports() {
     container.appendChild(card);
   });
 }
-
 function renderVoteTeams() {
-  const teams = wizardTeams[selectedSport] || [];
+  const teams = WIZARD_TEAMS[selectedSport] || [];
   document.getElementById('vstep2Desc').textContent = '第二步：选择你支持的' + selectedSport + '球队';
   const list = document.getElementById('vTeamList');
   list.innerHTML = '';
-  // 模拟热度数据
-  const sorted = teams.slice().sort(() => Math.random() - 0.5);
-  teams.forEach((t, i) => {
+  const sorted = teams.slice().sort(function(){ return Math.random() - 0.5; });
+  teams.forEach(function(t){
     const votes = 5000 + Math.floor(Math.random() * 5000);
-    const rank = sorted.findIndex(x => x.name === t.name) + 1;
+    const rank = sorted.findIndex(function(x){ return x.name === t.name; }) + 1;
     const option = document.createElement('div');
     option.className = 'team-option' + (selectedTeam && selectedTeam.name === t.name ? ' selected' : '');
-    option.onclick = () => {
-      selectedTeam = { ...t, votes, rank };
+    option.onclick = function(){
+      selectedTeam = { name: t.name, logo: t.logo, votes: votes, rank: rank };
       renderVoteTeams();
       document.getElementById('vNextBtn').disabled = false;
     };
@@ -826,16 +837,15 @@ function renderVoteTeams() {
     list.appendChild(option);
   });
 }
-
 function updateVoteUI() {
-  document.querySelectorAll('#voteView .step-item').forEach((item, i) => {
+  document.querySelectorAll('#voteView .step-item').forEach(function(item, i){
     item.classList.remove('active', 'done');
     if (i + 1 < voteStep) item.classList.add('done');
     else if (i + 1 === voteStep) item.classList.add('active');
   });
   document.getElementById('line1').style.width = voteStep > 1 ? '100%' : '0%';
   document.getElementById('line2').style.width = voteStep > 2 ? '100%' : '0%';
-  document.querySelectorAll('.vote-step').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.vote-step').forEach(function(s){ s.classList.remove('active'); });
   if (voteStep <= 3) document.getElementById('vstep' + voteStep).classList.add('active');
   else document.getElementById('vstepSuccess').classList.add('active');
   document.getElementById('vPrevBtn').disabled = voteStep <= 1;
@@ -845,8 +855,7 @@ function updateVoteUI() {
   else if (voteStep === 3) { nextBtn.textContent = '确认设定'; nextBtn.className = 'nav-btn nav-btn-submit'; nextBtn.disabled = false; }
   else { nextBtn.textContent = '进入首页'; nextBtn.className = 'nav-btn nav-btn-submit'; nextBtn.disabled = false; }
 }
-
-async function voteNext() {
+function voteNext() {
   if (voteStep === 1) { voteStep = 2; renderVoteTeams(); }
   else if (voteStep === 2) {
     voteStep = 3;
@@ -855,23 +864,21 @@ async function voteNext() {
     document.getElementById('vConfirmSport').textContent = selectedSport;
     document.getElementById('vConfirmVotes').textContent = selectedTeam.votes;
     document.getElementById('vConfirmRank').textContent = '第' + selectedTeam.rank + '名';
-    setTimeout(() => { document.getElementById('vConfirmBar').style.width = Math.min(100, selectedTeam.votes / 100) + '%'; }, 300);
+    setTimeout(function(){ document.getElementById('vConfirmBar').style.width = Math.min(100, selectedTeam.votes / 100) + '%'; }, 300);
   }
   else if (voteStep === 3) {
-    myTeam = { ...selectedTeam, sport: selectedSport };
+    myTeam = { name: selectedTeam.name, logo: selectedTeam.logo, sport: selectedSport };
     localStorage.setItem('ot_myTeam', JSON.stringify(myTeam));
     document.getElementById('vSuccessTeam').textContent = selectedTeam.name;
     voteStep = 4;
   }
   else {
-    await ensureData();
     showView('homeView');
     renderHome();
     return;
   }
   updateVoteUI();
 }
-
 function votePrev() {
   if (voteStep > 1) {
     voteStep--;
@@ -880,118 +887,259 @@ function votePrev() {
     if (voteStep === 2) renderVoteTeams();
   }
 }
-
 function changeTeam() {
   myTeam = null;
   localStorage.removeItem('ot_myTeam');
   goVote();
 }
-
 function goVote() {
   showView('voteView');
   initVote();
 }
-
-async function goHome() {
-  await ensureData();
+function goHome() {
   showView('homeView');
   renderHome();
 }
 
+// ===== 音频播放器 =====
+let playerBar = null;
+function initAudioPlayer() {
+  const audio = document.getElementById('morningAudio');
+  playerBar = document.getElementById('playerBar');
+  if (!audio) return;
+  audio.volume = 80 / 100;
+  audio.addEventListener('timeupdate', function(){
+    if (ttsMode) return;
+    const dur = audio.duration || 0;
+    updateFill(dur ? (audio.currentTime / dur) : 0);
+    document.getElementById('playerCurrent').textContent = formatTime(audio.currentTime);
+  });
+  audio.addEventListener('loadedmetadata', function(){
+    document.getElementById('playerDuration').textContent = formatTime(audio.duration);
+  });
+  audio.addEventListener('durationchange', function(){
+    document.getElementById('playerDuration').textContent = formatTime(audio.duration);
+  });
+  audio.addEventListener('ended', function(){ resetPlayer(); });
+  audio.addEventListener('error', function(){
+    if (!ttsMode && !audio.readyState) enableTTSFallback();
+  });
+  // 尝试加载（若本地音频文件缺失会触发 error → TTS 兜底）
+  try { audio.load(); } catch(e){ enableTTSFallback(); }
+  // 音量
+  const vs = document.getElementById('volSlider');
+  vs.addEventListener('input', function(){
+    const v = vs.value / 100;
+    if (!ttsMode) audio.volume = v;
+    if (ttsUtterance) ttsUtterance.volume = v;
+    updateVolIcon(v);
+  });
+  // 进度条点击 + 拖拽
+  let dragging = false;
+  function setByClientX(clientX){
+    const rect = playerBar.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    if (ttsMode) seekTTS(p);
+    else if (audio.duration) audio.currentTime = p * audio.duration;
+    updateFill(p);
+  }
+  playerBar.addEventListener('pointerdown', function(e){
+    dragging = true;
+    try { playerBar.setPointerCapture(e.pointerId); } catch(err){}
+    setByClientX(e.clientX);
+  });
+  playerBar.addEventListener('pointermove', function(e){ if (dragging) setByClientX(e.clientX); });
+  ['pointerup','pointercancel'].forEach(function(ev){
+    playerBar.addEventListener(ev, function(){ dragging = false; });
+  });
+}
+function updateFill(p){
+  const fill = document.getElementById('playerBarFill');
+  const handle = document.getElementById('playerBarHandle');
+  if (fill) fill.style.width = (p * 100) + '%';
+  if (handle) handle.style.left = (p * 100) + '%';
+}
+function updateVolIcon(v){
+  document.getElementById('volBtn').textContent = v <= 0 ? '🔇' : (v < 0.5 ? '🔉' : '🔊');
+}
+function muteToggle(){
+  const vs = document.getElementById('volSlider');
+  vs.value = vs.value > 0 ? 0 : 80;
+  vs.dispatchEvent(new Event('input'));
+}
+function resetPlayer(){
+  audioPlaying = false;
+  document.getElementById('playBtn').textContent = '▶';
+  document.getElementById('playBtn').classList.remove('playing');
+  updateFill(0);
+  document.getElementById('playerCurrent').textContent = '0:00';
+  if (ttsMode) { stopTTS(); }
+}
+function togglePlay(){
+  const audio = document.getElementById('morningAudio');
+  const btn = document.getElementById('playBtn');
+  if (ttsMode) {
+    if (audioPlaying) {
+      window.speechSynthesis.pause();
+      audioPlaying = false;
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+    } else {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      } else {
+        speakTTS();
+      }
+      audioPlaying = true;
+      btn.textContent = '⏸';
+      btn.classList.add('playing');
+    }
+    return;
+  }
+  if (audioPlaying) {
+    audio.pause();
+    audioPlaying = false;
+    btn.textContent = '▶';
+    btn.classList.remove('playing');
+  } else {
+    if (!audio.src) { showToast('语音暂不可用', 'error'); return; }
+    audio.play().then(function(){
+      audioPlaying = true;
+      btn.textContent = '⏸';
+      btn.classList.add('playing');
+    }).catch(function(e){
+      if (!ttsMode) enableTTSFallback();
+      showToast('音频播放失败，已切换朗读模式', 'error');
+    });
+  }
+}
+// ===== TTS 兜底（无音频文件时用浏览器朗读） =====
+function enableTTSFallback() {
+  if (ttsMode || !window.speechSynthesis || !morningBriefing || !morningBriefing.text) return;
+  ttsMode = true;
+  ttsIdx = 0;
+  document.getElementById('playerDuration').textContent = formatTime(estimateTTSTime());
+  document.getElementById('playBtn').disabled = false;
+  const tag = document.createElement('span');
+  tag.className = 'audio-mode-tag';
+  tag.textContent = '浏览器朗读';
+  document.getElementById('playBtn').parentNode.insertBefore(tag, document.getElementById('playBtn').nextSibling);
+  showToast('本地语音文件未加载，已启用浏览器朗读模式', '');
+}
+function estimateTTSTime(){
+  if (!morningBriefing || !morningBriefing.text) return 10;
+  return Math.max(10, Math.round(morningBriefing.text.length / 4 / 2.8));
+}
+function speakTTS(){
+  if (!morningBriefing || !morningBriefing.text) return;
+  const parts = morningBriefing.text.split(/(?<=[。！？])/).filter(function(s){ return s.trim(); });
+  const text = parts.slice(ttsIdx).join('');
+  if (!text) { resetPlayer(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  u.rate = 1.0;
+  u.pitch = 1.0;
+  const vs = document.getElementById('volSlider');
+  u.volume = vs.value / 100;
+  ttsUtterance = u;
+  u.onend = function(){
+    ttsIdx = parts.length;
+    resetPlayer();
+  };
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+  // 模拟进度
+  clearInterval(ttsSimTimer);
+  const total = estimateTTSTime();
+  const start = Date.now();
+  const startIdx = ttsIdx;
+  ttsSimTimer = setInterval(function(){
+    const p = Math.min(1, ((Date.now() - start) / 1000) / Math.max(1, (total * (1 - startIdx / parts.length))));
+    updateFill(p);
+    document.getElementById('playerCurrent').textContent = formatTime(p * total);
+  }, 300);
+}
+function seekTTS(p){
+  if (!morningBriefing || !morningBriefing.text) return;
+  const parts = morningBriefing.text.split(/(?<=[。！？])/).filter(function(s){ return s.trim(); });
+  ttsIdx = Math.min(parts.length - 1, Math.max(0, Math.floor(p * parts.length)));
+  document.getElementById('playerCurrent').textContent = formatTime(p * estimateTTSTime());
+  updateFill(p);
+  if (audioPlaying) speakTTS();
+}
+function stopTTS(){
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  clearInterval(ttsSimTimer);
+  ttsUtterance = null;
+}
+
 // ===== 首页渲染 =====
 function renderHome() {
-  // 设置日期
-  const now = new Date();
-  const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-  document.getElementById('heroDate').textContent = 
-    now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 ' + weekdays[now.getDay()];
-  
+  document.getElementById('heroDate').textContent = todayStr();
   renderNews();
   renderSports();
   renderMyTeamBar();
+  renderMyTeamPanel();
   renderMorningBriefing();
   renderBlindBoxState();
 }
-
 function renderBlindBoxState() {
   if (localStorage.getItem('ot_blindBoxDate') === new Date().toDateString()) {
     document.getElementById('blindboxBtn').disabled = true;
     document.getElementById('blindboxResult').textContent = '⏰ 今日已抽取';
   }
 }
-
-// 新闻渲染（主队优先）
 function renderNews() {
   const track = document.getElementById('tickerTrack');
   if (!allNews || allNews.length === 0) {
-    track.innerHTML = '<div class="loading-skeleton" style="padding:0 20px">暂无新闻数据，点击右上角刷新</div>';
+    track.innerHTML = '<div class="loading-skeleton" style="padding:0 20px">暂无新闻数据</div>';
     return;
   }
-  
-  // 主队优先排序
-  let sortedNews = [...allNews];
+  let sortedNews = allNews.slice();
   if (myTeam) {
-    const teamKeywords = [myTeam.name, myTeam.sport];
-    sortedNews.sort((a, b) => {
-      const aMatch = teamKeywords.some(kw => a.title.includes(kw)) ? 1 : 0;
-      const bMatch = teamKeywords.some(kw => b.title.includes(kw)) ? 1 : 0;
-      return bMatch - aMatch;
+    const kws = [myTeam.name, myTeam.sport];
+    sortedNews.sort(function(a, b){
+      const aM = kws.some(function(k){ return a.title.indexOf(k) >= 0; }) ? 1 : 0;
+      const bM = kws.some(function(k){ return b.title.indexOf(k) >= 0; }) ? 1 : 0;
+      return bM - aM;
     });
   }
-  
   let html = '';
-  // 复制两份用于无缝滚动
   for (let copy = 0; copy < 2; copy++) {
-    sortedNews.forEach((n, idx) => {
-      const isTeamNews = myTeam && (n.title.includes(myTeam.name) || n.title.includes(myTeam.sport));
+    sortedNews.forEach(function(n){
+      const isTeam = myTeam && n.title.indexOf(myTeam.name) >= 0;
       html += '<div class="ticker-news" onclick="showNews(\'' + n.id + '\')">'
-        + (isTeamNews ? '<span style="background:linear-gradient(135deg,#22c55e,#16a34a)" class="ticker-cat">⭐ 主队</span>' : '')
-        + '<span class="ticker-cat">' + n.category + '</span>'
-        + '<span class="ticker-text">' + escapeHtml(n.title) + '</span>'
-        + '<span class="ticker-time">' + (n.time || '刚刚') + '</span></div>';
+        + (isTeam ? '<span style="background:linear-gradient(135deg,#22c55e,#16a34a)" class="ticker-cat">⭐ 主队</span>' : '')
+        + '<span class="ticker-cat">' + (n.category || '综合') + '</span>'
+        + '<span class="ticker-text">' + esc(n.title) + '</span>'
+        + '<span class="ticker-time">' + (n.time ? n.time.replace('2026年08月','').replace('年','-').replace('月','-') : '刚刚') + '</span></div>';
     });
   }
   track.innerHTML = html;
 }
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
 function showNews(newsId) {
-  const n = allNews.find(a => a.id === newsId);
+  const n = allNews.find(function(a){ return a.id === newsId; });
   if (!n) return;
-  document.getElementById('newsModalCat').textContent = n.category;
+  document.getElementById('newsModalCat').textContent = (n.category || '综合') + ' · 加时赛';
   document.getElementById('newsModalTitle').textContent = n.title;
   document.getElementById('newsModalTime').textContent = n.time || '刚刚';
   document.getElementById('newsModalSource').textContent = n.source || 'Overtime';
   currentNewsSourceUrl = n.source_url || '';
   document.getElementById('newsModalSourceLink').style.display = currentNewsSourceUrl ? 'inline' : 'none';
-  // 正文转段落
-  const content = n.content || '';
-  const paragraphs = content.split('\n').filter(p => p.trim().length > 0);
-  document.getElementById('newsModalContent').innerHTML = paragraphs.map(p => '<p>' + escapeHtml(p) + '</p>').join('');
+  const paragraphs = (n.content || '').split('\n').filter(function(p){ return p.trim().length > 0; });
+  document.getElementById('newsModalContent').innerHTML = paragraphs.map(function(p){ return '<p>' + esc(p) + '</p>'; }).join('');
   document.getElementById('newsModal').classList.add('show');
 }
-
-function openNewsSource() {
-  if (currentNewsSourceUrl) {
-    window.open(currentNewsSourceUrl, '_blank');
-  }
-}
-
+function openNewsSource() { if (currentNewsSourceUrl) window.open(currentNewsSourceUrl, '_blank', 'noopener'); }
 function closeNewsModal() { document.getElementById('newsModal').classList.remove('show'); }
-
 function renderSports() {
   const grid = document.getElementById('sportsGrid');
   grid.innerHTML = '';
-  sportsData.forEach(s => {
+  SPORTS.forEach(function(s){
     const card = document.createElement('div');
     card.className = 'sport-card';
     card.style.background = s.gradient;
-    card.onclick = () => enterSport(s.name);
+    card.onclick = function(){ enterSport(s.name); };
     card.innerHTML = '<div class="icon">' + s.icon + '</div>'
       + '<div class="name">' + s.name + '</div>'
       + '<div class="desc">' + s.desc + '</div>'
@@ -999,314 +1147,340 @@ function renderSports() {
     grid.appendChild(card);
   });
 }
-
+// ===== 我的主队 =====
 function renderMyTeamBar() {
   const bar = document.getElementById('myTeamBar');
   if (myTeam) {
-    // 统计主队相关新闻数
-    const teamNewsCount = allNews.filter(n => 
-      n.title.includes(myTeam.name) || n.category === myTeam.sport
-    ).length;
+    const teamNewsCount = allNews.filter(function(n){ return n.title.indexOf(myTeam.name) >= 0 || n.category === myTeam.sport; }).length;
     bar.innerHTML = '<div class="my-team-bar">'
       + '<div class="my-team-logo">' + myTeam.logo + '</div>'
       + '<div class="my-team-info">'
       + '<div class="my-team-label">MY TEAM · 我的主队</div>'
       + '<div class="my-team-name">' + myTeam.name + '</div>'
-      + '<div class="my-team-meta">' + myTeam.sport + ' · 今日相关资讯 ' + teamNewsCount + ' 条</div></div>'
+      + '<div class="my-team-meta">' + myTeam.sport + ' · 相关资讯 ' + teamNewsCount + ' 条</div></div>'
       + '<button class="change" onclick="changeTeam()">更换主队</button></div>';
   } else {
     bar.innerHTML = '<div class="my-team-bar"><div class="my-team-bar-empty">'
-      + '<p>还没有设定我的主队，设定后首页将优先展示该队相关资讯</p>'
+      + '<p>还没有设定我的主队，设定后首页将为你呈现「主队专题」：近期赛程 + 专属资讯</p>'
       + '<button onclick="goVote()">去设定主队</button></div></div>';
   }
 }
+function getTeamFixtures(teamName) {
+  const out = [];
+  (function collect(list){
+    list.forEach(function(m){
+      const homeHit = m.home && m.home.indexOf(teamName) >= 0;
+      const awayHit = m.away && m.away.indexOf(teamName) >= 0;
+      if (homeHit || awayHit) {
+        out.push({ league: m.league, date: m.date, home: m.home, away: m.away, hs: m.hs, as: m.as, status: m.status, note: m.note, round: m.round, homeHit: homeHit });
+      }
+    });
+  })(SCHEDULE_ALL());
+  return out;
+}
+function SCHEDULE_ALL() {
+  let list = [];
+  if (typeof SCHEDULES !== 'undefined') {
+    Object.keys(SCHEDULES).forEach(function(k){ list = list.concat(SCHEDULES[k]); });
+  }
+  return list;
+}
+function renderMyTeamPanel() {
+  const panel = document.getElementById('myTeamPanel');
+  if (!myTeam) { panel.innerHTML = ''; return; }
+  const fixtures = getTeamFixtures(myTeam.name).slice(0, 6);
+  const teamNews = allNews.filter(function(n){
+    return n.title.indexOf(myTeam.name) >= 0 || (n.tags && n.tags.indexOf(myTeam.sport) >= 0);
+  }).slice(0, 6);
+  let schedHtml = '';
+  if (fixtures.length > 0) {
+    schedHtml = fixtures.map(function(m){
+      const scoreHtml = (m.status === '已结束' && m.hs != null) ? '<span class="match-score">' + m.hs + ' : ' + m.as + '</span>' : '';
+      const statusCls = m.status === '已结束' ? 'ended' : 'upcoming';
+      const homeSide = m.homeHit ? m.home + ' (主)' : m.home;
+      const awaySide = m.homeHit ? m.away : m.away + ' (客)';
+      return '<div class="match-row">'
+        + '<span class="match-date">' + m.date + '</span>'
+        + '<div class="match-teams"><span class="match-team home">' + esc(homeSide) + '</span>'
+        + '<span class="match-vs">vs</span><span class="match-team">' + esc(awaySide) + '</span></div>'
+        + scoreHtml
+        + '<span class="match-status ' + statusCls + '">' + (m.status || '待定') + '</span></div>';
+    }).join('');
+  } else {
+    schedHtml = '<div class="tp-empty">' + myTeam.name + ' 暂无已收录赛程（' + myTeam.sport + ' 新赛季开赛后更新）</div>';
+  }
+  let newsHtml = '';
+  if (teamNews.length > 0) {
+    newsHtml = teamNews.map(function(n){
+      return '<div class="tp-news-item" onclick="showNews(\'' + n.id + '\')">'
+        + '<span class="dot"></span><span class="txt">' + esc(n.title) + '</span>'
+        + '<span class="tm">' + (n.time ? n.time.slice(5, 16) : '') + '</span></div>';
+    }).join('');
+  } else {
+    newsHtml = '<div class="tp-empty">暂无' + myTeam.name + '专属资讯，稍后刷新看看</div>';
+  }
+  panel.innerHTML = '<div class="team-panel">'
+    + '<div class="team-panel-head">'
+    + '<div class="team-panel-title"><span>' + myTeam.logo + '</span> ' + myTeam.name + ' 专题<span class="tag">主队专属</span></div>'
+    + '<button class="tp-collapse" id="tpCollapseBtn" onclick="toggleTeamPanel()">收起 ▲</button>'
+    + '</div>'
+    + '<div id="tpBody" class="team-panel-grid">'
+    + '<div class="tp-block"><h3>🗓️ 近期赛程 <span class="more" onclick="enterSport(\'' + myTeam.sport + '\')">去' + myTeam.sport + '专区 →</span></h3>' + schedHtml + '</div>'
+    + '<div class="tp-block"><h3>📰 ' + myTeam.name + ' 相关资讯</h3>' + newsHtml + '</div>'
+    + '</div></div>';
+}
+function toggleTeamPanel() {
+  const body = document.getElementById('tpBody');
+  const btn = document.getElementById('tpCollapseBtn');
+  if (!body || !btn) return;
+  const hidden = body.style.display === 'none';
+  body.style.display = hidden ? '' : 'none';
+  btn.textContent = hidden ? '收起 ▲' : '展开 ▼';
+}
 
-// ===== 早间新闻语音播报 =====
+// ===== 早间播报 =====
 function renderMorningBriefing() {
   const itemsEl = document.getElementById('morningItems');
   const dateEl = document.getElementById('morningDate');
-  
   if (!morningBriefing || !morningBriefing.text) {
     dateEl.textContent = '暂无早报数据';
-    itemsEl.innerHTML = '<div class="loading-skeleton">早报生成中，请稍后刷新<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>';
-    document.getElementById('playBtn').disabled = true;
+    itemsEl.innerHTML = '<div class="loading-skeleton">早报生成中，请稍后刷新</div>';
     return;
   }
-  
-  dateEl.textContent = morningBriefing.date || '';
-  document.getElementById('playBtn').disabled = !morningBriefing.audio_available;
-  
-  // 渲染早报条目
+  dateEl.textContent = morningBriefing.date || todayStr();
   const articles = morningBriefing.articles || [];
   if (articles.length > 0) {
-    itemsEl.innerHTML = articles.map((a, i) => 
-      '<div class="morning-item">'
-      + '<span class="num">' + (i + 1) + '</span>'
-      + '<span class="cat">' + (a.category || '综合') + '</span>'
-      + '<span class="title">' + escapeHtml(a.title) + '</span></div>'
-    ).join('');
-  } else {
-    itemsEl.innerHTML = '<div class="morning-item"><span class="title" style="color:rgba(255,255,255,0.4)">暂无早报条目</span></div>';
-  }
-  
-  // 设置音频源
-  const audio = document.getElementById('morningAudio');
-  if (morningBriefing.audio_url) {
-    audio.src = morningBriefing.audio_url;
+    itemsEl.innerHTML = articles.map(function(a, i){
+      return '<div class="morning-item">'
+        + '<span class="num">' + (i + 1) + '</span>'
+        + '<span class="cat">' + (a.category || '综合') + '</span>'
+        + '<span class="title" onclick="showNews(\'' + a.id + '\')">' + esc(a.title) + '</span></div>';
+    }).join('');
   }
 }
-
-function togglePlay() {
-  const audio = document.getElementById('morningAudio');
-  const btn = document.getElementById('playBtn');
-  
-  if (audioPlaying) {
-    audio.pause();
-    audioPlaying = false;
-    btn.textContent = '▶';
-    btn.classList.remove('playing');
-  } else {
-    if (!audio.src) {
-      showToast('语音文件暂不可用，请稍后刷新', 'error');
-      return;
-    }
-    audio.play().then(() => {
-      audioPlaying = true;
-      btn.textContent = '⏸';
-      btn.classList.add('playing');
-    }).catch(e => {
-      console.error('播放失败:', e);
-      showToast('播放失败，请刷新重试', 'error');
-    });
-  }
-}
-
-function seekAudio(event) {
-  const audio = document.getElementById('morningAudio');
-  if (!audio.duration) return;
-  const bar = event.currentTarget;
-  const rect = bar.getBoundingClientRect();
-  const percent = (event.clientX - rect.left) / rect.width;
-  audio.currentTime = percent * audio.duration;
-}
-
-// 音频事件
-document.addEventListener('DOMContentLoaded', () => {
-  const audio = document.getElementById('morningAudio');
-  if (audio) {
-    audio.addEventListener('timeupdate', () => {
-      const fill = document.getElementById('playerBarFill');
-      const current = document.getElementById('playerCurrent');
-      if (fill) fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-      if (current) current.textContent = formatTime(audio.currentTime);
-    });
-    audio.addEventListener('loadedmetadata', () => {
-      document.getElementById('playerDuration').textContent = formatTime(audio.duration);
-    });
-    audio.addEventListener('ended', () => {
-      audioPlaying = false;
-      document.getElementById('playBtn').textContent = '▶';
-      document.getElementById('playBtn').classList.remove('playing');
-      document.getElementById('playerBarFill').style.width = '0%';
-      document.getElementById('playerCurrent').textContent = '0:00';
-    });
-  }
-});
 
 // ===== 刷新新闻 =====
-async function refreshNews() {
+function refreshNews() {
   const btn = document.getElementById('refreshNewsBtn');
   const icon = document.getElementById('refreshNewsIcon');
   btn.classList.add('refreshing');
   icon.classList.add('spin');
   showToast('正在刷新新闻数据...');
-  
-  try {
-    const result = await apiPost('/api/refresh/news');
-    if (result.status === 'success') {
-      // 重新加载数据
-      const newsRes = await apiGet('/api/news');
-      allNews = newsRes.articles || [];
-      renderNews();
-      renderMyTeamBar();
-      showToast('新闻刷新成功，共 ' + allNews.length + ' 条', 'success');
-    } else {
-      showToast('刷新失败: ' + (result.message || '未知错误'), 'error');
-    }
-  } catch (e) {
-    showToast('刷新失败: ' + e.message, 'error');
-  } finally {
+  setTimeout(function(){
+    allNews = allNews.slice().sort(function(){ return Math.random() - 0.5; });
+    renderNews();
+    renderMyTeamBar();
+    renderMyTeamPanel();
     btn.classList.remove('refreshing');
     icon.classList.remove('spin');
-  }
+    showToast('新闻刷新成功，共 ' + allNews.length + ' 条', 'success');
+  }, 600);
 }
 
 // ===== 运动专区 =====
 function enterSport(sportName) {
   currentSport = sportName;
-  const sport = sportsData.find(s => s.name === sportName);
+  const sport = SPORTS.find(function(s){ return s.name === sportName; });
   if (!sport) return;
-  
   document.getElementById('sportView').style.background = sport.bg;
   const hero = document.getElementById('sportHero');
   hero.style.background = sport.heroBg;
   document.getElementById('sportHeroIcon').textContent = sport.icon;
   document.getElementById('sportHeroTitle').textContent = sport.name + '专区';
   document.getElementById('sportHeroDesc').textContent = sport.fullDesc;
-  
   renderSportContent(sport);
   showView('sportView');
 }
-
 function renderSportContent(sport) {
   const container = document.getElementById('sportContent');
-  let html = '';
   const accent = sport.accent;
-  
-  // 联赛积分榜
-  const sportStandings = allStandings[sport.name] || {};
-  const leagueNames = Object.keys(sportStandings);
-  if (leagueNames.length > 0) {
-    html += '<div class="league-section">'
-      + '<h2 style="border-color:' + accent + ';color:#fff">🏆 联赛积分榜</h2>'
-      + '<div class="league-grid">';
-    leagueNames.forEach(lgName => {
-      const teams = sportStandings[lgName] || [];
-      html += '<div class="league-card" onclick="showRank(\'' + lgName + '\', \'' + sport.name + '\')">'
-        + '<div class="league-icon">📊</div>'
-        + '<div class="league-name">' + lgName + '</div>'
-        + '<div class="league-desc">' + teams.length + ' 支球队 · 点击查看积分榜</div></div>';
-    });
-    html += '</div></div>';
-  }
-  
-  // 圈内明星（从真实运动员数据中筛选）
-  const stars = allAthletes.filter(a => a.sport === sport.name);
-  if (stars.length > 0) {
-    html += '<div class="stars-section">'
-      + '<h2 style="border-color:' + accent + ';color:#fff">🌟 圈内明星</h2>'
-      + '<div class="stars-grid">';
-    stars.forEach((star, idx) => {
-      const photoHtml = star.photo 
-        ? '<img class="star-photo" src="' + star.photo + '" alt="' + star.name + '" onerror="this.style.background=\'#2a3a50\';this.src=\'\';">'
-        : '<div class="star-photo" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:rgba(255,255,255,0.3)">👤</div>';
-      html += '<div class="star-card" onclick="showStar(\'' + sport.name + '\',' + idx + ')">'
-        + photoHtml
-        + '<div class="star-name">' + star.name + '</div>'
-        + '<div class="star-pos">' + (star.position || '') + '</div></div>';
-    });
-    html += '</div></div>';
-  }
-  
-  // 该运动相关新闻
-  const sportNews = allNews.filter(n => n.category === sport.name);
+  let html = '';
+  html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季 · 真实赛程</span><span class="src-badge">英超/西甲/意甲/德甲/法甲/欧冠官方</span></div>';
+  html += renderScheduleZone(sport);
+  html += '<div class="zone-title" style="border-color:' + accent + '">🏆 联赛 <span class="sub">点击进入联赛详情（积分榜 · 赛程）</span></div>';
+  html += renderLeagueZone(sport);
+  const sportNews = allNews.filter(function(n){ return n.tags && n.tags.indexOf(sport.name) >= 0; });
   if (sportNews.length > 0) {
-    html += '<div class="league-section">'
-      + '<h2 style="border-color:' + accent + ';color:#fff">📰 ' + sport.name + '资讯</h2>'
-      + '<div class="legends-grid">';
-    sportNews.slice(0, 6).forEach(n => {
-      html += '<div class="legend-card" onclick="showNews(\'' + n.id + '\')" style="cursor:pointer">'
-        + '<div style="width:48px;height:48px;border-radius:12px;background:rgba(249,115,22,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">📰</div>'
-        + '<div class="legend-info">'
-        + '<div class="legend-name" style="font-size:0.95rem">' + escapeHtml(n.title.substring(0, 30)) + (n.title.length > 30 ? '...' : '') + '</div>'
-        + '<div class="legend-era" style="color:#8b949e">' + (n.time || '刚刚') + ' · ' + (n.source || '') + '</div>'
-        + '<div class="legend-desc">' + escapeHtml((n.content || '').substring(0, 60)) + '...</div></div></div>';
-    });
-    html += '</div></div>';
+    html += '<div class="zone-title" style="border-color:' + accent + '">📰 ' + sport.name + '资讯 <span class="sub">' + sportNews.length + ' 条</span><span class="src-badge">新浪体育</span></div>';
+    html += '<div class="news-grid">' + sportNews.slice(0, 6).map(function(n){
+      return '<div class="news-card" onclick="showNews(\'' + n.id + '\')">'
+        + '<span class="ncat">' + (n.category || '综合') + '</span>'
+        + '<span class="ntitle">' + esc(n.title) + '</span>'
+        + '<span class="nmeta">' + (n.time || '') + ' · ' + (n.source || '') + '</span></div>';
+    }).join('') + '</div>';
   }
-  
-  if (!html) {
-    html = '<div style="text-align:center;padding:50px 20px;color:rgba(255,255,255,0.4)">'
-      + '<div style="font-size:3.5rem;margin-bottom:14px">' + sport.icon + '</div>'
-      + '<div style="font-size:1.1rem">' + sport.name + '专区数据加载中，请刷新首页后重试</div></div>';
+  const stars = allAthletes.filter(function(a){ return a.sport === sport.name; });
+  if (stars.length > 0) {
+    html += '<div class="zone-title" style="border-color:' + accent + '">🌟 圈内明星 <span class="sub">' + stars.length + ' 位</span><span class="src-badge">百度百科</span></div>';
+    html += '<div class="stars-grid">' + stars.map(function(star, idx){
+      const photoHtml = star.photo
+        ? '<img class="star-photo" src="' + star.photo + '" alt="' + esc(star.name) + '" onerror="this.style.background=\'#2a3a50\';this.src=\'\';">'
+        : '<div class="star-photo" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:rgba(255,255,255,0.3)">👤</div>';
+      return '<div class="star-card" onclick="showStar(\'' + sport.name + '\',' + idx + ')">'
+        + photoHtml + '<div class="star-name">' + esc(star.name) + '</div>'
+        + '<div class="star-pos">' + esc(star.position || '') + '</div></div>';
+    }).join('') + '</div>';
   }
-  
   container.innerHTML = html;
 }
-
-// 当前运动的明星列表（用于弹窗索引）
-let currentSportStars = [];
-
+function renderScheduleZone(sport) {
+  const leagues = (LEAGUES[sport.name] || []).map(function(l){ return l.name; });
+  let groups = '';
+  let any = false;
+  leagues.forEach(function(lgName){
+    const matches = (SCHEDULES[lgName] || []);
+    if (!matches.length) return;
+    any = true;
+    const rows = matches.map(function(m){
+      const scoreHtml = (m.status === '已结束' && m.hs != null) ? '<span class="match-score">' + m.hs + ' : ' + m.as + '</span>' : '';
+      const stCls = m.status === '已结束' ? 'ended' : 'upcoming';
+      return '<div class="sched-row">'
+        + '<span class="match-date">' + (m.date || '') + '</span>'
+        + '<span class="match-round" style="font-size:0.7rem;color:#8b949e;min-width:44px">' + (m.round || '') + '</span>'
+        + '<div class="match-teams"><span class="match-team home">' + esc(m.home) + '</span>'
+        + '<span class="match-vs">vs</span><span class="match-team">' + esc(m.away) + '</span></div>'
+        + scoreHtml
+        + '<span class="match-status ' + stCls + '">' + (m.status || '') + '</span>'
+        + (m.note ? '<span style="font-size:0.7rem;color:#fdba74">' + esc(m.note) + '</span>' : '')
+        + '</div>';
+    }).join('');
+    groups += '<div class="sched-group"><div class="sched-group-title">' + (leaguesIcon(lgName)) + ' ' + lgName + ' <span class="cnt">' + matches.length + ' 场</span></div>' + rows + '</div>';
+  });
+  // 非联赛型运动：展示真实焦点赛事
+  const events = SPORT_EVENTS[sport.name] || [];
+  events.forEach(function(ev){
+    any = true;
+    const stCls = ev.status === '已结束' ? 'ended' : (ev.status === '进行中' ? 'live' : 'upcoming');
+    groups += '<div class="sched-group"><div class="sched-group-title">📅 ' + ev.name + ' <span class="cnt">' + ev.date + '</span></div>'
+      + '<div class="sched-row"><div class="match-teams"><span class="match-team">' + esc(ev.desc) + '</span></div>'
+      + '<span class="match-status ' + stCls + '">' + ev.status + '</span></div></div>';
+  });
+  if (!any) {
+    groups = '<div class="league-note">' + sport.name + '赛程数据收录中，可先浏览下方联赛与资讯。</div>';
+  }
+  return groups;
+}
+function leaguesIcon(name){
+  const map = {'英超联赛':'🏴','西甲联赛':'🇪🇸','意甲联赛':'🇮🇹','德甲联赛':'🇩🇪','法甲联赛':'🇫🇷','欧冠联赛':'⭐','NBA':'🏀','CBA':'🇨🇳'};
+  return map[name] || '🏆';
+}
+function renderLeagueZone(sport) {
+  const leagues = LEAGUES[sport.name] || [];
+  if (!leagues.length) return '<div class="league-note">暂无联赛数据</div>';
+  return '<div class="league-grid">' + leagues.map(function(l){
+    const st = allStandings[sport.name] && allStandings[sport.name][l.name];
+    const statHtml = st && st.length ? '<div class="league-stat">📊 已收录 ' + st.length + ' 支球队积分榜</div>' : '<div class="league-stat">📅 查看赛程与赛事信息</div>';
+    return '<div class="league-card" onclick="enterLeague(\'' + l.name + '\',\'' + sport.name + '\')">'
+      + '<div class="league-icon">' + l.icon + '</div>'
+      + '<div class="league-name">' + l.name + '</div>'
+      + '<div class="league-desc">' + l.desc + '</div>'
+      + statHtml + '</div>';
+  }).join('') + '</div>';
+}
+// ===== 联赛详情 =====
+function enterLeague(leagueName, sportName) {
+  currentLeague = leagueName;
+  const sport = SPORTS.find(function(s){ return s.name === sportName; });
+  const lg = (LEAGUES[sportName] || []).find(function(l){ return l.name === leagueName; });
+  document.getElementById('leagueView').style.background = sport ? sport.bg : '#0d1117';
+  const hero = document.getElementById('leagueHero');
+  hero.style.background = sport ? sport.heroBg : '';
+  document.getElementById('leagueHeroIcon').textContent = lg ? lg.icon : '🏆';
+  document.getElementById('leagueHeroTitle').textContent = leagueName;
+  document.getElementById('leagueHeroDesc').textContent = lg ? lg.desc : '';
+  renderLeagueContent(leagueName, sportName);
+  showView('leagueView');
+}
+function renderLeagueContent(leagueName, sportName) {
+  const container = document.getElementById('leagueContent');
+  const st = (allStandings[sportName] && allStandings[sportName][leagueName]) || [];
+  const sched = (SCHEDULES[leagueName] || []);
+  const sport = SPORTS.find(function(s){ return s.name === sportName; });
+  const accent = sport ? sport.accent : '#f97316';
+  let html = '';
+  if (st.length > 0) {
+    html += '<div class="zone-title" style="border-color:' + accent + '">📊 积分榜 <span class="sub">2025-26赛季 最终排名</span><span class="src-badge">新浪体育</span></div>'
+      + '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:10px;overflow-x:auto">'
+      + '<table class="rank-table"><thead><tr><th>排名</th><th>球队</th><th>场次</th><th>积分</th></tr></thead><tbody>'
+      + st.map(function(r, i){
+        const rc = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+        return '<tr><td><div class="rank-num ' + rc + '">' + (r.rank || i + 1) + '</div></td>'
+          + '<td class="rank-team">' + esc(r.team) + '</td>'
+          + '<td>' + (r.played || '-') + '</td>'
+          + '<td class="rank-points">' + (r.points || '-') + '</td></tr>';
+      }).join('')
+      + '</tbody></table></div>';
+  }
+  if (sched.length > 0) {
+    const rows = sched.map(function(m){
+      const scoreHtml = (m.status === '已结束' && m.hs != null) ? '<span class="match-score">' + m.hs + ' : ' + m.as + '</span>' : '';
+      const stCls = m.status === '已结束' ? 'ended' : 'upcoming';
+      return '<div class="sched-row">'
+        + '<span class="match-date">' + (m.date || '') + '</span>'
+        + '<span class="match-round" style="font-size:0.7rem;color:#8b949e;min-width:44px">' + (m.round || '') + '</span>'
+        + '<div class="match-teams"><span class="match-team home">' + esc(m.home) + '</span>'
+        + '<span class="match-vs">vs</span><span class="match-team">' + esc(m.away) + '</span></div>'
+        + scoreHtml
+        + '<span class="match-status ' + stCls + '">' + (m.status || '') + '</span>'
+        + (m.note ? '<span style="font-size:0.7rem;color:#fdba74">' + esc(m.note) + '</span>' : '')
+        + '</div>';
+    }).join('');
+    html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季</span><span class="src-badge">官方赛程</span></div>'
+      + '<div class="sched-group">' + rows + '</div>';
+  }
+  if (!st.length && !sched.length) {
+    const events = SPORT_EVENTS[sportName] || [];
+    html += '<div class="league-note">' + leagueName + ' 为杯赛/巡回赛制，暂无固定积分榜，以下为近期焦点赛事：</div>';
+    events.forEach(function(ev){
+      const stCls = ev.status === '已结束' ? 'ended' : (ev.status === '进行中' ? 'live' : 'upcoming');
+      html += '<div class="sched-group"><div class="sched-group-title">📅 ' + ev.name + '</div>'
+        + '<div class="sched-row"><div class="match-teams"><span class="match-team">' + esc(ev.desc) + '</span></div>'
+        + '<span class="match-status ' + stCls + '">' + ev.status + '</span></div></div>';
+    });
+  }
+  html += '<div style="text-align:center;color:rgba(255,255,255,0.35);font-size:0.78rem;margin-top:18px">数据快照：2026-08-29 · 赛程与积分以官方公布为准</div>';
+  container.innerHTML = html;
+}
+function goBackSport() {
+  const sport = SPORTS.find(function(s){ return s.name === currentSport; });
+  if (sport) { enterSport(currentSport); return; }
+  goHome();
+}
+// ===== 明星 =====
 function showStar(sportName, idx) {
-  currentSportStars = allAthletes.filter(a => a.sport === sportName);
+  currentSportStars = allAthletes.filter(function(a){ return a.sport === sportName; });
   const star = currentSportStars[idx];
   if (!star) return;
-  
-  if (star.photo) {
-    document.getElementById('modalStarImg').src = star.photo;
-    document.getElementById('modalStarImg').style.display = '';
-  } else {
-    document.getElementById('modalStarImg').src = '';
-    document.getElementById('modalStarImg').style.display = 'none';
-  }
+  if (star.photo) { document.getElementById('modalStarImg').src = star.photo; document.getElementById('modalStarImg').style.display = ''; }
+  else { document.getElementById('modalStarImg').src = ''; document.getElementById('modalStarImg').style.display = 'none'; }
   document.getElementById('modalStarName').textContent = star.name;
   document.getElementById('modalStarPos').textContent = star.position || '';
-  
-  // 元信息
   const metaEl = document.getElementById('modalStarMeta');
   let metaHtml = '';
   if (star.nationality) metaHtml += '<span>🌍 ' + star.nationality + '</span>';
   if (star.birth) metaHtml += '<span>🎂 ' + star.birth + '</span>';
   metaHtml += '<span>🏅 ' + star.sport + '</span>';
   metaEl.innerHTML = metaHtml;
-  
   document.getElementById('modalStarDesc').textContent = star.bio || '暂无简介';
-  
   currentStarBaikeUrl = star.baike_url || ('https://baike.baidu.com/item/' + encodeURIComponent(star.name));
   document.getElementById('starModal').classList.add('show');
 }
-
-function openBaike() {
-  if (currentStarBaikeUrl) {
-    window.open(currentStarBaikeUrl, '_blank');
-  }
-}
-
+function openBaike() { if (currentStarBaikeUrl) window.open(currentStarBaikeUrl, '_blank', 'noopener'); }
 function closeStarModal() { document.getElementById('starModal').classList.remove('show'); }
-
-// ===== 排行榜 =====
-function showRank(leagueName, sportName) {
-  document.getElementById('rankTitle').textContent = leagueName + ' · 积分榜';
-  const body = document.getElementById('rankBody');
-  const teams = (allStandings[sportName] && allStandings[sportName][leagueName]) || [];
-  
-  if (teams.length === 0) {
-    body.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,0.4)">暂无积分数据</td></tr>';
-  } else {
-    body.innerHTML = teams.map((r, i) => {
-      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-      return '<tr>'
-        + '<td><div class="rank-num ' + rankClass + '">' + (r.rank || i + 1) + '</div></td>'
-        + '<td class="rank-team">' + r.team + '</td>'
-        + '<td>' + (r.played || '-') + '</td>'
-        + '<td class="rank-points">' + (r.points || '-') + '</td></tr>';
-    }).join('');
-  }
-  document.getElementById('rankModal').classList.add('show');
-}
-
-function closeRank() { document.getElementById('rankModal').classList.remove('show'); }
-
 // ===== 盲盒 =====
 function drawBlindBox() {
   const btn = document.getElementById('blindboxBtn');
   const result = document.getElementById('blindboxResult');
   const today = new Date().toDateString();
-  
   if (localStorage.getItem('ot_blindBoxDate') === today) {
     result.textContent = '⏰ 今日已抽取';
     btn.disabled = true;
     return;
   }
-  
-  if (allAthletes.length === 0) {
-    showToast('运动员数据加载中，请稍后再试', 'error');
-    return;
-  }
-  
+  if (!allAthletes.length) { showToast('运动员数据加载中，请稍后再试', 'error'); return; }
   btn.disabled = true;
   let count = 0;
-  const shuffle = setInterval(() => {
+  const shuffle = setInterval(function(){
     const r = allAthletes[Math.floor(Math.random() * allAthletes.length)];
     result.textContent = '🎲 抽取中... ' + r.name;
     count++;
@@ -1315,15 +1489,10 @@ function drawBlindBox() {
       const star = allAthletes[Math.floor(Math.random() * allAthletes.length)];
       result.textContent = '🎉 抽中：' + star.name;
       localStorage.setItem('ot_blindBoxDate', today);
-      setTimeout(() => {
-        // 直接展示明星弹窗
+      setTimeout(function(){
         currentSportStars = [star];
-        if (star.photo) {
-          document.getElementById('modalStarImg').src = star.photo;
-          document.getElementById('modalStarImg').style.display = '';
-        } else {
-          document.getElementById('modalStarImg').style.display = 'none';
-        }
+        if (star.photo) { document.getElementById('modalStarImg').src = star.photo; document.getElementById('modalStarImg').style.display = ''; }
+        else { document.getElementById('modalStarImg').style.display = 'none'; }
         document.getElementById('modalStarName').textContent = star.name;
         document.getElementById('modalStarPos').textContent = star.position || '';
         const metaEl = document.getElementById('modalStarMeta');
@@ -1339,17 +1508,19 @@ function drawBlindBox() {
     }
   }, 65);
 }
-
-// 点击遮罩关闭
-document.getElementById('starModal').addEventListener('click', function (e) { if (e.target === this) closeStarModal(); });
-document.getElementById('newsModal').addEventListener('click', function (e) { if (e.target === this) closeNewsModal(); });
-document.getElementById('rankModal').addEventListener('click', function (e) { if (e.target === this) closeRank(); });
-
+// 遮罩关闭
+document.getElementById('starModal').addEventListener('click', function(e){ if (e.target === this) closeStarModal(); });
+document.getElementById('newsModal').addEventListener('click', function(e){ if (e.target === this) closeNewsModal(); });
+// 回到顶部
+window.addEventListener('scroll', function(){
+  const btn = document.getElementById('scrollTopBtn');
+  if (btn) btn.classList.toggle('show', window.scrollY > 500);
+});
 // ===== 初始化 =====
-window.addEventListener('load', async () => {
-  console.log('[Overtime] 页面加载完成，开始初始化...');
-  await loadAllData();
-  console.log('[Overtime] 初始化完成');
+window.addEventListener('load', function(){
+  prepareData();
+  initAudioPlayer();
+  console.log('[Overtime 加时赛] 初始化完成，新闻 ' + allNews.length + ' 条，球星 ' + allAthletes.length + ' 位');
 });
 </script>
 </body>
