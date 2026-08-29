@@ -8,7 +8,12 @@ import re
 import time
 import hashlib
 from datetime import datetime, timedelta
-from playwright.sync_api import sync_playwright
+try:
+    from playwright.sync_api import sync_playwright
+    PLAYWRIGHT_AVAILABLE = True
+except ImportError:
+    PLAYWRIGHT_AVAILABLE = False
+    sync_playwright = None
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -104,6 +109,8 @@ def _categorize_sport(title):
 
 def _get_browser():
     """获取Playwright浏览器实例"""
+    if not PLAYWRIGHT_AVAILABLE:
+        raise RuntimeError("Playwright 未安装，无法执行爬虫任务")
     pw = sync_playwright().start()
     browser = pw.chromium.launch(
         headless=True,

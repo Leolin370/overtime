@@ -4,7 +4,12 @@ Overtime 体育门户 - 语音合成模块
 """
 import os
 import asyncio
-import edge_tts
+try:
+    import edge_tts
+    TTS_AVAILABLE = True
+except ImportError:
+    edge_tts = None
+    TTS_AVAILABLE = False
 
 AUDIO_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'audio')
 os.makedirs(AUDIO_DIR, exist_ok=True)
@@ -31,6 +36,10 @@ def text_to_speech(text, filename='morning_briefing.mp3', voice=None, rate='+5%'
     """
     output_path = os.path.join(AUDIO_DIR, filename)
     selected_voice = voice or VOICE
+    
+    if not TTS_AVAILABLE:
+        print("[TTS] edge-tts 未安装，跳过语音合成")
+        return None
     
     try:
         asyncio.run(_synthesize(text, output_path, selected_voice, rate=rate))
