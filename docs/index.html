@@ -360,6 +360,28 @@ a{color:inherit;text-decoration:none}
 .user-modal-btn.logout:hover{background:rgba(239,68,68,0.25)}
 .user-modal-btn.close{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7)}
 .user-modal-btn.close:hover{background:rgba(255,255,255,0.12)}
+/* 短信通知弹窗 */
+.sms-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120%);background:#161b22;border:1px solid rgba(249,115,22,0.4);border-radius:14px;padding:16px 20px;min-width:300px;max-width:90vw;z-index:10000;box-shadow:0 12px 40px rgba(0,0,0,0.5);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);display:flex;gap:12px;align-items:flex-start}
+.sms-toast.show{transform:translateX(-50%) translateY(0)}
+.sms-toast .sms-icon{font-size:1.5rem;flex-shrink:0}
+.sms-toast .sms-body{flex:1}
+.sms-toast .sms-title{font-size:0.8rem;font-weight:700;color:#fb923c;margin-bottom:4px}
+.sms-toast .sms-content{font-size:0.85rem;color:#e6edf3;line-height:1.5}
+.sms-toast .sms-code{font-size:1.3rem;font-weight:800;color:#f97316;letter-spacing:4px;margin:4px 0;font-family:var(--font-display)}
+.sms-toast .sms-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.1rem;cursor:pointer;padding:0 4px;flex-shrink:0}
+.sms-toast .sms-close:hover{color:#fff}
+/* 用户协议 */
+.login-agreement{display:flex;align-items:flex-start;gap:8px;margin:14px 0 4px;font-size:0.75rem;color:rgba(255,255,255,0.45);line-height:1.5}
+.login-agreement input[type=checkbox]{margin-top:2px;accent-color:#f97316;width:14px;height:14px;flex-shrink:0}
+.login-agreement a{color:#fb923c;text-decoration:none}
+.login-agreement a:hover{text-decoration:underline}
+/* 认证成功动画 */
+.auth-success{text-align:center;padding:10px 0}
+.auth-success .check-icon{width:56px;height:56px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #4ade80;display:inline-flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:10px;animation:authPop 0.5s ease}
+@keyframes authPop{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.auth-success h4{color:#4ade80;font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.auth-success p{color:rgba(255,255,255,0.5);font-size:0.8rem}
+
 
 .hl-source-tip{text-align:center;color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:16px}
 .hl-source-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
@@ -552,7 +574,10 @@ a{color:inherit;text-decoration:none}
       </div>
       <button class="login-submit" onclick="doLogin()">登 录</button>
       <div class="login-error" id="loginError"></div>
-      <p class="login-tip demo">🔓 演示模式：任意11位手机号 + 任意6位验证码即可登录</p>
+      <div class="login-agreement">
+        <input type="checkbox" id="loginAgree" checked>
+        <label for="loginAgree">我已阅读并同意<a href="javascript:void(0)" onclick="alert('《用户协议》\n\n1. 本网站仅供体育资讯浏览使用\n2. 用户需对自己的账号安全负责\n3. 未成年人每日集锦限看5场\n4. 禁止利用本网站从事违法活动')">《用户协议》</a>和<a href="javascript:void(0)" onclick="alert('《隐私政策》\n\n1. 我们仅收集登录所需的手机号和实名认证信息\n2. 所有信息仅存储在您的浏览器本地，不上传服务器\n3. 您可以随时清除浏览器数据删除所有信息\n4. 我们不会向第三方分享您的个人信息')">《隐私政策》</a></label>
+      </div>
     </div>
     <!-- 步骤2：实名认证 -->
     <div id="loginStep2" class="login-step">
@@ -561,8 +586,8 @@ a{color:inherit;text-decoration:none}
       <input type="text" class="login-input" id="authIdCard" placeholder="身份证号码（18位）" maxlength="18">
       <button class="login-submit" onclick="doAuth()">提交认证</button>
       <div class="login-error" id="authError"></div>
-      <p class="login-tip demo">🔓 演示模式：前端校验身份证格式与出生日期，模拟实名认证</p>
       <p class="login-tip minor">🔞 未成年人每日集锦限看 5 场，成年人不限次数</p>
+      <p class="login-tip">实名认证信息仅存储于您的浏览器本地，用于年龄判断与集锦限额</p>
     </div>
   </div>
 </div>
@@ -972,6 +997,28 @@ function parseIdCard(idCard){
 
 // 发送验证码（模拟）
 let codeTimer = null;
+// 当前生成的验证码（5分钟有效）
+let currentSmsCode = null;
+let smsCodeExpire = 0;
+
+function generateSmsCode(){
+  // 生成6位随机数字验证码
+  let code = '';
+  for(let i=0;i<6;i++) code += Math.floor(Math.random()*10);
+  return code;
+}
+
+function showSmsToast(code){
+  document.getElementById('smsCode').textContent = code;
+  const toast = document.getElementById('smsToast');
+  toast.classList.add('show');
+  // 10秒后自动隐藏
+  setTimeout(function(){ hideSmsToast(); }, 10000);
+}
+function hideSmsToast(){
+  document.getElementById('smsToast').classList.remove('show');
+}
+
 function sendLoginCode(){
   const phone = document.getElementById('loginPhone').value.trim();
   if(!/^1\d{10}$/.test(phone)){
@@ -979,10 +1026,17 @@ function sendLoginCode(){
     return;
   }
   document.getElementById('loginError').textContent = '';
+  // 生成验证码
+  currentSmsCode = generateSmsCode();
+  smsCodeExpire = Date.now() + 5 * 60 * 1000; // 5分钟有效
+  // 显示短信通知
+  showSmsToast(currentSmsCode);
+  // 按钮倒计时
   const btn = document.getElementById('sendCodeBtn');
   let count = 60;
   btn.disabled = true;
   btn.textContent = count + 's后重发';
+  if(codeTimer) clearInterval(codeTimer);
   codeTimer = setInterval(function(){
     count--;
     if(count <= 0){
@@ -993,7 +1047,6 @@ function sendLoginCode(){
       btn.textContent = count + 's后重发';
     }
   }, 1000);
-  // 演示：验证码任意6位即可
 }
 
 // 登录
@@ -1001,9 +1054,29 @@ function doLogin(){
   const phone = document.getElementById('loginPhone').value.trim();
   const code = document.getElementById('loginCode').value.trim();
   const errEl = document.getElementById('loginError');
+  // 用户协议检查
+  const agree = document.getElementById('loginAgree');
+  if(agree && !agree.checked){
+    errEl.textContent = '请先阅读并同意用户协议和隐私政策';
+    return;
+  }
   if(!/^1\d{10}$/.test(phone)){ errEl.textContent = '请输入正确的11位手机号'; return; }
   if(!/^\d{6}$/.test(code)){ errEl.textContent = '请输入6位验证码'; return; }
+  // 验证码校验
+  if(!currentSmsCode){
+    errEl.textContent = '请先获取验证码';
+    return;
+  }
+  if(Date.now() > smsCodeExpire){
+    errEl.textContent = '验证码已过期，请重新获取';
+    return;
+  }
+  if(code !== currentSmsCode){
+    errEl.textContent = '验证码不正确，请重新输入';
+    return;
+  }
   errEl.textContent = '';
+  hideSmsToast();
   // 检查是否已实名认证
   const user = loadUser();
   if(user && user.phone === phone && user.authed){
@@ -1041,11 +1114,12 @@ function doAuth(){
   user.authTime = new Date().toISOString();
   saveUser(user);
   updateUserUI();
-  // 显示认证成功
-  errEl.innerHTML = '<span class="login-success-badge">✅ 实名认证成功！' + (parsed.isAdult ? '成年人' : '未成年人（集锦每日限5场）') + '</span>';
+  // 显示认证成功动画
+  const ageLabel = parsed.isAdult ? '成年人 · 集锦不限次数' : '未成年人 · 集锦每日限5场';
+  errEl.innerHTML = '<div class="auth-success"><div class="check-icon">✅</div><h4>实名认证成功</h4><p>' + name + ' · ' + ageLabel + '</p></div>';
   setTimeout(function(){
     enterVoteAfterLogin();
-  }, 1200);
+  }, 1800);
 }
 
 // 登录后进入选主队
@@ -1119,6 +1193,12 @@ function checkLoginAndEnter(){
     document.getElementById('loginStep2').classList.remove('active');
     document.getElementById('loginError').textContent = '';
     document.getElementById('authError').textContent = '';
+    document.getElementById('loginPhone').value = '';
+    document.getElementById('loginCode').value = '';
+    document.getElementById('authName').value = '';
+    document.getElementById('authIdCard').value = '';
+    currentSmsCode = null;
+    hideSmsToast();
     return false;
   }
 }
@@ -2090,5 +2170,17 @@ window.addEventListener('load', function(){
 </div>
 <!-- 集锦配额提示 -->
 <div class="hl-toast" id="hlToast"></div>
+
+<!-- 短信通知弹窗 -->
+<div class="sms-toast" id="smsToast">
+  <span class="sms-icon">📱</span>
+  <div class="sms-body">
+    <div class="sms-title">Overtime · 加时赛</div>
+    <div class="sms-content">您的验证码为：</div>
+    <div class="sms-code" id="smsCode">------</div>
+    <div class="sms-content" style="font-size:0.72rem;color:rgba(255,255,255,0.35)">5分钟内有效，请勿泄露给他人</div>
+  </div>
+  <button class="sms-close" onclick="hideSmsToast()">✕</button>
+</div>
 </body>
 </html>
