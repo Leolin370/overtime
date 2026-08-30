@@ -309,7 +309,7 @@ a{color:inherit;text-decoration:none}
 .hl-modal-foot{padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:rgba(255,255,255,0.45)}
 .hl-modal-foot a{color:#fb923c;text-decoration:none;font-weight:600}
 .hl-modal-foot a:hover{text-decoration:underline}
-/* ===== 登录/实名认证 ===== */
+/* ===== 登录 ===== */
 #loginView{display:none;min-height:100vh;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1117 0%,#1a1f2e 50%,#0d1117 100%);padding:20px}
 #loginView.active{display:flex}
 .login-container{width:100%;max-width:420px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:36px 32px;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
@@ -381,6 +381,21 @@ a{color:inherit;text-decoration:none}
 @keyframes authPop{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
 .auth-success h4{color:#4ade80;font-size:1.05rem;font-weight:700;margin-bottom:4px}
 .auth-success p{color:rgba(255,255,255,0.5);font-size:0.8rem}
+/* 出生日期选择 */
+.login-birth{margin:14px 0 4px}
+.login-birth label{display:block;font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:6px}
+.login-birth input[type=date]{width:100%;padding:12px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#fff;font-size:0.9rem;outline:none;transition:all 0.2s;box-sizing:border-box;color-scheme:dark}
+.login-birth input[type=date]:focus{border-color:#f97316;background:rgba(249,115,22,0.06)}
+.login-birth .birth-hint{font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:4px}
+/* 粘贴验证码按钮 */
+.paste-btn{padding:0 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);border-radius:12px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;min-width:60px}
+.paste-btn:hover{background:rgba(249,115,22,0.15);border-color:rgba(249,115,22,0.3);color:#fb923c}
+/* 登录成功动画 */
+.login-success-anim{text-align:center;padding:20px 0}
+.login-success-anim .check-icon{width:60px;height:60px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #4ade80;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:12px;animation:authPop 0.5s ease}
+.login-success-anim h4{color:#4ade80;font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.login-success-anim p{color:rgba(255,255,255,0.5);font-size:0.82rem}
+
 
 
 .hl-source-tip{text-align:center;color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:16px}
@@ -556,7 +571,7 @@ a{color:inherit;text-decoration:none}
 </div>
 <!-- ===== 投票页 ===== -->
 
-<!-- ===== 登录/实名认证页 ===== -->
+<!-- ===== 登录页 ===== -->
 <div id="loginView" class="view">
   <div class="login-container">
     <div class="login-logo">
@@ -570,25 +585,22 @@ a{color:inherit;text-decoration:none}
       <input type="tel" class="login-input" id="loginPhone" placeholder="请输入手机号" maxlength="11" inputmode="numeric">
       <div class="login-code-row">
         <input type="text" class="login-input" id="loginCode" placeholder="验证码" maxlength="6" inputmode="numeric">
+        <button class="paste-btn" onclick="pasteSmsCode()" title="从剪贴板粘贴">粘贴</button>
         <button class="login-code-btn" id="sendCodeBtn" onclick="sendLoginCode()">获取验证码</button>
+      </div>
+      <div class="login-birth">
+        <label for="loginBirth">出生日期（用于判断成年/未成年，决定集锦限额）</label>
+        <input type="date" id="loginBirth" max="2026-12-31">
+        <div class="birth-hint">未成年人每日集锦限看5场，成年人不限次数</div>
       </div>
       <button class="login-submit" onclick="doLogin()">登 录</button>
       <div class="login-error" id="loginError"></div>
       <div class="login-agreement">
         <input type="checkbox" id="loginAgree" checked>
-        <label for="loginAgree">我已阅读并同意<a href="javascript:void(0)" onclick="alert('《用户协议》\n\n1. 本网站仅供体育资讯浏览使用\n2. 用户需对自己的账号安全负责\n3. 未成年人每日集锦限看5场\n4. 禁止利用本网站从事违法活动')">《用户协议》</a>和<a href="javascript:void(0)" onclick="alert('《隐私政策》\n\n1. 我们仅收集登录所需的手机号和实名认证信息\n2. 所有信息仅存储在您的浏览器本地，不上传服务器\n3. 您可以随时清除浏览器数据删除所有信息\n4. 我们不会向第三方分享您的个人信息')">《隐私政策》</a></label>
+        <label for="loginAgree">我已阅读并同意<a href="javascript:void(0)" onclick="alert('《用户协议》\n\n1. 本网站仅供体育资讯浏览使用\n2. 用户需对自己的账号安全负责\n3. 未成年人每日集锦限看5场\n4. 禁止利用本网站从事违法活动')">《用户协议》</a>和<a href="javascript:void(0)" onclick="alert('《隐私政策》\n\n1. 我们仅收集登录所需的手机号和出生日期\n2. 所有信息仅存储在您的浏览器本地，不上传服务器\n3. 您可以随时清除浏览器数据删除所有信息\n4. 我们不会向第三方分享您的个人信息')">《隐私政策》</a></label>
       </div>
     </div>
-    <!-- 步骤2：实名认证 -->
-    <div id="loginStep2" class="login-step">
-      <h3>实名认证</h3>
-      <input type="text" class="login-input" id="authName" placeholder="真实姓名">
-      <input type="text" class="login-input" id="authIdCard" placeholder="身份证号码（18位）" maxlength="18">
-      <button class="login-submit" onclick="doAuth()">提交认证</button>
-      <div class="login-error" id="authError"></div>
-      <p class="login-tip minor">🔞 未成年人每日集锦限看 5 场，成年人不限次数</p>
-      <p class="login-tip">实名认证信息仅存储于您的浏览器本地，用于年龄判断与集锦限额</p>
-    </div>
+
   </div>
 </div>
 <!-- ===== 个人中心弹窗 ===== -->
@@ -596,10 +608,14 @@ a{color:inherit;text-decoration:none}
   <div class="user-modal">
     <h3>👤 个人中心</h3>
     <div class="user-modal-row"><span class="label">手机号</span><span class="value" id="umPhone"></span></div>
-    <div class="user-modal-row"><span class="label">姓名</span><span class="value" id="umName"></span></div>
     <div class="user-modal-row"><span class="label">出生日期</span><span class="value" id="umBirth"></span></div>
     <div class="user-modal-row"><span class="label">年龄状态</span><span class="value" id="umAge"></span></div>
     <div class="user-modal-row"><span class="label">今日集锦已看</span><span class="value" id="umHlCount"></span></div>
+    <div class="user-modal-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <span class="label">修改出生日期</span>
+      <input type="date" id="umEditBirth" style="width:100%;padding:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;color-scheme:dark">
+      <button onclick="updateUserBirth()" style="width:100%;padding:8px;background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.3);color:#fb923c;border-radius:8px;font-size:0.8rem;cursor:pointer">保存修改</button>
+    </div>
     <div class="user-modal-actions">
       <button class="user-modal-btn close" onclick="closeUserModal()">关闭</button>
       <button class="user-modal-btn logout" onclick="logoutUser()">退出登录</button>
@@ -954,7 +970,7 @@ function mergeRealtimeNews(staticNews){
 }
 
 
-// ===== 用户登录与实名认证 =====
+// ===== 用户登录 =====
 const USER_KEY = 'overtime_user';
 let currentUser = null;
 
@@ -974,29 +990,28 @@ function clearUser(){
   try{ localStorage.removeItem(USER_KEY); }catch(e){}
 }
 
-// 从身份证号解析出生日期和年龄
-function parseIdCard(idCard){
-  if(!idCard || idCard.length !== 18) return null;
-  // 校验前17位都是数字
-  if(!/^\d{17}[\dXx]$/.test(idCard)) return null;
-  const year = parseInt(idCard.substr(6,4));
-  const month = parseInt(idCard.substr(10,2));
-  const day = parseInt(idCard.substr(12,2));
-  if(year < 1900 || year > 2026 || month < 1 || month > 12 || day < 1 || day > 31) return null;
-  const birth = new Date(year, month-1, day);
-  const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  const m = now.getMonth() - birth.getMonth();
-  if(m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
-  return {
-    birth: year + '年' + String(month).padStart(2,'0') + '月' + String(day).padStart(2,'0') + '日',
-    age: age,
-    isAdult: age >= 18
-  };
-}
-
 // 发送验证码（模拟）
 let codeTimer = null;
+// 从剪贴板粘贴验证码
+function pasteSmsCode(){
+  if(navigator.clipboard && navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(text){
+      // 从剪贴板文本中提取6位数字
+      const match = text.match(/\d{6}/);
+      if(match){
+        document.getElementById('loginCode').value = match[0];
+        document.getElementById('loginError').textContent = '';
+      } else {
+        document.getElementById('loginError').textContent = '剪贴板中未找到6位验证码';
+      }
+    }).catch(function(){
+      document.getElementById('loginError').textContent = '无法读取剪贴板，请手动输入';
+    });
+  } else {
+    document.getElementById('loginError').textContent = '当前浏览器不支持剪贴板读取，请手动输入';
+  }
+}
+
 // 当前生成的验证码（5分钟有效）
 let currentSmsCode = null;
 let smsCodeExpire = 0;
@@ -1050,9 +1065,30 @@ function sendLoginCode(){
 }
 
 // 登录
+function calcAgeFromBirth(birthStr){
+  if(!birthStr) return null;
+  const parts = birthStr.split('-');
+  if(parts.length !== 3) return null;
+  const year = parseInt(parts[0]);
+  const month = parseInt(parts[1]);
+  const day = parseInt(parts[2]);
+  if(year < 1900 || year > 2026) return null;
+  const birth = new Date(year, month-1, day);
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const m = now.getMonth() - birth.getMonth();
+  if(m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+  return {
+    birth: year + '年' + String(month).padStart(2,'0') + '月' + String(day).padStart(2,'0') + '日',
+    age: age,
+    isAdult: age >= 18
+  };
+}
+
 function doLogin(){
   const phone = document.getElementById('loginPhone').value.trim();
   const code = document.getElementById('loginCode').value.trim();
+  const birthStr = document.getElementById('loginBirth').value;
   const errEl = document.getElementById('loginError');
   // 用户协议检查
   const agree = document.getElementById('loginAgree');
@@ -1062,6 +1098,9 @@ function doLogin(){
   }
   if(!/^1\d{10}$/.test(phone)){ errEl.textContent = '请输入正确的11位手机号'; return; }
   if(!/^\d{6}$/.test(code)){ errEl.textContent = '请输入6位验证码'; return; }
+  if(!birthStr){ errEl.textContent = '请选择出生日期'; return; }
+  const ageInfo = calcAgeFromBirth(birthStr);
+  if(!ageInfo){ errEl.textContent = '出生日期不合法'; return; }
   // 验证码校验
   if(!currentSmsCode){
     errEl.textContent = '请先获取验证码';
@@ -1077,51 +1116,26 @@ function doLogin(){
   }
   errEl.textContent = '';
   hideSmsToast();
-  // 检查是否已实名认证
-  const user = loadUser();
-  if(user && user.phone === phone && user.authed){
-    // 已认证，直接进入
-    updateUserUI();
-    enterVoteAfterLogin();
-  } else {
-    // 未认证，进入实名认证步骤
-    document.getElementById('loginStep1').classList.remove('active');
-    document.getElementById('loginStep2').classList.add('active');
-    // 预填手机号
-    if(!user || user.phone !== phone){
-      saveUser({phone: phone, authed: false});
-    }
-  }
-}
-
-// 实名认证
-function doAuth(){
-  const name = document.getElementById('authName').value.trim();
-  const idCard = document.getElementById('authIdCard').value.trim().toUpperCase();
-  const errEl = document.getElementById('authError');
-  if(!name || name.length < 2){ errEl.textContent = '请输入真实姓名'; return; }
-  const parsed = parseIdCard(idCard);
-  if(!parsed){ errEl.textContent = '身份证号格式不正确（需18位有效身份证）'; return; }
-  errEl.textContent = '';
   // 保存用户信息
   const user = loadUser() || {};
-  user.name = name;
-  user.idCard = idCard;
-  user.birth = parsed.birth;
-  user.age = parsed.age;
-  user.isAdult = parsed.isAdult;
+  user.phone = phone;
+  user.birth = ageInfo.birth;
+  user.birthDate = birthStr;
+  user.age = ageInfo.age;
+  user.isAdult = ageInfo.isAdult;
   user.authed = true;
-  user.authTime = new Date().toISOString();
+  user.loginTime = new Date().toISOString();
   saveUser(user);
   updateUserUI();
-  // 显示认证成功动画
-  const ageLabel = parsed.isAdult ? '成年人 · 集锦不限次数' : '未成年人 · 集锦每日限5场';
-  errEl.innerHTML = '<div class="auth-success"><div class="check-icon">✅</div><h4>实名认证成功</h4><p>' + name + ' · ' + ageLabel + '</p></div>';
+  // 显示登录成功动画
+  const ageLabel = ageInfo.isAdult ? '成年人 · 集锦不限次数' : '未成年人 · 集锦每日限5场';
+  errEl.innerHTML = '<div class="login-success-anim"><div class="check-icon">✅</div><h4>登录成功</h4><p>' + phone.substr(0,3) + '****' + phone.substr(7) + ' · ' + ageLabel + '</p></div>';
   setTimeout(function(){
     enterVoteAfterLogin();
-  }, 1800);
+  }, 1500);
 }
 
+// 登录成功后处理
 // 登录后进入选主队
 function enterVoteAfterLogin(){
   document.getElementById('loginView').classList.remove('active');
@@ -1136,8 +1150,9 @@ function updateUserUI(){
   if(!badge) return;
   if(user && user.authed){
     badge.style.display = 'inline-flex';
-    document.getElementById('topUserAvatar').textContent = (user.name || '?').charAt(0);
-    document.getElementById('topUserName').textContent = user.name || user.phone || '';
+    const phoneShort = user.phone ? user.phone.substr(7) : '用户';
+    document.getElementById('topUserAvatar').textContent = phoneShort.charAt(0);
+    document.getElementById('topUserName').textContent = phoneShort;
     const ageEl = document.getElementById('topUserAge');
     if(user.isAdult){
       ageEl.textContent = '成年';
@@ -1156,8 +1171,8 @@ function openUserModal(){
   const user = loadUser();
   if(!user || !user.authed) return;
   document.getElementById('umPhone').textContent = user.phone ? user.phone.substr(0,3) + '****' + user.phone.substr(7) : '-';
-  document.getElementById('umName').textContent = user.name || '-';
   document.getElementById('umBirth').textContent = user.birth || '-';
+  if(user.birthDate) document.getElementById('umEditBirth').value = user.birthDate;
   const ageEl = document.getElementById('umAge');
   ageEl.textContent = (user.age || 0) + '岁 · ' + (user.isAdult ? '成年人' : '未成年人');
   ageEl.className = 'value ' + (user.isAdult ? 'adult' : 'minor');
@@ -1168,6 +1183,25 @@ function openUserModal(){
   document.getElementById('umHlCount').textContent = quota.count + ' / ' + limit;
   document.getElementById('userModal').classList.add('show');
 }
+
+// 修改用户出生日期
+function updateUserBirth(){
+  const newBirth = document.getElementById('umEditBirth').value;
+  if(!newBirth){ alert('请选择出生日期'); return; }
+  const ageInfo = calcAgeFromBirth(newBirth);
+  if(!ageInfo){ alert('出生日期不合法'); return; }
+  const user = loadUser();
+  if(!user){ alert('请先登录'); return; }
+  user.birth = ageInfo.birth;
+  user.birthDate = newBirth;
+  user.age = ageInfo.age;
+  user.isAdult = ageInfo.isAdult;
+  saveUser(user);
+  updateUserUI();
+  openUserModal(); // 刷新显示
+  alert('出生日期已更新，当前年龄状态：' + (ageInfo.isAdult ? '成年人（集锦不限）' : '未成年人（集锦每日5场）'));
+}
+
 function closeUserModal(){ document.getElementById('userModal').classList.remove('show'); }
 function logoutUser(){
   clearUser();
@@ -1181,22 +1215,18 @@ function logoutUser(){
 function checkLoginAndEnter(){
   const user = loadUser();
   if(user && user.authed){
-    // 已登录认证，直接进入选主队
+    // 已登录，直接进入选主队
     updateUserUI();
     return true;
   } else {
     // 未登录，显示登录页
     document.getElementById('coverView').classList.remove('active');
     showView('loginView');
-    // 重置登录步骤
-    document.getElementById('loginStep1').classList.add('active');
-    document.getElementById('loginStep2').classList.remove('active');
+    // 重置登录表单
     document.getElementById('loginError').textContent = '';
-    document.getElementById('authError').textContent = '';
     document.getElementById('loginPhone').value = '';
     document.getElementById('loginCode').value = '';
-    document.getElementById('authName').value = '';
-    document.getElementById('authIdCard').value = '';
+    document.getElementById('loginBirth').value = '';
     currentSmsCode = null;
     hideSmsToast();
     return false;
