@@ -387,9 +387,6 @@ a{color:inherit;text-decoration:none}
 .login-birth input[type=date]{width:100%;padding:12px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#fff;font-size:0.9rem;outline:none;transition:all 0.2s;box-sizing:border-box;color-scheme:dark}
 .login-birth input[type=date]:focus{border-color:#f97316;background:rgba(249,115,22,0.06)}
 .login-birth .birth-hint{font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:4px}
-/* 粘贴验证码按钮 */
-.paste-btn{padding:0 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);border-radius:12px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;min-width:60px}
-.paste-btn:hover{background:rgba(249,115,22,0.15);border-color:rgba(249,115,22,0.3);color:#fb923c}
 /* 登录成功动画 */
 .login-success-anim{text-align:center;padding:20px 0}
 .login-success-anim .check-icon{width:60px;height:60px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #4ade80;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:12px;animation:authPop 0.5s ease}
@@ -585,7 +582,6 @@ a{color:inherit;text-decoration:none}
       <input type="tel" class="login-input" id="loginPhone" placeholder="请输入手机号" maxlength="11" inputmode="numeric">
       <div class="login-code-row">
         <input type="text" class="login-input" id="loginCode" placeholder="验证码" maxlength="6" inputmode="numeric">
-        <button class="paste-btn" onclick="pasteSmsCode()" title="从剪贴板粘贴">粘贴</button>
         <button class="login-code-btn" id="sendCodeBtn" onclick="sendLoginCode()">获取验证码</button>
       </div>
       <div class="login-birth">
@@ -992,26 +988,6 @@ function clearUser(){
 
 // 发送验证码（模拟）
 let codeTimer = null;
-// 从剪贴板粘贴验证码
-function pasteSmsCode(){
-  if(navigator.clipboard && navigator.clipboard.readText){
-    navigator.clipboard.readText().then(function(text){
-      // 从剪贴板文本中提取6位数字
-      const match = text.match(/\d{6}/);
-      if(match){
-        document.getElementById('loginCode').value = match[0];
-        document.getElementById('loginError').textContent = '';
-      } else {
-        document.getElementById('loginError').textContent = '剪贴板中未找到6位验证码';
-      }
-    }).catch(function(){
-      document.getElementById('loginError').textContent = '无法读取剪贴板，请手动输入';
-    });
-  } else {
-    document.getElementById('loginError').textContent = '当前浏览器不支持剪贴板读取，请手动输入';
-  }
-}
-
 // 当前生成的验证码（5分钟有效）
 let currentSmsCode = null;
 let smsCodeExpire = 0;
