@@ -309,6 +309,13 @@ a{color:inherit;text-decoration:none}
 .hl-modal-foot{padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:rgba(255,255,255,0.45)}
 .hl-modal-foot a{color:#fb923c;text-decoration:none;font-weight:600}
 .hl-modal-foot a:hover{text-decoration:underline}
+.hl-quota{display:inline-block;font-size:0.7rem;color:#fdba74;font-weight:400;margin-left:10px;letter-spacing:0.5px;vertical-align:middle}
+.hl-quota-bar{display:inline-block;width:50px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;vertical-align:middle;margin-left:6px;overflow:hidden}
+.hl-quota-bar i{display:block;height:100%;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:3px;transition:width 0.3s}
+.hl-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid rgba(249,115,22,0.45);color:#fff;padding:14px 26px;border-radius:14px;font-size:0.88rem;z-index:10002;opacity:0;transition:all 0.3s ease;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-width:90vw;text-align:center;line-height:1.5}
+.hl-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hl-toast strong{color:#fb923c}
+.hl-toast .emoji{font-size:1.1rem;margin-right:4px}
 /* 联赛板块 */
 .league-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
 .league-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
@@ -1545,14 +1552,50 @@ window.addEventListener('scroll', function(){
   const btn = document.getElementById('scrollTopBtn');
   if (btn) btn.classList.toggle('show', window.scrollY > 500);
 });
-// ===== 比赛集锦 =====
+// ===== 比赛集锦（每日限看5次）=====
+const HL_DAILY_LIMIT = 5;
+const HL_STORAGE_KEY = 'overtime_hl_quota';
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function getHlQuota(){
+  try{
+    const raw = localStorage.getItem(HL_STORAGE_KEY);
+    const today = todayStr();
+    if(!raw) return {date:today,count:0};
+    const d = JSON.parse(raw);
+    if(d.date !== today) return {date:today,count:0};
+    return {date:d.date,count:parseInt(d.count)||0};
+  }catch(e){ return {date:todayStr(),count:0}; }
+}
+function saveHlQuota(q){
+  try{ localStorage.setItem(HL_STORAGE_KEY, JSON.stringify(q)); }catch(e){}
+}
+function showHlToast(html, duration){
+  const t = document.getElementById('hlToast');
+  if(!t) return;
+  t.innerHTML = html;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('show'); }, duration || 3500);
+}
+function quotaBadge(count){
+  const used = count || 0;
+  const pct = Math.min(100, (used / HL_DAILY_LIMIT) * 100);
+  return '<span class="hl-quota">今日 ' + used + '/' + HL_DAILY_LIMIT + '<span class="hl-quota-bar"><i style="width:' + pct + '%"></i></span></span>';
+}
 function showHighlights(home, away, league){
   if (!home && !away) return;
+  const quota = getHlQuota();
+  if(quota.count >= HL_DAILY_LIMIT){
+    showHlToast('<span class="emoji">⏰</span>今日集锦观看次数已用完（<strong>' + HL_DAILY_LIMIT + '/' + HL_DAILY_LIMIT + '</strong>）<br>明天 0 点自动重置，明天再来吧～');
+    return;
+  }
+  quota.count++;
+  saveHlQuota(quota);
   const q = (home || '') + ' vs ' + (away || '') + ' ' + (league || '') + ' 集锦 highlights full match 2026';
   const embedUrl = 'https://www.youtube.com/embed?listType=search&list=' + encodeURIComponent(q);
   const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
   document.getElementById('hlFrame').src = embedUrl;
-  document.getElementById('hlTitle').textContent = '🎬 ' + (home || '') + ' vs ' + (away || '') + ' 完整集锦';
+  document.getElementById('hlTitle').innerHTML = '🎬 ' + (home || '') + ' vs ' + (away || '') + ' 完整集锦' + quotaBadge(quota.count);
   document.getElementById('hlYtLink').href = ytUrl;
   document.getElementById('hlModal').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -1586,5 +1629,7 @@ window.addEventListener('load', function(){
     </div>
   </div>
 </div>
+<!-- 集锦配额提示 -->
+<div class="hl-toast" id="hlToast"></div>
 </body>
 </html>
