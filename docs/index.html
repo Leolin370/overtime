@@ -290,6 +290,25 @@ a{color:inherit;text-decoration:none}
 .sched-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);margin-bottom:7px;font-size:0.85rem;transition:all 0.2s}
 .sched-row:last-child{margin-bottom:0}
 .sched-row:hover{background:rgba(255,255,255,0.08)}
+/* ===== 集锦按钮与弹窗 ===== */
+.hl-btn{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:0.7rem;font-weight:700;padding:3px 9px;border-radius:16px;cursor:pointer;transition:all 0.2s;flex-shrink:0;border:none;font-family:var(--font-display);letter-spacing:0.5px;white-space:nowrap}
+.hl-btn:hover{transform:scale(1.08);box-shadow:0 3px 10px rgba(249,115,22,0.45)}
+.hl-btn.disabled{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.28);cursor:default}
+.hl-btn.disabled:hover{transform:none;box-shadow:none}
+.hl-modal{position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,0.88);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(10px);animation:hlFadeIn 0.25s ease}
+.hl-modal.show{display:flex}
+@keyframes hlFadeIn{from{opacity:0}to{opacity:1}}
+.hl-modal-box{background:#161b22;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:100%;max-width:920px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,0.6);animation:hlSlideUp 0.3s ease}
+@keyframes hlSlideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.hl-modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);background:linear-gradient(90deg,rgba(249,115,22,0.08),transparent)}
+.hl-modal-title{font-size:1.05rem;font-weight:700;color:#fff;font-family:var(--font-display);letter-spacing:0.5px}
+.hl-modal-close{background:rgba(255,255,255,0.08);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s}
+.hl-modal-close:hover{background:rgba(249,115,22,0.3);transform:rotate(90deg)}
+.hl-modal-body{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.hl-modal-body iframe{width:100%;height:100%;border:none;display:block}
+.hl-modal-foot{padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:rgba(255,255,255,0.45)}
+.hl-modal-foot a{color:#fb923c;text-decoration:none;font-weight:600}
+.hl-modal-foot a:hover{text-decoration:underline}
 /* 联赛板块 */
 .league-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
 .league-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
@@ -1210,7 +1229,9 @@ function renderMyTeamPanel() {
         + '<div class="match-teams"><span class="match-team home">' + esc(homeSide) + '</span>'
         + '<span class="match-vs">vs</span><span class="match-team">' + esc(awaySide) + '</span></div>'
         + scoreHtml
-        + '<span class="match-status ' + statusCls + '">' + (m.status || '待定') + '</span></div>';
+        + '<span class="match-status ' + statusCls + '">' + (m.status || '待定') + '</span>'
+        + (m.status === '已结束' ? '<button class="hl-btn" onclick="showHighlights(\'' + m.home.replace(/'/g,"\\'") + '\',\'' + m.away.replace(/'/g,"\\'") + '\',\'' + (myTeam.sport || '').replace(/'/g,"\\'") + '\')">▶ 集锦</button>' : '<span class="hl-btn disabled">赛前</span>')
+        + '</div>';
     }).join('');
   } else {
     schedHtml = '<div class="tp-empty">' + myTeam.name + ' 暂无已收录赛程（' + myTeam.sport + ' 新赛季开赛后更新）</div>';
@@ -1348,6 +1369,7 @@ function renderScheduleZone(sport) {
         + scoreHtml
         + '<span class="match-status ' + stCls + '">' + (m.status || '') + '</span>'
         + (m.note ? '<span style="font-size:0.7rem;color:#fdba74">' + esc(m.note) + '</span>' : '')
+        + (m.status === '已结束' ? '<button class="hl-btn" onclick="showHighlights(\'' + m.home.replace(/'/g,"\\'") + '\',\'' + m.away.replace(/'/g,"\\'") + '\',\'' + lgName.replace(/'/g,"\\'") + '\')">▶ 集锦</button>' : '<span class="hl-btn disabled">赛前</span>')
         + '</div>';
     }).join('');
     groups += '<div class="sched-group"><div class="sched-group-title">' + (leaguesIcon(lgName)) + ' ' + lgName + ' <span class="cnt">' + matches.length + ' 场</span></div>' + rows + '</div>';
@@ -1429,6 +1451,7 @@ function renderLeagueContent(leagueName, sportName) {
         + scoreHtml
         + '<span class="match-status ' + stCls + '">' + (m.status || '') + '</span>'
         + (m.note ? '<span style="font-size:0.7rem;color:#fdba74">' + esc(m.note) + '</span>' : '')
+        + (m.status === '已结束' ? '<button class="hl-btn" onclick="showHighlights(\'' + m.home.replace(/'/g,"\\'") + '\',\'' + m.away.replace(/'/g,"\\'") + '\',\'' + leagueName.replace(/'/g,"\\'") + '\')">▶ 集锦</button>' : '<span class="hl-btn disabled">赛前</span>')
         + '</div>';
     }).join('');
     html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季</span><span class="src-badge">官方赛程</span></div>'
@@ -1522,6 +1545,24 @@ window.addEventListener('scroll', function(){
   const btn = document.getElementById('scrollTopBtn');
   if (btn) btn.classList.toggle('show', window.scrollY > 500);
 });
+// ===== 比赛集锦 =====
+function showHighlights(home, away, league){
+  if (!home && !away) return;
+  const q = (home || '') + ' vs ' + (away || '') + ' ' + (league || '') + ' 集锦 highlights full match 2026';
+  const embedUrl = 'https://www.youtube.com/embed?listType=search&list=' + encodeURIComponent(q);
+  const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+  document.getElementById('hlFrame').src = embedUrl;
+  document.getElementById('hlTitle').textContent = '🎬 ' + (home || '') + ' vs ' + (away || '') + ' 完整集锦';
+  document.getElementById('hlYtLink').href = ytUrl;
+  document.getElementById('hlModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeHighlights(){
+  document.getElementById('hlModal').classList.remove('show');
+  document.getElementById('hlFrame').src = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeHighlights(); });
 // ===== 初始化 =====
 window.addEventListener('load', function(){
   prepareData();
@@ -1529,5 +1570,21 @@ window.addEventListener('load', function(){
   console.log('[Overtime 加时赛] 初始化完成，新闻 ' + allNews.length + ' 条，球星 ' + allAthletes.length + ' 位');
 });
 </script>
+<!-- ===== 比赛集锦弹窗 ===== -->
+<div class="hl-modal" id="hlModal" onclick="if(event.target===this)closeHighlights()">
+  <div class="hl-modal-box">
+    <div class="hl-modal-head">
+      <div class="hl-modal-title" id="hlTitle">🎬 比赛集锦</div>
+      <button class="hl-modal-close" onclick="closeHighlights()" aria-label="关闭">✕</button>
+    </div>
+    <div class="hl-modal-body">
+      <iframe id="hlFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <div class="hl-modal-foot">
+      <span>💡 播放列表含多场集锦，可切换观看</span>
+      <a id="hlYtLink" href="#" target="_blank" rel="noopener">在 YouTube 打开 →</a>
+    </div>
+  </div>
+</div>
 </body>
 </html>
