@@ -997,15 +997,31 @@ const REAL_NEWS_KEY = 'overtime_realtime_news';
 const REAL_NEWS_TIME_KEY = 'overtime_realtime_time';
 async function fetchRealtimeNews(){
   try{
-    // 检查缓存（15分钟内不重复请求）
+    const now = Date.now();
+    // 优先读取同域实时新闻JSON（GitHub Actions每15分钟更新，无CORS问题）
+    try{
+      const resp = await fetch('data/realtime_news.json?t=' + now, {signal: AbortSignal.timeout(8000), cache: 'no-store'});
+      if(resp.ok){
+        const data = await resp.json();
+        if(data && data.news && data.news.length > 0){
+          const news = data.news;
+          localStorage.setItem(REAL_NEWS_KEY, JSON.stringify(news));
+          localStorage.setItem(REAL_NEWS_TIME_KEY, String(now));
+          console.log('[实时新闻] 从同域JSON加载 ' + news.length + ' 条，更新时间: ' + (data.fetch_time || '未知'));
+          return news;
+        }
+      }
+    }catch(e){
+      console.log('[实时新闻] 同域JSON加载失败，尝试代理方式:', e.message);
+    }
+    // 备用：检查localStorage缓存
     const cached = localStorage.getItem(REAL_NEWS_KEY);
     const cachedTime = localStorage.getItem(REAL_NEWS_TIME_KEY);
-    const now = Date.now();
-    if(cached && cachedTime && (now - parseInt(cachedTime)) < 5*60*1000){
+    if(cached && cachedTime && (now - parseInt(cachedTime)) < 30*60*1000){
       const data = JSON.parse(cached);
       if(data && data.length) return data;
     }
-    // 通过多代理抓取新浪体育RSS（依次尝试）
+    // 最后备用：通过多代理抓取新浪体育RSS（依次尝试）
     const rssUrl = 'https://rss.sina.com.cn/roll/sports/hot_roll.xml';
     const proxies = [
       'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl),
@@ -1455,7 +1471,12 @@ function prepareData() {
   morningBriefing = (typeof MORNING !== 'undefined') ? MORNING : null;
   newsCount = allNews.length;
   tagNews();
-  // 加载实时体育资讯（新浪RSS，15分钟缓存，成功后自动刷新首页）
+  // 页面加载时清除旧新闻缓存，强制获取最新数据
+  try{
+    localStorage.removeItem(REAL_NEWS_KEY);
+    localStorage.removeItem(REAL_NEWS_TIME_KEY);
+  }catch(e){}
+  // 加载实时体育资讯（优先同域JSON，GitHub Actions每15分钟更新）
   try{
     fetchRealtimeNews().then(function(realNews){
       if(realNews && realNews.length){
