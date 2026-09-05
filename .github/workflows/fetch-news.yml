@@ -1,0 +1,42 @@
+name: Fetch Real-time Sports News
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # 每15分钟运行一次
+  push:
+    branches: [ master ]
+    paths:
+      - 'scripts/fetch_news.py'
+  workflow_dispatch:  # 支持手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch latest sports news
+        run: |
+          cd scripts
+          python fetch_news.py
+
+      - name: Commit and push updated news
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add docs/data/realtime_news.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: 更新实时新闻数据 $(date '+%Y-%m-%d %H:%M')"
+            git push
+          fi
