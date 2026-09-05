@@ -309,6 +309,16 @@ a{color:inherit;text-decoration:none}
 .hl-modal-foot{padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:rgba(255,255,255,0.45)}
 .hl-modal-foot a{color:#fb923c;text-decoration:none;font-weight:600}
 .hl-modal-foot a:hover{text-decoration:underline}
+/* 实时数据加载状态 */
+.sched-loading{text-align:center;padding:30px 10px;color:rgba(255,255,255,0.4);font-size:0.85rem}
+.sched-loading .spin{display:inline-block;width:20px;height:20px;border:2px solid rgba(249,115,22,0.3);border-top-color:#f97316;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sched-refresh-btn{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);color:#fb923c;padding:4px 10px;border-radius:8px;font-size:0.72rem;cursor:pointer;transition:all 0.2s;margin-left:8px}
+.sched-refresh-btn:hover{background:rgba(249,115,22,0.2)}
+.sched-refresh-btn.spinning .icon{animation:spin 0.8s linear infinite;display:inline-block}
+.data-update-time{font-size:0.68rem;color:rgba(255,255,255,0.3);margin-left:8px;font-weight:400}
+.zone-title .sub{font-size:0.7rem;color:rgba(255,255,255,0.4);font-weight:400;margin-left:8px}
+
 /* ===== 登录 ===== */
 #loginView{display:none;min-height:100vh;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1117 0%,#1a1f2e 50%,#0d1117 100%);padding:20px}
 #loginView.active{display:flex}
@@ -864,6 +874,125 @@ a{color:inherit;text-decoration:none}
 // ===== 真实数据（快照：2026-08-29）=====
 
 // ===== 实时体育资讯 =====
+
+// ===== 联赛 TheSportsDB ID 映射 =====
+const LEAGUE_TSDB_IDS = {
+  '英超联赛': 4328, '西甲联赛': 4335, '意甲联赛': 4332,
+  '德甲联赛': 4331, '法甲联赛': 4334, '欧冠联赛': 4480,
+  'NBA': 4387, 'NFL': 4391
+};
+const TSDB_BASE = 'https://www.thesportsdb.com/api/v1/json/3/';
+const SCHED_CACHE_KEY = 'overtime_sched_cache';
+const SCHED_CACHE_TTL = 10 * 60 * 1000; // 10分钟缓存
+
+function getSchedCache(){
+  try{
+    const raw = localStorage.getItem(SCHED_CACHE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function setSchedCache(data){
+  try{ localStorage.setItem(SCHED_CACHE_KEY, JSON.stringify(data)); }catch(e){}
+}
+
+// 从 TheSportsDB 获取联赛实时赛程
+async function fetchLeagueSchedule(leagueName, force){
+  const leagueId = LEAGUE_TSDB_IDS[leagueName];
+  if(!leagueId) return null;
+  // 检查缓存
+  if(!force){
+    const cache = getSchedCache();
+    const entry = cache[leagueName];
+    if(entry && (Date.now() - entry.time) < SCHED_CACHE_TTL && entry.matches){
+      return entry.matches;
+    }
+  }
+  try{
+    const results = [];
+    // 获取未来赛程
+    try{
+      const nextResp = await fetch(TSDB_BASE + 'eventsnextleague.php?id=' + leagueId, {signal: AbortSignal.timeout(8000)});
+      const nextData = await nextResp.json();
+      if(nextData.events){
+        nextData.events.forEach(function(ev){
+          const home = ev.strHomeTeam || '';
+          const away = ev.strAwayTeam || '';
+          const date = ev.dateEvent || '';
+          const time = ev.strTime || '';
+          const round = ev.intRound ? ('第' + ev.intRound + '轮') : (ev.strEvent || '');
+          let dateStr = '';
+          if(date){
+            const parts = date.split('-');
+            if(parts.length === 3) dateStr = parts[1] + '-' + parts[2] + ' ' + (time ? time.substr(0,5) : '');
+          }
+          results.push({
+            round: round, date: dateStr, home: home, away: away,
+            status: '未开始', note: '', realtime: true
+          });
+        });
+      }
+    }catch(e){}
+    // 获取最近赛果
+    try{
+      const pastResp = await fetch(TSDB_BASE + 'eventspastleague.php?id=' + leagueId, {signal: AbortSignal.timeout(8000)});
+      const pastData = await pastResp.json();
+      if(pastData.events){
+        pastData.events.slice(0, 10).forEach(function(ev){
+          const home = ev.strHomeTeam || '';
+          const away = ev.strAwayTeam || '';
+          const date = ev.dateEvent || '';
+          const time = ev.strTime || '';
+          const round = ev.intRound ? ('第' + ev.intRound + '轮') : (ev.strEvent || '');
+          let dateStr = '';
+          if(date){
+            const parts = date.split('-');
+            if(parts.length === 3) dateStr = parts[1] + '-' + parts[2] + ' ' + (time ? time.substr(0,5) : '');
+          }
+          results.push({
+            round: round, date: dateStr, home: home, away: away,
+            hs: ev.intHomeScore, as: ev.intAwayScore,
+            status: '已结束', note: '', realtime: true
+          });
+        });
+      }
+    }catch(e){}
+    if(results.length > 0){
+      // 按日期排序（已结束在前，未开始在后）
+      results.sort(function(a, b){
+        if(a.status === b.status) return (a.date || '').localeCompare(b.date || '');
+        return a.status === '已结束' ? -1 : 1;
+      });
+      // 存入缓存
+      const cache = getSchedCache();
+      cache[leagueName] = {matches: results, time: Date.now()};
+      setSchedCache(cache);
+      return results;
+    }
+    return null;
+  }catch(e){
+    return null;
+  }
+}
+
+// 获取联赛赛程（优先实时，失败回退静态）
+async function getLeagueMatches(leagueName, force){
+  const realtime = await fetchLeagueSchedule(leagueName, force);
+  if(realtime && realtime.length > 0) return {matches: realtime, source: 'realtime'};
+  const staticData = SCHEDULES[leagueName] || [];
+  return {matches: staticData, source: 'static'};
+}
+
+// 格式化更新时间
+function formatUpdateTime(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if(diff < 60) return '刚刚更新';
+  if(diff < 3600) return Math.floor(diff/60) + '分钟前更新';
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ' 更新';
+}
+
 const REAL_NEWS_KEY = 'overtime_realtime_news';
 const REAL_NEWS_TIME_KEY = 'overtime_realtime_time';
 async function fetchRealtimeNews(){
@@ -872,16 +1001,28 @@ async function fetchRealtimeNews(){
     const cached = localStorage.getItem(REAL_NEWS_KEY);
     const cachedTime = localStorage.getItem(REAL_NEWS_TIME_KEY);
     const now = Date.now();
-    if(cached && cachedTime && (now - parseInt(cachedTime)) < 15*60*1000){
+    if(cached && cachedTime && (now - parseInt(cachedTime)) < 5*60*1000){
       const data = JSON.parse(cached);
       if(data && data.length) return data;
     }
-    // 通过allorigins代理抓取新浪体育RSS
+    // 通过多代理抓取新浪体育RSS（依次尝试）
     const rssUrl = 'https://rss.sina.com.cn/roll/sports/hot_roll.xml';
-    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
-    const resp = await fetch(proxyUrl, {signal: AbortSignal.timeout(8000)});
-    if(!resp.ok) throw new Error('HTTP ' + resp.status);
-    const text = await resp.text();
+    const proxies = [
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl),
+      'https://corsproxy.io/?' + encodeURIComponent(rssUrl),
+      'https://thingproxy.freeboard.io/fetch/' + rssUrl
+    ];
+    let text = null;
+    for(let pi = 0; pi < proxies.length; pi++){
+      try{
+        const resp = await fetch(proxies[pi], {signal: AbortSignal.timeout(6000)});
+        if(resp.ok){
+          text = await resp.text();
+          if(text && text.indexOf('<item>') >= 0) break;
+        }
+      }catch(e){ continue; }
+    }
+    if(!text) throw new Error('所有代理均失败');
     // 解析XML
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(text, 'text/xml');
@@ -1821,16 +1962,31 @@ function refreshNews() {
   const icon = document.getElementById('refreshNewsIcon');
   btn.classList.add('refreshing');
   icon.classList.add('spin');
-  showToast('正在刷新新闻数据...');
-  setTimeout(function(){
-    allNews = allNews.slice().sort(function(){ return Math.random() - 0.5; });
+  showToast('正在从新浪体育获取最新新闻...');
+  // 强制清除缓存，真正刷新
+  try{
+    localStorage.removeItem(REAL_NEWS_KEY);
+    localStorage.removeItem(REAL_NEWS_TIME_KEY);
+  }catch(e){}
+  fetchRealtimeNews().then(function(realNews){
+    allNews = mergeRealtimeNews(NEWS);
+    tagNews();
     renderNews();
     renderMyTeamBar();
     renderMyTeamPanel();
     btn.classList.remove('refreshing');
     icon.classList.remove('spin');
-    showToast('新闻刷新成功，共 ' + allNews.length + ' 条', 'success');
-  }, 600);
+    const realtimeCount = allNews.filter(function(n){ return n.realtime; }).length;
+    showToast('新闻刷新成功，共 ' + allNews.length + ' 条（实时 ' + realtimeCount + ' 条）', 'success');
+  }).catch(function(){
+    // 失败时用静态数据
+    allNews = NEWS.slice();
+    tagNews();
+    renderNews();
+    btn.classList.remove('refreshing');
+    icon.classList.remove('spin');
+    showToast('实时新闻获取失败，已显示精选新闻', 'error');
+  });
 }
 
 // ===== 运动专区 =====
@@ -1851,8 +2007,23 @@ function renderSportContent(sport) {
   const container = document.getElementById('sportContent');
   const accent = sport.accent;
   let html = '';
-  html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季 · 真实赛程</span><span class="src-badge">英超/西甲/意甲/德甲/法甲/欧冠官方</span></div>';
-  html += renderScheduleZone(sport);
+  html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季 · 实时数据</span><span class="src-badge">TheSportsDB</span></div>';
+  html += '<div id="sportSchedWrap">' + renderScheduleZone(sport) + '</div>';
+  // 异步加载实时赛程，加载完成后更新
+  const leagues = (LEAGUES[sport.name] || []);
+  let loadedCount = 0;
+  leagues.forEach(function(lg){
+    if(LEAGUE_TSDB_IDS[lg.name]){
+      fetchLeagueSchedule(lg.name, false).then(function(){
+        loadedCount++;
+        // 仍在当前运动专区时更新赛程
+        const wrap = document.getElementById('sportSchedWrap');
+        if(wrap && currentSport && currentSport.name === sport.name){
+          wrap.innerHTML = renderScheduleZone(sport);
+        }
+      });
+    }
+  });
   html += '<div class="zone-title" style="border-color:' + accent + '">🏆 联赛 <span class="sub">点击进入联赛详情（积分榜 · 赛程）</span></div>';
   html += renderLeagueZone(sport);
   const sportNews = allNews.filter(function(n){ return n.tags && n.tags.indexOf(sport.name) >= 0; });
@@ -1886,8 +2057,20 @@ function renderScheduleZone(sport) {
   const leagues = (LEAGUES[sport.name] || []).map(function(l){ return l.name; });
   let groups = '';
   let any = false;
+  const cache = getSchedCache();
   leagues.forEach(function(lgName){
-    const matches = (SCHEDULES[lgName] || []);
+    // 优先用实时缓存数据
+    let matches = [];
+    let isRealtime = false;
+    let updateTime = '';
+    const cacheEntry = cache[lgName];
+    if(cacheEntry && cacheEntry.matches && cacheEntry.matches.length > 0){
+      matches = cacheEntry.matches;
+      isRealtime = true;
+      updateTime = formatUpdateTime(cacheEntry.time);
+    } else {
+      matches = (SCHEDULES[lgName] || []);
+    }
     if (!matches.length) return;
     any = true;
     const rows = matches.map(function(m){
@@ -1904,7 +2087,10 @@ function renderScheduleZone(sport) {
         + (m.status === '已结束' ? '<button class="hl-btn" onclick="showHighlights(\'' + m.home.replace(/'/g,"\\'") + '\',\'' + m.away.replace(/'/g,"\\'") + '\',\'' + lgName.replace(/'/g,"\\'") + '\')">▶ 集锦</button>' : '<span class="hl-btn disabled">赛前</span>')
         + '</div>';
     }).join('');
-    groups += '<div class="sched-group"><div class="sched-group-title">' + (leaguesIcon(lgName)) + ' ' + lgName + ' <span class="cnt">' + matches.length + ' 场</span></div>' + rows + '</div>';
+    const sourceBadge = isRealtime ? '<span style="font-size:0.65rem;color:#4ade80;margin-left:6px">● 实时</span>' : '<span style="font-size:0.65rem;color:rgba(255,255,255,0.3);margin-left:6px">静态</span>';
+    const timeBadge = updateTime ? '<span class="data-update-time">' + updateTime + '</span>' : '';
+    const refreshBtn = LEAGUE_TSDB_IDS[lgName] ? '<button class="sched-refresh-btn" onclick="refreshLeagueSched(\'' + lgName.replace(/'/g,"\\'") + '\', this)"><span class="icon">🔄</span> 刷新</button>' : '';
+    groups += '<div class="sched-group"><div class="sched-group-title">' + (leaguesIcon(lgName)) + ' ' + lgName + ' <span class="cnt">' + matches.length + ' 场</span>' + sourceBadge + timeBadge + refreshBtn + '</div>' + rows + '</div>';
   });
   // 非联赛型运动：展示真实焦点赛事
   const events = SPORT_EVENTS[sport.name] || [];
@@ -1919,6 +2105,17 @@ function renderScheduleZone(sport) {
     groups = '<div class="league-note">' + sport.name + '赛程数据收录中，可先浏览下方联赛与资讯。</div>';
   }
   return groups;
+}
+
+// 刷新单个联赛赛程
+async function refreshLeagueSched(leagueName, btn){
+  if(btn) btn.classList.add('spinning');
+  await fetchLeagueSchedule(leagueName, true);
+  // 重新渲染当前运动专区
+  if(currentSport){
+    renderSportZone(currentSport);
+  }
+  if(btn) btn.classList.remove('spinning');
 }
 function leaguesIcon(name){
   const map = {'英超联赛':'🏴','西甲联赛':'🇪🇸','意甲联赛':'🇮🇹','德甲联赛':'🇩🇪','法甲联赛':'🇫🇷','欧冠联赛':'⭐','NBA':'🏀','CBA':'🇨🇳'};
@@ -1949,12 +2146,23 @@ function enterLeague(leagueName, sportName) {
   document.getElementById('leagueHeroTitle').textContent = leagueName;
   document.getElementById('leagueHeroDesc').textContent = lg ? lg.desc : '';
   renderLeagueContent(leagueName, sportName);
+  // 异步加载实时赛程
+  if(LEAGUE_TSDB_IDS[leagueName]){
+    fetchLeagueSchedule(leagueName, false).then(function(){
+      if(currentLeague === leagueName){
+        renderLeagueContent(leagueName, sportName);
+      }
+    });
+  }
   showView('leagueView');
 }
 function renderLeagueContent(leagueName, sportName) {
   const container = document.getElementById('leagueContent');
   const st = (allStandings[sportName] && allStandings[sportName][leagueName]) || [];
-  const sched = (SCHEDULES[leagueName] || []);
+  const cache = getSchedCache();
+  const cacheEntry = cache[leagueName];
+  const sched = (cacheEntry && cacheEntry.matches && cacheEntry.matches.length > 0) ? cacheEntry.matches : (SCHEDULES[leagueName] || []);
+  const schedIsRealtime = !!(cacheEntry && cacheEntry.matches && cacheEntry.matches.length > 0);
   const sport = SPORTS.find(function(s){ return s.name === sportName; });
   const accent = sport ? sport.accent : '#f97316';
   let html = '';
@@ -1986,7 +2194,9 @@ function renderLeagueContent(leagueName, sportName) {
         + (m.status === '已结束' ? '<button class="hl-btn" onclick="showHighlights(\'' + m.home.replace(/'/g,"\\'") + '\',\'' + m.away.replace(/'/g,"\\'") + '\',\'' + leagueName.replace(/'/g,"\\'") + '\')">▶ 集锦</button>' : '<span class="hl-btn disabled">赛前</span>')
         + '</div>';
     }).join('');
-    html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季</span><span class="src-badge">官方赛程</span></div>'
+    const schedSrc = schedIsRealtime ? '<span style="font-size:0.65rem;color:#4ade80">● 实时</span>' : '<span style="font-size:0.65rem;color:rgba(255,255,255,0.3)">静态</span>';
+    const schedRf = LEAGUE_TSDB_IDS[leagueName] ? '<button class="sched-refresh-btn" onclick="refreshLeagueSched(\'' + leagueName.replace(/'/g,"\\'") + '\',this);setTimeout(function(){renderLeagueContent(\'' + leagueName.replace(/'/g,"\\'") + '\',\'' + sportName.replace(/'/g,"\\'") + '\')},500)"><span class="icon">🔄</span> 刷新</button>' : '';
+    html += '<div class="zone-title" style="border-color:' + accent + '">🗓️ 赛程 <span class="sub">2026-27赛季</span>' + schedSrc + schedRf + '</div>'
       + '<div class="sched-group">' + rows + '</div>';
   }
   if (!st.length && !sched.length) {
